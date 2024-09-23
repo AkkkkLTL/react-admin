@@ -24,6 +24,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0"
   },
+  base: '/react-admin',
   test: {
     globals: true,
     environment: 'jsdom',
