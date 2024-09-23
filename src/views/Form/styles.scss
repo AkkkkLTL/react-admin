@@ -1,0 +1,11 @@
+.ant-picker {
+  width: 100%;
+}
+
+.ant-col-2 {
+  text-align: center;
+}
+
+.ant-col:has(> [title="Activity zone"]) + .ant-col > .ant-form-item-control-input {
+  display: inline-block;
+}
