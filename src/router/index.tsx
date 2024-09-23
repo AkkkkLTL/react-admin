@@ -172,7 +172,9 @@ export const constantRoutes:RouteType[] = [
   
 ]
 
-const router = createBrowserRouter(constantRoutes);
+const router = createBrowserRouter(constantRoutes, {
+  basename: "/react-admin/"
+});
 
 const GetRoutes = () => {
   const element = useRoutes(constantRoutes);
