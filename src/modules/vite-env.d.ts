@@ -8,4 +8,5 @@ interface ImportMeta {
 interface ImportMetaEnv {
   readonly ENV: string,
   readonly VITE_APP_BASE_API: string,
+  readonly GRAPHQL_AUTH: string
 }
