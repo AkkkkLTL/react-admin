@@ -7,30 +7,29 @@ const useTree = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [treeData, setTreeData] = useState<TreeNodeType[]>(defaultTreeData);
 
-  const getTreeData = useMemo(() => {
+  useMemo(() => {
 
     let newTreeData:TreeNodeType[] = [];
     Object.assign(newTreeData, defaultTreeData);
-    
-    const loop = (data:TreeNodeType[]) => {
 
-      let showCount:number = 0;
+    const treeFilter = (node:TreeNodeType) => {
+      const strTitle = node.title as string;
+      const index = strTitle.indexOf(searchValue);
+      let showCount = 0;
 
-      data.map((item) => {
-        const strTitle = item.title as string;
-        const index = strTitle.indexOf(searchValue);
-
-        if (item.children) {
-          showCount = 0;
-          showCount += loop(item.children);
-        }
-        showCount += Number(index > -1);
-        item.disabled = index > -1 || showCount > 0 ? false : true;
-      });
-      return showCount;
+      if (node.children) {
+        node.children.forEach(child => {
+          showCount += Number(treeFilter(child));
+        })
+      }
+      node.disabled = !(index > -1 || showCount);
+      return Number(index > -1) || showCount;
     }
 
-    loop(newTreeData);
+    newTreeData.map(tree => {
+      treeFilter(tree);
+    });
+
     setTreeData(newTreeData);
   }, [searchValue]);
 

@@ -34,5 +34,16 @@ export default defineConfig({
       cleanOnRerun: true,
       reporter: ['text', 'json', 'html']
     }
+  },
+  build: {
+    target: "esnext",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        // 生成环境移除 console
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   }
 })

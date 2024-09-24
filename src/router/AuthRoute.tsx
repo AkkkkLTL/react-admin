@@ -23,8 +23,6 @@ const AuthRoute:FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log("store", store);
-
   useEffect(() => {
     
 

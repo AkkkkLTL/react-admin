@@ -1,7 +1,7 @@
 import { constantRoutes } from "@/router";
 import { getMenuFromRoutes } from "@/utils/menu";
 import { MenuProps } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { matchRoutes, useMatches, useNavigate } from "react-router-dom";
 import { getLevelKeys } from "./helper";
 import { IProps, LevelKeysProps } from "./types";
@@ -16,6 +16,13 @@ const useSidebar = (props: IProps) => {
   const [activeKey, setActiveKey] = useState<string>('');
   const [stateOpenKeys, setStateOpenKeys] = useState<string[]>(['']);
 
+  // 展开Sidebar时，Menu展开到选中的那一项
+  useEffect(() => {
+    const {collapsed} = props;
+
+    if (!collapsed) setStateOpenKeys(defaultSelectedKeys);
+  }, [props.collapsed]);
+
   const handleMenuOnClick:MenuProps["onClick"] = (e) => {
     setDefaultSelectedKeys(e.keyPath);
     setStateOpenKeys(e.keyPath);
@@ -26,7 +33,6 @@ const useSidebar = (props: IProps) => {
     }
     if (path.charAt(0) !== '/') path = '/' + path;
     navigate(path);
-    console.log("handleMenuOnClick", [stateOpenKeys]);
   }
 
   const handleOpenChange:MenuProps["onOpenChange"] = (openKeys) => {
@@ -43,7 +49,6 @@ const useSidebar = (props: IProps) => {
     } else {
       setStateOpenKeys(openKeys);
     }
-    console.log("handleOpenChange", [stateOpenKeys, openKeys]);
   }
 
   return {
