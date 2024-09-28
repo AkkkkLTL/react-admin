@@ -9,18 +9,20 @@ import { MainWrapper } from "./styles";
 const Layout:FC = () => {
 
   const {
+    matches,
     collapsed,
     toggleCollapes
   } = useLayout();
   
   return (
     <MainWrapper className={classNames(["h-full","app-wrapper"])}>
-      <Sidebar collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} matches={matches}/>
       <AntdLayout className="main-container" >
         <Header>
           <Navbar 
             collapsed={collapsed}
             toggleCollapes={toggleCollapes}
+            matches={matches}
           />
         </Header>
         <Content>

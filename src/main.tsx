@@ -21,11 +21,9 @@ const Root:FC<IProps> = props => {
 */
 
 ReactDOM.createRoot(document.getElementById('app')!).render(
-  <React.StrictMode>
-    <ThemeProvider theme={{}}>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={{}}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </ThemeProvider>
 )

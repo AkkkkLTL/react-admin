@@ -1,5 +1,4 @@
 import { constantRoutes } from "@/router";
-import { getMenuFromRoutes } from "@/utils/menu";
 import { Layout, Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { FC } from "react";
@@ -19,6 +18,8 @@ const Sidebar:FC<IProps> = (props) => {
   } = useSidebar(props);
 
   console.log("Open State", stateOpenKeys);
+  console.log("Select State", defaultSelectedKeys);
+
   return (
     <Sider
       trigger={null}
@@ -28,7 +29,7 @@ const Sidebar:FC<IProps> = (props) => {
     >
       <Menu
         mode="inline"
-        defaultSelectedKeys={defaultSelectedKeys}
+        selectedKeys={defaultSelectedKeys}
         openKeys={stateOpenKeys}
         onOpenChange={handleOpenChange}
         onClick={handleMenuOnClick}

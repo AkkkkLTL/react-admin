@@ -1,0 +1,55 @@
+.navbar {
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+
+  .hamburger-container {
+    float: left;
+    height: 100%;
+    width: 46px;
+  }
+
+  .ant-breadcrumb a {
+    display: inline;
+  }
+
+  .breadcrumb-container {
+    float: left;
+    line-height: 50px;
+    margin-left: 8px;
+  }
+
+  .right-menu {
+    float: right;
+    height: 100%;
+    line-height: 50px;
+  
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .avatar-wrapper {
+    margin-top: 5px;
+    position: relative;
+    margin-right: 30px;
+
+    .user-avatar {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .anticon-caret-down {
+      cursor: pointer;
+      position: absolute;
+      right: -20px;
+      top: 25px;
+      font-size: 12px;
+    }
+  }
+  
+}

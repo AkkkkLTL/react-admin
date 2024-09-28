@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { createBrowserRouter, createHashRouter, useRoutes } from "react-router-dom";
+import { RouteObject, createBrowserRouter, createHashRouter, useRoutes } from "react-router-dom";
 import "nprogress/nprogress.css"
 import { RouteType } from "./types";
 import Dashboard from "@/views/Dashboard";
@@ -172,6 +172,6 @@ export const constantRoutes:RouteType[] = [
   
 ]
 
-const router = createHashRouter(constantRoutes);
+const router = createHashRouter(constantRoutes as unknown as RouteObject[]);
 
 export default router;
