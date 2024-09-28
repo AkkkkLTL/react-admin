@@ -4,5 +4,6 @@ export interface LevelKeysProps {
 }
 
 export interface IProps {
-  collapsed: boolean
+  collapsed: boolean;
+  matches: any;
 }

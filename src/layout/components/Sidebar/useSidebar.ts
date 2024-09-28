@@ -1,20 +1,41 @@
 import { constantRoutes } from "@/router";
 import { getMenuFromRoutes } from "@/utils/menu";
 import { MenuProps } from "antd";
-import { useState } from "react";
-import { matchRoutes, useMatches, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { matchRoutes, useLocation, useMatches, useNavigate } from "react-router-dom";
 import { getLevelKeys } from "./helper";
 import { IProps, LevelKeysProps } from "./types";
 
 const useSidebar = (props: IProps) => {
   const items = getMenuFromRoutes(constantRoutes);
-  const levelKeys = getLevelKeys(items as LevelKeysProps[])
+  console.log("route generate menu", items);
+  const levelKeys = getLevelKeys(items as LevelKeysProps[]);
+  const location = useLocation();
 
   const navigate = useNavigate();
 
   const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>(['']);
   const [activeKey, setActiveKey] = useState<string>('');
   const [stateOpenKeys, setStateOpenKeys] = useState<string[]>(['']);
+
+  // 展开Sidebar时，Menu展开到选中的那一项
+  useEffect(() => {
+    const {collapsed} = props;
+
+    if (!collapsed) setStateOpenKeys(defaultSelectedKeys);
+  }, [props.collapsed]);
+
+  useEffect(() => {
+    const keys:string[] = [];
+    props.matches.forEach((item) => {
+      if (item.route.name) {
+        keys.push(item.route.path);
+      }
+    });
+    console.log("menu keys", keys);
+    setDefaultSelectedKeys(keys);
+    setStateOpenKeys(keys);
+  }, [location.pathname])
 
   const handleMenuOnClick:MenuProps["onClick"] = (e) => {
     setDefaultSelectedKeys(e.keyPath);
@@ -26,7 +47,6 @@ const useSidebar = (props: IProps) => {
     }
     if (path.charAt(0) !== '/') path = '/' + path;
     navigate(path);
-    console.log("handleMenuOnClick", [stateOpenKeys]);
   }
 
   const handleOpenChange:MenuProps["onOpenChange"] = (openKeys) => {
@@ -43,7 +63,6 @@ const useSidebar = (props: IProps) => {
     } else {
       setStateOpenKeys(openKeys);
     }
-    console.log("handleOpenChange", [stateOpenKeys, openKeys]);
   }
 
   return {

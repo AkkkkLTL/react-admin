@@ -15,7 +15,7 @@ import { RouteObject } from "react-router-dom";
  *  activeMenu: '/example/list' if set path, the sidebar will highlight the path you set
  * }
  */
-export type RouteType = RouteObject & {
+export type RouteType = Omit<RouteObject, 'children'> & {
   hidden?: boolean,
   alwaysShow?: boolean,
   redirect?: string,

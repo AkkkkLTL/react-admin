@@ -45,6 +45,7 @@ export const login:any = (userInfo:{username:string, password:string}):AppThunk 
   .then(response => {
     const { data } = response;
     dispatch(setToken(data.token));
+    dispatch(getInfo(data.token));
     auth_setToken(data.token);
   }).catch(error => {
     throw new Error(error);

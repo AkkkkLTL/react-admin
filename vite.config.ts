@@ -24,7 +24,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0"
   },
-  base: '/react-admin',
+  base: '/react-admin/',
   test: {
     globals: true,
     environment: 'jsdom',
@@ -33,6 +33,17 @@ export default defineConfig({
       provider: "v8",
       cleanOnRerun: true,
       reporter: ['text', 'json', 'html']
+    }
+  },
+  build: {
+    target: "esnext",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        // 生成环境移除 console
+        drop_console: true,
+        drop_debugger: true
+      }
     }
   }
 })
