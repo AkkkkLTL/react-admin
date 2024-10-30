@@ -18,7 +18,7 @@ export function getInfo(token:string) {
 
 export function logout() {
   return service({
-    url: 'user/logout',
+    url: '/user/logout',
     method: 'post'
   });
 }
