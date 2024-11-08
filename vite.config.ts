@@ -9,6 +9,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/react-admin/',
   plugins: [
     react(),
     tsconfigPaths(),
@@ -21,10 +22,12 @@ export default defineConfig({
       iconDirs: [path.join(__dirname, "src/icons/svg")]
     })
   ],
-  server: {
-    host: "0.0.0.0"
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './src')
+    }
   },
-  base: '/react-admin/',
   test: {
     globals: true,
     environment: 'jsdom',
@@ -35,15 +38,20 @@ export default defineConfig({
       reporter: ['text', 'json', 'html']
     }
   },
+  server: {
+    host: "0.0.0.0"
+  },
   build: {
     target: "esnext",
     minify: "terser",
     terserOptions: {
       compress: {
         // 生成环境移除 console
+        keep_infinity: true,
         drop_console: true,
         drop_debugger: true
       }
-    }
+    },
+    outDir: 'dist'
   }
 })

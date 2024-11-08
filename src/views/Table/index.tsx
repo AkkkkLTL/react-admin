@@ -74,7 +74,7 @@ const Table:FC = () => {
 
   return (
     <div className="app-container">
-      <AntdTable columns={columns} dataSource={data} 
+      <AntdTable columns={columns} dataSource={data} rowKey="id"
         pagination={false}
         bordered
       />

@@ -12,7 +12,7 @@ const data = mock({
 });
 
 export default [{
-  url: RegExp("/table/list"),
+  url: "/table/list",
   type: "get",
   response: () => {
     const items = data.items;

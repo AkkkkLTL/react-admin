@@ -1,5 +1,3 @@
-import { getQuery } from "./utils";
-
 const tokens = {
   admin: {
     token: "admin-token"
@@ -27,10 +25,10 @@ const users = {
 export default [
   // user login
   {
-    url: RegExp("/user/login"),
+    url: "/user/login",
     type: "post",
     response: (config:any) => {
-      const { username } = JSON.parse(config.body);
+      const { username } = config.body;
       const token = tokens[username];
 
       if (!token) {
@@ -48,11 +46,10 @@ export default [
 
   // get user info
   {
-    url: RegExp("/user/info"),
+    url: "/user/info\.*",
     type: "get",
     response: (config:any) => {
-      console.log("get user info", getQuery(config.url));
-      const { token } = getQuery(config.url);
+      const { token } = config.query;
       const info = users[token];
 
       if (!info) {
@@ -69,9 +66,9 @@ export default [
   },
   // user logout
   {
-    url: RegExp("/user/logout"),
+    url: "/user/logout",
     type: "post",
-    response: _ => {
+    response: () => {
       return {
         code: 20000,
         data: "success"

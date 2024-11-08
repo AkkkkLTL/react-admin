@@ -28,14 +28,15 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "paths": {
-      "@/*":["src/*"]
+      "@/*":["src/*"],
+      "~/*":["./*"]
     },
     "types": ["vite-plugin-svgr/client", "vitest"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "mock/**/*.ts",
+    "mock/*.ts",
     "vite.config.ts",
   ],
   "exclude": ["node_modules", "dist"]
