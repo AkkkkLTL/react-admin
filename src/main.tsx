@@ -9,10 +9,11 @@ import { ThemeProvider } from 'styled-components';
 import App from './App.tsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.tsx';
+import { doDynamicImport } from './utils/dynamicImport.ts';
 
-if (import.meta.env.MODE === 'development') {
-  const { mockXHR } = await import("~/mock/index.ts");
-  mockXHR();
+if (import.meta.env.VITE_MOCK_ENABLE) {
+   const { mockXHR } = doDynamicImport() as any;
+   mockXHR();
 }
 
 ReactDOM.createRoot(document.getElementById('app')!).render(

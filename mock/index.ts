@@ -3,7 +3,7 @@ import user from "./user";
 import table from "./table";
 import { getQuery } from "./utils";
 
-const mocks = [
+export const mocks = [
   ...user,
   ...table
 ];
