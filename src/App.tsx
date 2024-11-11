@@ -4,6 +4,7 @@ import { ConfigProvider } from 'antd';
 import zhCN from "antd/locale/zh_CN";
 import { RouterProvider } from 'react-router-dom';
 import router from './router';
+import NProgress from './components/NProgress';
 
 const App:FC = () => {
 
@@ -36,7 +37,7 @@ const App:FC = () => {
         }
       }}
     >
-      <Suspense fallback={<div>loading...</div>}>
+      <Suspense fallback={<NProgress />}>
         <RouterProvider router={router} />
       </Suspense>
     </ConfigProvider>
