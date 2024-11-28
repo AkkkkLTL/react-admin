@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client'
 
-import "normalize.css"  // css reset
+import "normalize.css/normalize.css"  // css reset
 import "@/styles/index.scss"  // global css
 import "virtual:svg-icons-register";
 

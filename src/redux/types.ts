@@ -16,6 +16,7 @@ export interface appState {
     withoutAnimation: boolean;
   };
   device: string;
+  size: string;
 }
 
 export interface settingsState {
@@ -28,4 +29,10 @@ export interface userState {
   token?: string;
   name: string;
   avatar: string;
+  introduction: string,
+  roles: string[]
+}
+
+export interface errorLogState {
+  logs: string[]
 }

@@ -1,15 +1,29 @@
-import { FC } from "react";
-import "./styles.scss";
+import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/types";
+import DashboardEditor from "./editor";
+import DashboardAdmin from "./admin";
 
 const Dashboard:FC = () => {
+  const [currentRole, setCurrentRole] = useState<string>("");
+  const roles = useSelector((state:RootState) => state.user.roles);
 
-  const name = useSelector((state:RootState) => state.user.name);
+  useEffect(() => {
+    if (roles.includes("editor")) {
+      setCurrentRole("editorDashboard");
+    } else if (roles.includes("admin")) {
+      setCurrentRole("adminDashboard");
+    }
+  }, [roles]);
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-text">name: {name}</div>
+      { currentRole === "adminDashboard" &&
+        <DashboardAdmin />
+      }
+      { currentRole === "editorDashboard" &&
+        <DashboardEditor />
+      }
     </div>
   )
 }
