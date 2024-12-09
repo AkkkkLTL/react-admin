@@ -9,7 +9,8 @@ const appSlice = createSlice({
       opened: Cookies.get("sidebarStatus") ? Boolean(Cookies.get("sidebarStatus")) : true,
       withoutAnimation: false
     },
-    device: "desktop"
+    device: "desktop",
+    size: Cookies.get("size") || "medium"
   },
   reducers: {
     toggleSidebar: (state) => {
@@ -28,6 +29,10 @@ const appSlice = createSlice({
     },
     toggleDevice: (state, action:Action<string>) => {
       state.device = action.payload;
+    },
+    setSize: (state, action:Action<string>) => {
+      state.size = action.payload;
+      Cookies.set("size", state.size);
     }
   }
 });
@@ -36,6 +41,7 @@ export const {
   toggleSidebar,
   closeSidebar,
   toggleDevice,
+  setSize,
 } = appSlice.actions;
 
 export default appSlice.reducer;

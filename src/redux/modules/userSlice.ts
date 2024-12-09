@@ -7,7 +7,9 @@ const getDefaultState = ():userState => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    introduction: '',
+    roles: []
   }
 }
 
@@ -21,11 +23,17 @@ const userSlice = createSlice({
     setToken: (state, action:Action<string>) => {
       state.token = action.payload;
     },
+    setIntroduction: (state, action:Action<string>) => {
+      state.introduction = action.payload;
+    },
     setName: (state, action:Action<string>) => {
       state.name = action.payload;
     },
     setAvatar: (state, action:Action<string>) => {
       state.avatar = action.payload;
+    },
+    setRoles: (state, action:Action<string[]>) => {
+      state.roles = action.payload;
     }
   }
 });
@@ -34,7 +42,9 @@ export const {
   resetState,
   setToken,
   setAvatar,
-  setName
+  setName,
+  setRoles,
+  setIntroduction,
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -58,9 +68,15 @@ export const getInfo:any = (token:string):AppThunk => async (dispatch:Dispatch) 
     if (!data) {
       throw new Error("Verification failed, please Login again");
     }
-    const { name, avatar } = data;
+    const { name, avatar, roles, introduction } = data;
+
+    if (!roles || roles.length <= 0) {
+      throw new Error("getInfo: roles must be a non-null array!")
+    }
+    dispatch(setRoles(roles));
     dispatch(setName(name));
     dispatch(setAvatar(avatar));
+    dispatch(setIntroduction(introduction));
   }).catch(error => {
     throw new Error(error);
   })
@@ -70,6 +86,7 @@ export const logout:any = ():AppThunk => async (dispatch:Dispatch) => {
   logoutApi().then(() => {
     removeToken();
     dispatch(resetState());
+    dispatch(setRoles([]));
   }).catch(error => {
     throw new Error(error);
   })
@@ -78,4 +95,13 @@ export const logout:any = ():AppThunk => async (dispatch:Dispatch) => {
 export const resetToken:any = ():AppThunk => async (dispatch:Dispatch) => {
   removeToken();
   dispatch(resetState());
+  dispatch(setRoles([]));
+}
+
+export const changeRoles:any = (role:string):AppThunk => async (dispatch:Dispatch) => {
+  const token = role + '-token';
+  dispatch(setToken(token));
+  auth_setToken(token);
+
+  const { roles } = await dispatch(getInfo(token));
 }
