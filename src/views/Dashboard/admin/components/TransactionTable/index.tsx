@@ -1,11 +1,19 @@
 import { transactionList } from "@/api/remote-search";
-import { Statistic, Table, TableProps } from "antd";
+import { Statistic, Table, TableProps, Tag } from "antd";
 import { FC, useEffect, useState } from "react";
 
 interface DataType {
   order_no:string;
   price: number;
   status:string;
+}
+
+function statusFilter(status:"success"|"pending"):string {
+  const statusMap = {
+    success: "success",
+    pending: "error"
+  }
+  return statusMap[status];
 }
 
 const columns:TableProps<DataType>["columns"] = [
@@ -30,7 +38,8 @@ const columns:TableProps<DataType>["columns"] = [
     dataIndex: "status",
     key: "status",
     width: 100,
-    align: "center"
+    align: "center",
+    render: (text:"success"|"pending") => <Tag color={statusFilter(text)}>{text}</Tag>
   }
 ]
 
