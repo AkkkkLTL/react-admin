@@ -2,7 +2,6 @@ import { lazy } from "react";
 import { RouteObject, createBrowserRouter, createHashRouter, useRoutes } from "react-router-dom";
 import "nprogress/nprogress.css"
 import { RouteType } from "./types";
-import Dashboard from "@/views/Dashboard";
 import Menu1 from "@/views/Nested/Menu1";
 import Menu1_1 from "@/views/Nested/Menu1/Menu1-1";
 import Table from "@/views/Table";
@@ -13,8 +12,6 @@ import Menu1_2_1 from "@/views/Nested/Menu1/Menu1-2/Menu1-2-1";
 import Menu1_2_2 from "@/views/Nested/Menu1/Menu1-2/Menu1-2-2";
 import Menu1_3 from "@/views/Nested/Menu1/Menu1-3";
 import Menu2 from "@/views/Nested/Menu2";
-const Login = lazy(() => import("@/views/Login"));
-const Page404 = lazy(() => import("@/views/Page404"));
 const Layout = lazy(() => import("@/layout"));
 const AuthRoute = lazy(() => import("@/router/AuthRoute"));
 
@@ -27,12 +24,12 @@ export const constantRoutes:RouteType[] = [
     children: [
       {
         path: "/login",
-        element: <Login />,
+        Component: lazy(() => import("@/views/Login/index")),
         hidden: true,
       },
       {
         path: "/404",
-        element: <Page404 />,
+        Component: lazy(() => import("@/views/Page404/index")),
         hidden: true,
       },
       {
@@ -41,13 +38,28 @@ export const constantRoutes:RouteType[] = [
         redirect: "/dashboard",
         children: [{
           path: "dashboard",
-          element: <Dashboard />,
+          Component: lazy(() => import("@/views/Dashboard/index")),
           name: "Dashboard",
           meta: {
             title: "Dashboard",
             icon: "dashboard"
           }
         }]
+      },
+      {
+        path: "/guide",
+        element: <Layout />,
+        children: [
+          {
+            path: "/guide/index",
+            Component: lazy(() => import("@/views/Guide/index")),
+            name: "Guide",
+            meta: {
+              title: "Guide",
+              icon: "guide",
+            }
+          }
+        ]
       },
       {
         path: "/example",
