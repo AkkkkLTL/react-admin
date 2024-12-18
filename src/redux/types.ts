@@ -1,5 +1,6 @@
 import type { PayloadAction, ThunkAction, Action as ReduxAction } from "@reduxjs/toolkit";
 import store from "./store";
+import { AppRouteObject } from "@/router/types";
 
 export type RootState = ReturnType<typeof store.getState>;
 export type Action<T> = PayloadAction<T>;
@@ -35,4 +36,9 @@ export interface userState {
 
 export interface errorLogState {
   logs: string[]
+}
+
+export interface permissionState {
+  routes: AppRouteObject[],
+  addRoutes: AppRouteObject[]
 }

@@ -10,6 +10,8 @@ import App from './App.tsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.tsx';
 import { doDynamicImport } from './utils/dynamicImport.ts';
+import { StrictMode, Suspense } from 'react';
+import NProgress from './components/NProgress/index.tsx';
 
 if (import.meta.env.VITE_MOCK_ENABLE) {
    const { mockXHR } = doDynamicImport() as any;
@@ -17,9 +19,13 @@ if (import.meta.env.VITE_MOCK_ENABLE) {
 }
 
 ReactDOM.createRoot(document.getElementById('app')!).render(
+  <StrictMode>
   <ThemeProvider theme={{}}>
     <Provider store={store}>
-      <App />
+      <Suspense fallback={<NProgress />}>
+        <App />
+      </Suspense>
     </Provider>
   </ThemeProvider>
+  </StrictMode>
 )

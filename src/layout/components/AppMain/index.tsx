@@ -1,6 +1,6 @@
+import { LazyMotion, domMax, m } from "framer-motion";
 import { FC } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 const AppMain:FC = () => {
 
@@ -8,14 +8,11 @@ const AppMain:FC = () => {
 
   return (
     <section className="app-main">
-      <SwitchTransition mode="out-in">
-        <CSSTransition
-          key={path}
-          addEndListener={(node, doneCallBack) => node.addEventListener("transitionend", doneCallBack)}
-        >
+      <LazyMotion strict features={domMax}>
+        <m.div style={{height: "100%"}}>
           <Outlet />
-        </CSSTransition>
-      </SwitchTransition>
+        </m.div>
+      </LazyMotion>
     </section>
   )
 }

@@ -3,7 +3,11 @@ import { Breadcrumb, Button, Dropdown } from "antd";
 import { FC } from "react";
 import useNavbar from "./useNavbar";
 import "./styles.scss";
-import { IProps } from "./types";
+interface IProps {
+  collapsed: boolean;
+  toggleCollapes: () => void;
+  matches: any;
+}
 
 const Navbar:FC<IProps> = (props) => {
 

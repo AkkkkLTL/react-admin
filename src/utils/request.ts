@@ -4,7 +4,8 @@ import { getToken } from "./auth";
 import { message } from "antd";
 import confirm from "antd/es/modal/confirm";
 import { resetToken } from "@/redux/modules/userSlice";
-import nProgress from "nprogress";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 // Create an axios instance
 const service = axios.create({
@@ -16,7 +17,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 请求时开启进度条
-    nProgress.start();
+    NProgress.start();
     // 发送请求前在请求头部加上token
     if (store.getState().user.token) {
       config.headers['X-Token'] = getToken();
@@ -27,7 +28,7 @@ service.interceptors.request.use(
     // 处理请求异常
     console.log(error);
     // 异常时关闭进度条
-    nProgress.done();
+    NProgress.done();
     return Promise.reject(error);
   }
 );
@@ -35,7 +36,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     // 相应成功关闭进度条
-    nProgress.done();
+    NProgress.done();
     const res = response.data;
     // if the custom code is not 20000, it is judged as an error
     if (res.code !== 20000) {
@@ -64,7 +65,7 @@ service.interceptors.response.use(
   error => {
     console.log("err" + error);
     // 异常时关闭进度条
-    nProgress.done();
+    NProgress.done();
     message.error({
       content: error.message,
       duration: 3
