@@ -13,7 +13,7 @@ const ErrorRoutes:AppRouteObject = {
   ),
   children: [
     {
-      path: "403",
+      path: "404",
       Component: lazy(() => import("@/views/Page404/index"))
     }
   ]

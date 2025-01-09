@@ -2,11 +2,6 @@ import { FC, lazy } from "react";
 import { Navigate, RouteObject, RouterProvider, createHashRouter } from "react-router-dom";
 import "nprogress/nprogress.css"
 import { AppRouteObject } from "./types";
-import dashboard from "./routes/modules/dashboard";
-import guide from "./routes/modules/guide";
-import example from "./routes/modules/example";
-import form from "./routes/modules/form";
-import nested from "./routes/modules/nested";
 import AuthGuard from "./components/AuthGuard";
 import ErrorRoutes from "./routes/ErrorRoutes";
 import { usePermissionRoutes } from "./hooks/usePermissionRoutes";
