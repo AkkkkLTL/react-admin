@@ -16,7 +16,7 @@ const dashboard:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Dashboard",
+    label: "sys.route.dashboard",
     icon: "dashboard",
     key: "/dashboard",
   }

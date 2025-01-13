@@ -16,7 +16,7 @@ const form:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Form",
+    label: "sys.route.form",
     icon: "form",
     key: "/form"
   }

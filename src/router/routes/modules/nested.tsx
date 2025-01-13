@@ -12,7 +12,7 @@ const nested:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Nested",
+    label: "sys.route.nested",
     icon: "nested",
     key: "/nested"
   },
@@ -26,7 +26,7 @@ const nested:AppRouteObject = {
       Component: lazy(() => import("@/views/Nested/Menu1/index")),
       meta: {
         key: "/nested/menu1",
-        label: "Menu1",
+        label: "sys.route.menu1",
       },
       children: [
         {
@@ -38,7 +38,7 @@ const nested:AppRouteObject = {
           Component: lazy(() => import("@/views/Nested/Menu1/Menu1-1/index")),
           meta: {
             key: "/nested/menu1/menu1-1",
-            label: "Menu1-1"
+            label: "sys.route.menu1-1"
           }
         },
         {
@@ -46,7 +46,7 @@ const nested:AppRouteObject = {
           Component: lazy(() => import("@/views/Nested/Menu1/Menu1-2/index")),
           meta: {
             key: "/nested/menu1/menu1-2",
-            label: "Menu1-2"
+            label: "sys.route.menu1-2"
           },
           children: [
             {
@@ -58,7 +58,7 @@ const nested:AppRouteObject = {
               Component: lazy(() => import("@/views/Nested/Menu1/Menu1-2/Menu1-2-1/index")),
               meta: {
                 key: "/nested/menu1/menu1-2/menu1-2-1",
-                label: "Menu1-2-1"
+                label: "sys.route.menu1-2-1"
               }
             },
             {
@@ -66,7 +66,7 @@ const nested:AppRouteObject = {
               Component: lazy(() => import("@/views/Nested/Menu1/Menu1-2/Menu1-2-2/index")),
               meta: {
                 key: "/nested/menu1/menu1-2/menu1-2-2",
-                label: "Menu1-2-2"
+                label: "sys.route.menu1-2-2"
               }
             }
           ]
@@ -76,7 +76,7 @@ const nested:AppRouteObject = {
           Component: lazy(() => import("@/views/Nested/Menu1/Menu1-3/index")),
           meta: {
             key: "/nested/menu1/menu1-3", 
-            label: "Menu1-3"
+            label: "sys.route.menu1-3"
           }
         }
       ]
@@ -86,7 +86,7 @@ const nested:AppRouteObject = {
       Component: lazy(() => import("@/views/Nested/Menu2/index")),
       meta: { 
         key: "/nested/menu2",
-        label: "Menu2" 
+        label: "sys.route.menu2" 
       }
     }
   ]

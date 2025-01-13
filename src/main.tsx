@@ -13,6 +13,9 @@ import { doDynamicImport } from './utils/dynamicImport.ts';
 import { StrictMode, Suspense } from 'react';
 import NProgress from './components/NProgress/index.tsx';
 
+// i18n
+import "./locales/i18n.ts"
+
 if (import.meta.env.VITE_MOCK_ENABLE) {
    const { mockXHR } = doDynamicImport() as any;
    mockXHR();

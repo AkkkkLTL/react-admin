@@ -16,7 +16,7 @@ const guide:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Guide",
+    label: "sys.route.guide",
     icon: "guide",
     key: "/guide"
   }

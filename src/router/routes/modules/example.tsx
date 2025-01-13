@@ -15,7 +15,7 @@ const example:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Example",
+    label: "sys.route.example",
     icon: "example",
     key: "/example"
   },
@@ -28,7 +28,7 @@ const example:AppRouteObject = {
       path: "table",
       Component: lazy(() => import("@/views/Table/index")),
       meta: {
-        label: "Table",
+        label: "sys.route.table",
         icon: "table",
         key: "/example/table"
       }
@@ -37,7 +37,7 @@ const example:AppRouteObject = {
       path: "tree",
       Component: lazy(() => import("@/views/Tree/index")),
       meta: {
-        label: "Tree",
+        label: "sys.route.tree",
         icon: "tree",
         key: "/example/tree"
       }

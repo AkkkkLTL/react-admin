@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { AppRouteObject } from "../types";
 import { GetProp, MenuProps } from "antd";
 import SvgIcon from "@/components/SvgIcon";
+import { useTranslation } from "react-i18next";
 
 type MenuItem = GetProp<MenuProps, "items">[number];
 
@@ -10,6 +11,9 @@ type MenuItem = GetProp<MenuProps, "items">[number];
  * @returns MenuItem
  */
 export function useRouteToMenu() {
+
+  const { t } = useTranslation();
+
   const routeToMenuFn = useCallback(
     (items:AppRouteObject[]): MenuItem[] => {
       return (
@@ -21,7 +25,9 @@ export function useRouteToMenu() {
 
           const menuItem:Partial<MenuItem> = {
             key: meta.key,
-            label: meta.label,
+            label: (
+              <div>{t(meta.label)}</div>
+            ),
             icon: meta.icon && <SvgIcon iconClass={meta.icon} />,
             ...(children && { children: routeToMenuFn(children)})
           };

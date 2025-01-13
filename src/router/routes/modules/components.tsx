@@ -11,7 +11,7 @@ const components:AppRouteObject = {
     </Suspense>
   ),
   meta: {
-    label: "Components",
+    label: "sys.route.components",
     icon: "component",
     key: "/components"
   },
@@ -20,7 +20,7 @@ const components:AppRouteObject = {
       path: "rich-editor",
       Component: lazy(() => import("@/views/ComponentsDemo/RichEditor/index")),
       meta: {
-        label: "Rich Editor",
+        label: "sys.route.richeditor",
         key: "/components/rich-editor"
       }
     }
