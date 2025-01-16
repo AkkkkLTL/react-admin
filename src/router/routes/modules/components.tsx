@@ -23,6 +23,14 @@ const components:AppRouteObject = {
         label: "sys.route.richeditor",
         key: "/components/rich-editor"
       }
+    },
+    {
+      path: "tiny-editor",
+      Component: lazy(() => import("@/views/ComponentsDemo/Tinymce/index")),
+      meta: {
+        label: "TinyMCE",
+        key: "/components/tiny-editor"
+      }
     }
   ]
 }

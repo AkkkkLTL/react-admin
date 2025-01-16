@@ -41,7 +41,8 @@
     "react-transition-group": "^4.4.5",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "tinymce": "^7.6.0"
   },
   "devDependencies": {
     "@emotion/babel-preset-css-prop": "^11.12.0",
