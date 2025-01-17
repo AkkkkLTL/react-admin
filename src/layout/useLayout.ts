@@ -1,22 +1,6 @@
-import { constantRoutes } from "@/router"
-import { getMenuFromRoutes } from "@/utils/menu"
-import { useEffect, useState } from "react";
-import { matchRoutes, useLocation, useMatch, useMatches, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const useLayout = () => {
-
-  const items = getMenuFromRoutes(constantRoutes);
-  const location = useLocation();
-  const matches = matchRoutes(constantRoutes, location);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const redirect = matches[matches?.length - 1].route.redirect;
-    if (redirect) {
-      navigate(redirect);
-    }
-  }, [matches]);
-  console.log("router Info", matches);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
@@ -27,7 +11,6 @@ const useLayout = () => {
   }
 
   return {
-    items, matches,
     collapsed,
     toggleCollapes,
   }

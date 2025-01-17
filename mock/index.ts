@@ -2,10 +2,12 @@ import { mock } from "mockjs";
 import user from "./user";
 import table from "./table";
 import { getQuery } from "./utils";
+import remoteSearch from "./remote-search";
 
 export const mocks = [
   ...user,
-  ...table
+  ...table,
+  ...remoteSearch
 ];
 
 type Request = {

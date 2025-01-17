@@ -1,9 +1,8 @@
-import { Suspense, type FC } from 'react';
+import { type FC } from 'react';
 import "./App.scss"
 import { ConfigProvider } from 'antd';
 import zhCN from "antd/locale/zh_CN";
-import { RouterProvider } from 'react-router-dom';
-import router from './router';
+import Router from './router';
 
 const App:FC = () => {
 
@@ -36,9 +35,7 @@ const App:FC = () => {
         }
       }}
     >
-      <Suspense fallback={<div>loading...</div>}>
-        <RouterProvider router={router} />
-      </Suspense>
+        <Router />
     </ConfigProvider>
   )
 }

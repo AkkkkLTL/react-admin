@@ -1,31 +1,38 @@
 import { RouteObject } from "react-router-dom";
 
 /**
- * hidden:true                  if set true, item will not show in the sidebar
- * alwaysShow:true              if set true, will always show the root menu
- *                              if set false or not set, when item children.length > 0
- *                              it becomes nested mode, and not show the root menu
- * redirect: noRedirect         if set noRedirect will no redirect in the breadcrumb
- * name: 'router-name'          used to 'keep-alive'
- * meta: {
- *  roles: ['admin', 'editor']  control the page roles
- *  title: 'title'              the name show in sidebar and breadcrumb
- *  icon: 'svg-name'            the icon show in the sidebar
- *  breadcrumb: false           if set false, the item will hidden in breadcrumb(default is true)
- *  activeMenu: '/example/list' if set path, the sidebar will highlight the path you set
- * }
+ * order:1    --模块的顺序
+ * meta
  */
-export type RouteType = Omit<RouteObject, 'children'> & {
-  hidden?: boolean,
-  alwaysShow?: boolean,
-  redirect?: string,
-  name?: string,
-  meta?: {
-    roles?: string[],
-    title?: string,
-    icon?: string,
-    breadcrumb?: boolean,
-    activeMenu?: string
-  },
-  children?: RouteType[]
+export type AppRouteObject = Omit<RouteObject, 'children'> & {
+	order?:number,
+  meta?: RouteMeta,
+  children?: AppRouteObject[]
 };
+
+interface RouteMeta {
+  /**
+	* menu 的 selectedKeys，用路由的全路径
+	* 
+	* @example "/dashboard/analysis"
+	*/
+	key: string;
+	/**
+	* 当前路由对应国际化标签
+	* 
+	* @example "sys.menu.analysis"
+	*/
+	label: string;
+	/**
+	* menu 前置的图标
+	*/
+	icon?: string;
+	/**
+	* 设置为 true 时，在 menu 中隐藏
+	*/
+	hideMenu?: boolean;
+	/**
+	*设置该路由设置的权限
+	*/
+	roles?: string[];
+}

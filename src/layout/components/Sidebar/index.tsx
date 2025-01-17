@@ -1,39 +1,31 @@
-import { constantRoutes } from "@/router";
 import { Layout, Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { FC } from "react";
-import { matchRoutes, useLocation, useMatches } from "react-router-dom";
 import useSidebar from "./useSidebar";
 import { IProps } from "./types";
 
 const Sidebar:FC<IProps> = (props) => {
-  const location = useLocation();
-  const matches = matchRoutes(constantRoutes, location);
-  const meta = matches ? matches[matches?.length - 1].route : null;
-  if (meta) console.log(meta);
-  const {
-    items,
-    defaultSelectedKeys, stateOpenKeys,
-    handleMenuOnClick, handleOpenChange
-  } = useSidebar(props);
 
-  console.log("Open State", stateOpenKeys);
-  console.log("Select State", defaultSelectedKeys);
+  const { collapsed } = props;
+
+  const {
+    menuList, selectedKeys,
+    handleMenuOnClick,
+  } = useSidebar(props);
 
   return (
     <Sider
       trigger={null}
       collapsible
       width={210}
-      collapsed={props.collapsed}
+      collapsed={collapsed}
     >
       <Menu
         mode="inline"
-        selectedKeys={defaultSelectedKeys}
-        openKeys={stateOpenKeys}
-        onOpenChange={handleOpenChange}
+        defaultOpenKeys={[]}
+        selectedKeys={selectedKeys}
         onClick={handleMenuOnClick}
-        items={items}
+        items={menuList}
       />
     </Sider>
   )

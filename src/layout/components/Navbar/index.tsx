@@ -3,7 +3,11 @@ import { Breadcrumb, Button, Dropdown } from "antd";
 import { FC } from "react";
 import useNavbar from "./useNavbar";
 import "./styles.scss";
-import { IProps } from "./types";
+interface IProps {
+  collapsed: boolean;
+  toggleCollapes: () => void;
+  matches: any;
+}
 
 const Navbar:FC<IProps> = (props) => {
 
@@ -24,7 +28,11 @@ const Navbar:FC<IProps> = (props) => {
         onClick={toggleCollapes}
         className="hamburger-container"
       />
-      <Breadcrumb itemRender={itemRender} items={props.matches} className="breadcrumb-container"/>
+      <Breadcrumb 
+        itemRender={itemRender} 
+        items={props.matches} 
+        className="breadcrumb-container"
+      />
       <div className="right-menu">
         <Dropdown menu={{items: dropDownMenu, onClick:handleDropDownMenuClick}} trigger={['click']}>
           <div className="avatar-wrapper">

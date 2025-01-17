@@ -29,13 +29,17 @@
     "baseUrl": "./",
     "paths": {
       "@/*":["src/*"],
-      "~/*":["./*"]
+      "~/*":["./*"],
+      "@toast-ui/editor":[
+        "node_modules/@toast-ui/editor/types/index.d.ts",
+      ]
     },
     "types": ["vite-plugin-svgr/client", "vitest"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/**/*.json",
     "mock/*.ts",
     "vite.config.ts",
   ],
