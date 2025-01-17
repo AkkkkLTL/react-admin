@@ -17,6 +17,7 @@
     "@apollo/client": "^3.11.4",
     "@lexical/react": "^0.21.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@toast-ui/editor": "^3.2.2",
     "antd": "^5.22.0",
     "axios": "^1.7.4",
     "classnames": "^2.5.1",

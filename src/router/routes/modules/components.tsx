@@ -28,8 +28,16 @@ const components:AppRouteObject = {
       path: "tiny-editor",
       Component: lazy(() => import("@/views/ComponentsDemo/Tinymce/index")),
       meta: {
-        label: "TinyMCE",
+        label: "sys.route.tinymce",
         key: "/components/tiny-editor"
+      }
+    },
+    {
+      path: "markdown-editor",
+      Component: lazy(() => import("@/views/ComponentsDemo/Markdown/index")),
+      meta: {
+        label: "sys.route.toastui",
+        key: "/components/markdown-editor"
       }
     }
   ]
