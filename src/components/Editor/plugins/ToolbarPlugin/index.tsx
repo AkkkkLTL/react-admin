@@ -60,7 +60,7 @@ const BlockFormatDropDown:FC<IBlockFormatProps> = (props) => {
       buttonClassName="toobar-item block-controls"
       buttonIconClassName={`icon`}
     >
-
+      <></>
     </DropDown>
   )
 }

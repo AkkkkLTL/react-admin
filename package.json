@@ -16,6 +16,7 @@
     "@ant-design/icons": "^5.5.2",
     "@apollo/client": "^3.11.4",
     "@lexical/react": "^0.21.0",
+    "@lexical/utils": "^0.23.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@rollup/plugin-alias": "^5.1.1",
     "@toast-ui/editor": "^3.2.2",
