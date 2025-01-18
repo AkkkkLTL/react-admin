@@ -6,11 +6,13 @@ import tsconfigPaths from "vite-tsconfig-paths"
 import svgr from "vite-plugin-svgr"
 import {createSvgIconsPlugin} from "vite-plugin-svg-icons"
 import path from 'path'
+import alias from "@rollup/plugin-alias"
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/react-admin/',
   plugins: [
+    alias(),
     react(),
     tsconfigPaths(),
     svgr({
