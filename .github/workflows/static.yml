@@ -40,7 +40,7 @@ jobs:
           node-version: 20
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --unsafe-perm=true --allow-root
       - name: Build
         run: pnpm run build
         env:
