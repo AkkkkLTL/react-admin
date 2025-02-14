@@ -39,6 +39,14 @@ const components:AppRouteObject = {
         label: "sys.route.toastui",
         key: "/components/markdown-editor"
       }
+    },
+    {
+      path: "icons",
+      Component: lazy(() => import("@/views/ComponentsDemo/Icons/index")),
+      meta: {
+        label: "sys.route.icons",
+        key: "/components/icons"
+      }
     }
   ]
 }
