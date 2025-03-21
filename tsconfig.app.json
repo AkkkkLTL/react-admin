@@ -37,11 +37,9 @@
     "types": ["vite-plugin-svgr/client", "vitest"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.json",
-    "mock/*.ts",
-    "vite.config.ts",
+    "src",
+    "mock",
+    "vite.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }
