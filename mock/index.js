@@ -1,3 +1,4 @@
+/*
 import { mock } from "mockjs";
 import user from "./user";
 import table from "./table";
@@ -37,3 +38,10 @@ export function mockXHR() {
     mock(new RegExp(i.url), i.type || "get", XHR2ExpressReqWrap(i.response));
   }
 };
+*/
+import { setupWorker } from "msw/browser";
+
+import userMockApi from "./handlers/user";
+
+const handlers = [...userMockApi];
+export const worker = setupWorker(...handlers);
