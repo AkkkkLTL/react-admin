@@ -1,9 +1,8 @@
-import store from "@/redux/store";
+import {store} from "@/store";
 import axios from "axios";
 import { getToken } from "./auth";
 import { message } from "antd";
 import confirm from "antd/es/modal/confirm";
-import { resetToken } from "@/redux/modules/userSlice";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 

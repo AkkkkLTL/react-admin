@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/types";
+import { RootState } from "@/store/types";
 import DashboardEditor from "./editor";
 import DashboardAdmin from "./admin";
 

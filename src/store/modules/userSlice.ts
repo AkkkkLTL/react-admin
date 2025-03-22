@@ -1,4 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice, type Reducer } from "@reduxjs/toolkit";
+import { produce } from "immer";
 import userService, { SignInReq } from "@/api/services/userService";
 
 // 定义用户状态类型
@@ -37,7 +38,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action: PayloadAction<UserInfo>) => {
-      state.userInfo = action.payload;
+      state.userInfo = produce(state.userInfo, draft => {
+        Object.assign(draft, action.payload);
+      });
     },
     setUserToken: (state, action: PayloadAction<UserToken>) => {
       state.userToken = action.payload;

@@ -1,4 +1,4 @@
-import { AppRouteObject } from "./types";
+import { AppRouteObject, RouteMeta } from "./types";
 
 export function menuFilter(items:AppRouteObject[]) {
   return (
@@ -18,7 +18,7 @@ export function menuFilter(items:AppRouteObject[]) {
  * 
  * @returns 
  */
-export function getRoutesFromModules(roles:string[]) {
+export function getRoutesFromModules(roles?:string[]) {
   const menuModules:AppRouteObject[] = [];
 
   const modules = import.meta.glob("./routes/modules/*.tsx", {eager:true});
@@ -29,4 +29,17 @@ export function getRoutesFromModules(roles:string[]) {
   }
 
   return menuModules;
+}
+
+export function flattenMenuRoutes(routes:AppRouteObject[]) {
+  return routes.reduce<RouteMeta[]>((prev, curr) => {
+    const { meta, children } = curr;
+    if (meta) {
+      prev.push(meta);
+    }
+    if (children) {
+      prev.push(...flattenMenuRoutes(children));
+    }
+    return prev;
+  }, []);
 }

@@ -1,21 +1,21 @@
-import { RootState } from "@/redux/types";
 import { useDispatch, useSelector } from "react-redux";
 import { items } from "./constants";
-import { logout } from "@/redux/modules/userSlice";
+// import { logout } from "@/store/modules/userSlice";
 import { MenuProps } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { IProps } from "./types";
+// import { IProps } from "./types";
 import { useEffect, useState } from "react";
+import { RootState } from "@/store";
 
-const useNavbar = (props:IProps) => {
-  const avatar = useSelector((state:RootState) => state.user.avatar);
+const useNavbar = (props) => {
   const dispatch = useDispatch();
-  const dropDownMenu = items;
   const navigate = useNavigate();
+  const dropDownMenu = items;
+  const avatar = useSelector((state:RootState) => state.user.userInfo.avatar);
 
   const handleDropDownMenuClick:MenuProps['onClick'] = ({ key }) => {
     if (key === '3') {
-      dispatch(logout());
+      // dispatch(logout());
       navigate("/login");
     }
   }

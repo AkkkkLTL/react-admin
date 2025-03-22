@@ -10,7 +10,7 @@ export type AppRouteObject = Omit<RouteObject, 'children'> & {
   children?: AppRouteObject[]
 };
 
-interface RouteMeta {
+export interface RouteMeta {
   /**
 	* menu 的 selectedKeys，用路由的全路径
 	* 

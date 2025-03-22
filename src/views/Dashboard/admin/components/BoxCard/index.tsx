@@ -1,6 +1,6 @@
 import PanThumb from "@/components/PanThumb";
 import Mallki from "@/components/TextHoverEffect/Mallki";
-import { RootState } from "@/redux/types";
+import { RootState } from "@/store";
 import { Card, Progress } from "antd";
 import { FC } from "react";
 import { useSelector } from "react-redux";
@@ -8,8 +8,7 @@ import "./styles.scss";
 
 const BoxCard:FC = () => {
 
-  const name = useSelector((state:RootState) => state.user.name);
-  const avatar = useSelector((state:RootState) => state.user.avatar);
+  const { avatar, username } = useSelector((state:RootState) => state.user.userInfo);
 
   return (
     <Card 

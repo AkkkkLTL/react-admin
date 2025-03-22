@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 
+import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tsconfigPaths from "vite-tsconfig-paths"
@@ -22,6 +23,9 @@ export default defineConfig({
     }),
     createSvgIconsPlugin({
       iconDirs: [path.join(__dirname, "src/icons/svg")]
+    }),
+    vanillaExtractPlugin({
+      identifiers: ({debugId}) => `${debugId}`
     })
   ],
   resolve: {
@@ -42,7 +46,17 @@ export default defineConfig({
     }
   },
   server: {
-    host: "0.0.0.0"
+    open: true,
+    host: true,
+    port: 3001,
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000/react-admin/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+        secure: false,
+      }
+    }
   },
   build: {
     target: "esnext",

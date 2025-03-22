@@ -1,5 +1,5 @@
 import PanThumb from "@/components/PanThumb";
-import { RootState } from "@/redux/types";
+import { RootState } from "@/store/types";
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { Main } from "./styles";
