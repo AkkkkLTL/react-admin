@@ -1,6 +1,5 @@
 
 // quote from https://github.com/d3george/slash-admin/blob/main/src/api/apiClient.ts#L37
-import confirm from "antd/es/modal/confirm";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { toast } from "sonner";
 import { store } from "@/store";
@@ -9,8 +8,8 @@ import nProgress from "nprogress";
 import "nprogress/nprogress.css";
 
 interface Result<T = any> {
-  status: number;
-  msg: string;
+  code: number;
+  message: string;
   data?: T;
 }
 
@@ -45,20 +44,20 @@ axiosInstance.interceptors.response.use(
     nProgress.done();
 
     if (!res.data) throw new Error('Request Error');
-    const { status, data, msg } = res.data;
+    const { code, data, message } = res.data;
 
     // 请求成功
-    const hasSuccess = data && Reflect.has(res.data, "status") && status === 0;
+    const hasSuccess = data && Reflect.has(res.data, "code") && code === 200;
     if (hasSuccess) {
       return data;
     }
 
     // 请求失败
-    throw new Error(msg || 'Request Error');
+    throw new Error(message || 'Request Error');
   },
   (error:AxiosError<Result>) => {
     const { response, message } = error || {};
-    const errMsg = response?.data?.msg || message || 'Request Error';
+    const errMsg = response?.data?.message || message || 'Request Error';
     toast.error(errMsg, {
       position: "top-center",
     });

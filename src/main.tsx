@@ -1,25 +1,26 @@
 // react
 import ReactDOM from 'react-dom/client';
 import { StrictMode, Suspense } from 'react';
+// svg icon
+import "virtual:svg-icons-register";
+// store manage
+import { Provider } from 'react-redux';
+import {store, persistor} from './store/index.ts';
+import { PersistGate } from 'redux-persist/integration/react';
 // i18n
-import "./locales/i18n.ts"
+import "./locales/i18n.ts";
+// css
+import "normalize.css/normalize.css"  // css reset
+import "@/styles/index.scss"  // global css
 // root component
 import App from './App.tsx';
 import NProgress from './components/NProgress/index.tsx';
 
-import "normalize.css/normalize.css"  // css reset
-import "@/styles/index.scss"  // global css
-import "virtual:svg-icons-register";
-
 import "@/icons";
-import { ThemeProvider } from 'styled-components';
-import { Provider } from 'react-redux';
-import {store, persistor} from './store/index.ts';
-import { PersistGate } from 'redux-persist/integration/react';
 
-// start service worker
+// start moke service
 if (import.meta.env.VITE_MOCK_ENABLE) {
-   const { worker }  = import.meta.glob(["~/mock/index.js"], {eager: true})[`/mock/index.js`] as any;
+   const { worker }  = import.meta.glob(["~/mock/index.ts"], {eager: true})[`/mock/index.ts`] as any;
    console.log(worker);
    worker.start({ 
     serviceWorker: {
@@ -31,7 +32,6 @@ if (import.meta.env.VITE_MOCK_ENABLE) {
 
 ReactDOM.createRoot(document.getElementById('app')!).render(
   <StrictMode>
-  <ThemeProvider theme={{}}>
     <Provider store={store}>
       <PersistGate loading={<NProgress />} persistor={persistor}>
         <Suspense fallback={<NProgress />}>
@@ -39,6 +39,5 @@ ReactDOM.createRoot(document.getElementById('app')!).render(
         </Suspense>
       </PersistGate>
     </Provider>
-  </ThemeProvider>
   </StrictMode>
 )

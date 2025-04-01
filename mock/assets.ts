@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { BasicStatus, PermissionType } from "@/utils/setting-enum";
 
 // ------------ User Permission Mock Data ----------------
 const DASHBOARD_PERMISSION = {
   id: "4281707933534331",
 	parentId: "",
-  label: "sys.menu.dashboard",
+  label: "sys.route.dashboard",
 	name: "Dashboard",
 	icon: "dashboard",
 	type: PermissionType.CATALOGUE,

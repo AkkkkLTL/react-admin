@@ -1,5 +1,6 @@
 // quote from https://github.com/d3george/slash-admin/blob/main/src/api/services/userService.ts
 import apiClient from "../apiClient";
+import type { UserInfo, UserToken } from "@/utils/global-types";
 
 export interface SignInReq {
   username: string;

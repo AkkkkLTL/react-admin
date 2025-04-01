@@ -9,7 +9,7 @@ interface IProps {
   children: ReactNode;
 }
 
-const AuthGuard:FC<IProps> = (props) => {
+const ProtectedRoute:FC<IProps> = (props) => {
 
   const { children } = props;
 
@@ -31,4 +31,4 @@ const AuthGuard:FC<IProps> = (props) => {
   )
 }
 
-export default AuthGuard;
+export default ProtectedRoute;

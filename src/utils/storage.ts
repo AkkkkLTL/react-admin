@@ -1,11 +1,11 @@
-import { STORAGEENUM } from "@/settings";
+import { StorageEnum } from "@/utils/setting-enum";
 
 /**
  * 
  * @param key 
  * @returns 
  */
-export const getItem = <T>(key:STORAGEENUM):T | null => {
+export const getItem = <T>(key:StorageEnum):T | null => {
   let value = null;
   try {
     const result = localStorage.getItem(key);
@@ -23,7 +23,7 @@ export const getItem = <T>(key:STORAGEENUM):T | null => {
  * @param key 
  * @returns 
  */
-export const getStringItem = (key:STORAGEENUM):string | null => {
+export const getStringItem = (key:StorageEnum):string | null => {
   return localStorage.getItem(key);
 };
 
@@ -31,7 +31,7 @@ export const getStringItem = (key:STORAGEENUM):string | null => {
  * 
  * @param key 
  */
-export const setItem = <T>(key:STORAGEENUM, value: T):void => {
+export const setItem = <T>(key:StorageEnum, value: T):void => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
@@ -39,7 +39,7 @@ export const setItem = <T>(key:STORAGEENUM, value: T):void => {
  * 
  * @param key 
  */
-export const removeItem = (key:STORAGEENUM):void => {
+export const removeItem = (key:StorageEnum):void => {
   localStorage.removeItem(key);
 };
 

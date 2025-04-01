@@ -1,45 +1,29 @@
-import { FC, lazy } from "react";
-import { Navigate, RouteObject, RouterProvider, createHashRouter } from "react-router-dom";
-import "nprogress/nprogress.css"
-import { AppRouteObject } from "./types";
-import AuthGuard from "./components/AuthGuard";
+import { type FC, lazy } from "react";
+import { Navigate, type RouteObject, RouterProvider, createHashRouter } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
+
+import type { AppRouteObject } from "./types";
+// routes
 import ErrorRoutes from "./routes/ErrorRoutes";
 import { usePermissionRoutes } from "./hooks/usePermissionRoutes";
+import ProtectedRoute from "./components/ProtectedRoute";
+// pages
+import Login from "@/pages/sys/login/Login";
+import PageError from "@/pages/sys/error/PageError";
 const Layout = lazy(() => import("@/layout"));
 
-/*
-export const asyncRoutes:AppRouteObject[] = [
-  {
-    path: "/permission",
-    element: <Layout />,
-    redirect: "/permission/page",
-    alwaysShow: true,
-    name: "Permission",
-    meta: {
-      title: "Permission",
-      icon: "lock",
-      roles: ["admin", "editor"]
-    },
-    children: [
-      {
-        path: "/permission/page",
-        name: "PagePermission",
-        meta: {
-          title: "Page Permission",
-          roles: ["admin"]
-        }
-      }
-    ]
-  }
-]
-*/
+const { VITE_APP_HOMEPAGE:HOMEPAGE } = import.meta.env;
 
-const LoginRoute:AppRouteObject = {
+const PUBLIC_ROUTE:AppRouteObject = {
   path: "/login",
-  Component: lazy(() => import("@/views/Login/index"))
+  element: (
+    <ErrorBoundary FallbackComponent={PageError}>
+      <Login />
+    </ErrorBoundary>
+  )
 }
 
-const PAGE_NOT_FOUND_ROUTE:AppRouteObject = {
+const NO_MATCHED_ROUTE:AppRouteObject = {
   path: "*",
   element: <Navigate to="/404" replace />
 }
@@ -48,23 +32,23 @@ const Router:FC = () => {
 
   const permissionRoutes = usePermissionRoutes();
 
-  const asyncRoutes:AppRouteObject = {
+  const PROTECTED_ROUTE:AppRouteObject = {
     path: "/",
     element: (
-      <AuthGuard>
+      <ProtectedRoute>
         <Layout />
-      </AuthGuard>
+      </ProtectedRoute>
     ),
     children: [
       {
         index: true,
-        element: <Navigate to="/dashboard" replace />
+        element: <Navigate to={HOMEPAGE} replace />
       },
       ...permissionRoutes,
     ]
   }
 
-  const routes = [LoginRoute, asyncRoutes, ErrorRoutes, PAGE_NOT_FOUND_ROUTE];
+  const routes = [PUBLIC_ROUTE, PROTECTED_ROUTE, ErrorRoutes, NO_MATCHED_ROUTE];
 
   const router = createHashRouter(routes as unknown as RouteObject[]);
 

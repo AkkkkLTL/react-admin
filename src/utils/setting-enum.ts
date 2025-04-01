@@ -10,30 +10,30 @@ const settings = {
   showSettings: true,
 }
 
-declare enum BasicStatus {
+export enum BasicStatus {
   DISABLE = 0,
   ENABLE = 1,
 }
 
-declare enum StorageEnum {
+export enum StorageEnum {
   USERINFO = "userInfo",
   USERTOKEN = "userToken",
   SETTINGS = "settings",
   I18N = "i18nextlang",
 }
 
-declare enum ThemeMode {
+export enum ThemeMode {
   Light = "light",
   Dark = "dark",
   Auto = "auto",
 }
 
-declare enum ThemeLayout {
+export enum ThemeLayout {
   Horizontal = "horizontal",
   Vertical = "vertical",
 }
 
-declare enum ThemeColorPresets {
+export enum ThemeColorPresets {
   Default = "default",
   Cyan = "cyan",
   Purple = "purple",
@@ -42,12 +42,12 @@ declare enum ThemeColorPresets {
   Red = "red",
 }
 
-declare enum localEnum {
+export enum localEnum {
   EN_US = "en_US",
   ZH_CN = "zh_CN",
 }
 
-declare enum PermissionType {
+export enum PermissionType {
   CATALOGUE = 0,
   MENU = 1,
   BUTTON = 2,

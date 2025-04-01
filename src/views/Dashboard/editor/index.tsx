@@ -1,5 +1,5 @@
 import PanThumb from "@/components/PanThumb";
-import { RootState } from "@/store/types";
+import { RootState } from "@/store";
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { Main } from "./styles";
@@ -9,15 +9,15 @@ const DashboardEditor:FC = () => {
 
   const emptyGif = "https://wpimg.wallstcn.com/0e03b7da-db9e-4819-ba10-9016ddfdaed3";
 
-  const roles = useSelector((state:RootState) => state.user.roles);
-  const name = useSelector((state:RootState) => state.user.name);
-  const avatar = useSelector((state:RootState) => state.user.avatar);
+  const role = useSelector((state:RootState) => state.user.userInfo.role);
+  const name = useSelector((state:RootState) => state.user.userInfo.username);
+  const avatar = useSelector((state:RootState) => state.user.userInfo.avatar);
 
   return (
     <Main className="dashboard-editor-container">
       <div className="clearfix">
         <PanThumb 
-          image={avatar}
+          image={avatar || emptyGif}
           float="left"
         >
           Your roles: 

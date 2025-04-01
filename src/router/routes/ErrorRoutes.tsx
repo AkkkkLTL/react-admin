@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { lazy } from "react";
 
 import type { AppRouteObject } from "../types";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 /**
  * error 
@@ -9,7 +10,9 @@ import type { AppRouteObject } from "../types";
  */
 const ErrorRoutes:AppRouteObject = {
   element: (
-    <Outlet />
+    <ProtectedRoute>
+      <Outlet />
+    </ProtectedRoute>
   ),
   children: [
     {

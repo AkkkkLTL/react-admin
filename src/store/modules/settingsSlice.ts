@@ -1,7 +1,5 @@
 import { PayloadAction, Reducer, createSlice } from "@reduxjs/toolkit";
-import settings, { ThemeColorPresets, ThemeLayout, ThemeMode } from "@/settings";
-
-const { showSettings, fixedHeader, sidebarLogo } = settings;
+import { ThemeColorPresets, ThemeLayout, ThemeMode } from "@/utils/setting-enum";
 
 type SettingsState = {
   showSettings: boolean;

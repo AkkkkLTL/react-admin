@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice, type Reducer } from "@reduxjs/toolkit";
 import { produce } from "immer";
 import userService, { SignInReq } from "@/api/services/userService";
+import type { UserInfo, UserToken } from "@/utils/global-types";
 
 // 定义用户状态类型
 type UserState = {

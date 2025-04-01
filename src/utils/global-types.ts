@@ -1,9 +1,11 @@
-declare interface UserToken {
+import { BasicStatus, PermissionType } from "@/utils/setting-enum";
+
+export interface UserToken {
   accessToken?: string;
   refreshToken?: string;
 }
 
-declare interface UserInfo {
+export interface UserInfo {
   id: string;
   email: string;
   username: string;
@@ -14,7 +16,7 @@ declare interface UserInfo {
   permissions?: Permission[];
 }
 
-declare interface Organization {
+export interface Organization {
   id: string;
   name: string;
   status: BasicStatus;
@@ -23,11 +25,11 @@ declare interface Organization {
   children? :Organization[];
 }
 
-declare interface Permission {
+export interface Permission {
   id: string;
   parentId: string;
   name: string;
-  name: string;
+  label: string;
   type: PermissionType;
   route: string;
   status?: BasicStatus;
@@ -41,7 +43,7 @@ declare interface Permission {
   children?: Permission[];
 }
 
-declare interface Role {
+export interface Role {
   id: string;
   name: string;
   label: string;
