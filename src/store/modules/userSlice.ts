@@ -1,34 +1,43 @@
 import { PayloadAction, createAsyncThunk, createSlice, type Reducer } from "@reduxjs/toolkit";
 import { produce } from "immer";
-import userService, { SignInReq } from "@/api/services/userService";
-import type { UserInfo, UserToken } from "@/utils/global-types";
+import userService, { SignInReq, SignInRes } from "@/api/services/userService";
+import type { UserInfo, UserToken } from "#/entity";
+import { useSelector } from "react-redux";
+import { RootState } from "..";
+import { toast } from "sonner";
 
 // 定义用户状态类型
 type UserState = {
   userInfo: Partial<UserInfo>;
   userToken: UserToken;
-  loading: boolean;
-  error: string | null;
 }
 
 // 初始状态
 const initialState:UserState = {
   userInfo: {},
   userToken: {},
-  loading: false,
-  error: null,
 };
 
 // 异步登录操作
-export const signIn:any = createAsyncThunk(
+export const signIn = createAsyncThunk(
   "user/login",
-  async (data:SignInReq, {rejectWithValue}) => {
-    const { username, password } = data;
+  async (data:SignInReq, { dispatch }) => {
+
+    // const signInMutation = useMutation({
+    //   mutationFn: userService.signin,
+    // });
+
     try {
-      const res = await userService.signin({ username:username.trim(), password });
-      return res;
+      const res = await userService.signin(data);
+      const { user, accessToken, refreshToken } = res;
+      dispatch(setUserInfo(user));
+      dispatch(setUserToken({ accessToken, refreshToken }));
+      sessionStorage.setItem("isLogined", "true");
     } catch (error) {
-      return rejectWithValue(error || "登录失败");
+      toast.error(error.message, {
+        position: "top-center",
+      });
+      throw error;
     }
   }
 )
@@ -39,37 +48,25 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action: PayloadAction<UserInfo>) => {
-      state.userInfo = produce(state.userInfo, draft => {
-        Object.assign(draft, action.payload);
+      return produce(state, draft => {
+        Object.assign(draft.userInfo, action.payload);
       });
     },
     setUserToken: (state, action: PayloadAction<UserToken>) => {
-      state.userToken = action.payload;
+      return produce(state, draft => {
+        Object.assign(draft.userToken, action.payload);
+      });;
     },
     clearUserInfoAndToken: (state) => {
-      state.userInfo = {};
-      state.userToken = {};
+      return produce(state, draft => {
+        Object.assign(draft, initialState);
+      })
+      debugger;
     },
   },
   extraReducers: (builder) => {
     builder
-      // 处理登录操作
-      .addCase(signIn.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(signIn.fulfilled, (state, action) => {
-        state.loading = false;
-        state.userInfo = action.payload.user;
-        state.userToken = {
-          accessToken: action.payload.accessToken,
-          refreshToken: action.payload.refreshToken,
-        };
-      })
-      .addCase(signIn.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+      .addCase(signIn.fulfilled, (state, action) => {});
   }
 });
 
@@ -77,8 +74,13 @@ const userSlice = createSlice({
 export const {
   setUserInfo,
   setUserToken,
-  clearUserInfoAndToken
+  clearUserInfoAndToken,
 } = userSlice.actions;
+
+export const useUserInfo = () => useSelector((state:RootState) => state.user.userInfo);
+export const useUserToken = () => useSelector((state:RootState) => state.user.userToken);
+export const useUserPermissions = () => useSelector((state:RootState) => state.user.userInfo.permissions || []);
+export const useUserRoles = () => useSelector((state:RootState) => state.user.userInfo.roles || []);
 
 // 导出 reducer
 export default userSlice.reducer as Reducer<UserState>;

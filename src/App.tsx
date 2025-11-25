@@ -1,42 +1,29 @@
-import { type FC } from 'react';
-import "./App.scss"
-import { ConfigProvider } from 'antd';
-import zhCN from "antd/locale/zh_CN";
-import Router from './router';
+import type { ReactNode } from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './store/index.ts';
+import AntdAdapter from './theme/adapter/AntdAdapter';
+import ThemeProvider from './theme/ThemeProvider';
 
-const App:FC = () => {
+interface IProps {
+  children: ReactNode;
+}
+
+export function App({
+  children
+}:IProps) {
+
+  console.log("渲染APP");
 
   return (
-    <ConfigProvider
-      locale={zhCN}
-      theme={{
-        components: {
-          Layout: {
-            siderBg: '#304156',
-            headerBg: '#fff'
-          },
-          Menu: {
-            itemBg: '#304156',
-            itemColor: 'rgb(191, 203, 217);',
-            itemHeight: 56,
-            subMenuItemBg: "#1f2d3d",
-            itemHoverColor: 'rgb(191, 203, 217);',
-            itemSelectedBg: '#304156'
-          },
-          Slider: {
-            railBg: '#000000',
-            railHoverBg: '#000000',
-            handleColor: '#000000',
-            handleActiveColor: '#000000',
-            trackHoverBg: '#000000',
-            dotSize: 4,
-            trackBg: '#000'
-          }
-        }
-      }}
-    >
-        <Router />
-    </ConfigProvider>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <ThemeProvider adapters={[AntdAdapter]}>
+          {children}
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
+    
   )
 }
 

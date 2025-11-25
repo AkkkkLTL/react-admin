@@ -1,4 +1,4 @@
-import { StorageEnum } from "@/utils/setting-enum";
+import { StorageEnum } from "@/types/enum";
 
 /**
  * 

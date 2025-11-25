@@ -2,27 +2,41 @@
 // quote from https://github.com/d3george/slash-admin/blob/main/src/api/apiClient.ts#L37
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { toast } from "sonner";
+import { t } from "i18next";
 import { store } from "@/store";
 import { clearUserInfoAndToken } from "@/store/modules/userSlice";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
+import { GLOBAL_CONFIG } from "@/global-config";
 
+/**
+ * 接口返回数据格式
+ * @interface Result
+ */
 interface Result<T = any> {
   code: number;
   message: string;
   data?: T;
 }
 
-// 创建 axios 实例
+/**
+ * 实例化 axios
+ * @param config AxiosRequestConfig
+ * @returns axiosInstance
+ */
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: GLOBAL_CONFIG.apiBaseUrl,
   timeout: 50000,
   headers: {
     "Content-Type": "application/json;charset=UTF-8"
   }
 });
 
-// 请求拦截
+/**
+ * 拦截器
+ * @param config AxiosRequestConfig
+ * @returns config
+ */
 axiosInstance.interceptors.request.use(
   (config) => {
     // 请求时开启进度条
@@ -37,13 +51,17 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// 响应拦截
+/**
+ * 响应拦截器
+ * @param res AxiosResponse<Result>
+ * @returns res.data
+ */
 axiosInstance.interceptors.response.use(
   (res:AxiosResponse<Result>) => {
     // 响应成功关闭进度条
     nProgress.done();
 
-    if (!res.data) throw new Error('Request Error');
+    if (!res.data) throw new Error(t("sys.api.apiRequestFailed"));
     const { code, data, message } = res.data;
 
     // 请求成功
@@ -70,6 +88,10 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+/**
+ * 封装 axios 实例
+ * @class APIClient
+ */
 class APIClient {
   get<T = any>(config:AxiosRequestConfig):Promise<T> {
     return this.request({ ...config, method: "GET" });

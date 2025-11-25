@@ -1,8 +1,9 @@
-import { FC } from "react";
-import { FallbackProps } from "react-error-boundary";
+import type { FallbackProps } from "react-error-boundary";
 
-const PageError:FC<FallbackProps> = (props) => {
-  const { error, resetErrorBoundary } = props;
+export default function PageError({
+  error,
+  resetErrorBoundary,
+}:FallbackProps) {
 
   const goHome = () => {
     resetErrorBoundary();
@@ -18,4 +19,3 @@ const PageError:FC<FallbackProps> = (props) => {
     </div>
   )
 }
-export default PageError;

@@ -1,17 +1,16 @@
-import { EnhancedStore, configureStore } from "@reduxjs/toolkit";
+import { AnyAction, EnhancedStore, ThunkDispatch, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import appReducer from "./modules/appSlice";
 import settingsReducer from "./modules/settingsSlice";
 import userReducer from "./modules/userSlice";
-import permissionReducer from "./modules/permissionSlice";
+import { StorageEnum } from "@/types/enum";
 
 // 为每个Slice配置独立的持久化选项
 const userPersistConfig = {
-  key: "user",   // 存储到localStorage的key
+  key: "userStore",   // 存储到localStorage的key
   storage,
-  whitelist: ["userInfo", "userToken"], // 需要持久化的字段
+  whitelist: [StorageEnum.USERINFO, StorageEnum.USERTOKEN], // 需要持久化的字段
 };
 
 const settingsPersistConfig = {
@@ -48,4 +47,4 @@ export const persistor = persistStore(store);
 
 // 导出类型
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = ThunkDispatch<RootState, any, AnyAction>;
