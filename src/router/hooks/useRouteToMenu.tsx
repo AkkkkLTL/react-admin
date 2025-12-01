@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { AppRouteObject } from "../types";
 import { GetProp, MenuProps } from "antd";
-import SvgIcon from "@/components/SvgIcon";
+import { Icon } from "@/components/icon";
 import { useTranslation } from "react-i18next";
 
 type MenuItem = GetProp<MenuProps, "items">[number];
@@ -28,7 +28,7 @@ export function useRouteToMenu() {
             label: (
               <div>{t(meta.label)}</div>
             ),
-            icon: meta.icon && <SvgIcon iconClass={meta.icon} />,
+            icon: meta.icon && <Icon icon={meta.icon} size={18}/>,
             ...(children && { children: routeToMenuFn(children)})
           };
           return menuItem as MenuItem;

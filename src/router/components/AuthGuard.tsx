@@ -1,28 +1,26 @@
-import { FC, ReactNode, useCallback, useEffect } from "react";
+// quote from https://github.com/d3george/slash-admin/tree/main
+import { ReactNode, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import type { RootState } from "@/redux/types";
-
+import type { RootState } from "@/store";
 import { useRouter } from "../hooks/useRouter";
+import { useUserToken } from "@/store/modules/userSlice";
 
 interface IProps {
   children: ReactNode;
 }
 
-/**
- * 引用 https://github.com/d3george/slash-admin/blob/main/src/router/components/auth-guard.tsx
- * @param props 
- */
-const AuthGuard:FC<IProps> = (props) => {
-
-  const { children } = props;
+export default function AuthGuard({
+  children
+}:IProps) {
 
   const router = useRouter();
-
-  const accessToken = useSelector((state:RootState) => state.user.token);
-
+  const { accessToken } = useUserToken();
+  debugger;
   const check = useCallback(() => {
-    if (!accessToken) router.replace("/login");
+    debugger;
+    console.log("is accessToken", !accessToken);
+    if (!accessToken) router.replace("/auth/login");
   }, [router, accessToken]);
 
   useEffect(() => {
@@ -30,10 +28,6 @@ const AuthGuard:FC<IProps> = (props) => {
   }, [check]);
 
   return (
-    <>
-      {children}
-    </>
-  )
+    <>{children}</>
+  );
 }
-
-export default AuthGuard;

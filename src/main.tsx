@@ -1,34 +1,33 @@
-import ReactDOM from 'react-dom/client'
-
-import "normalize.css/normalize.css"  // css reset
-import "@/styles/index.scss"  // global css
-import "virtual:svg-icons-register";
-
-import "@/icons";
-import { ThemeProvider } from 'styled-components';
-import App from './App.tsx';
-import { Provider } from 'react-redux';
-import store from './redux/store.tsx';
-import { doDynamicImport } from './utils/dynamicImport.ts';
-import { StrictMode, Suspense } from 'react';
-import NProgress from './components/NProgress/index.tsx';
-
+// react
+import ReactDOM from 'react-dom/client';
+import { StrictMode } from 'react';
 // i18n
-import "./locales/i18n.ts"
+import "./locales/i18n.ts";
+// css
+import "@/theme/global.css";  // global css
+import "@/theme/theme.css";
+import { registerLocalIcons } from './components/icon';
+import { urlJoin } from './utils/index.ts';
+// 全局配置
+import { GLOBAL_CONFIG } from './global-config.ts';
+import AppRoutes from './router/index.tsx';
+// 注册图标
+await registerLocalIcons();
 
-if (import.meta.env.VITE_MOCK_ENABLE) {
-   const { mockXHR } = doDynamicImport() as any;
-   mockXHR();
+// 开启mock服务
+if (GLOBAL_CONFIG.openMock) {
+   const { worker }  = import.meta.glob(["~/mock/index.ts"], {eager: true})[`/mock/index.ts`] as any;
+   console.log(worker);
+   worker.start({
+    onUnhandledRequest: "bypass",
+    serviceWorker: {
+      url: urlJoin(GLOBAL_CONFIG.publicPath, "mockServiceWorker.js"),
+    },
+  });
 }
 
-ReactDOM.createRoot(document.getElementById('app')!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
-  <ThemeProvider theme={{}}>
-    <Provider store={store}>
-      <Suspense fallback={<NProgress />}>
-        <App />
-      </Suspense>
-    </Provider>
-  </ThemeProvider>
+    <AppRoutes />
   </StrictMode>
 )

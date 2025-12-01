@@ -1,47 +1,45 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
+  "compilerOptions": {  // 控制 TS 编译器的行为
+    "composite": true,  // 启用组合模式，允许使用多个 tsconfig 文件
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",  // 编译文件的输出路径
+    "target": "ESNext",  // 编译目标环境为 ESNext，即最新的 JavaScript 版本
+    "module": "ESNext", // 模块类型为 ESNext，即使用 ESNext 模块系统
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // 引入的库文件，包括 ESNext、DOM 和 DOM.Iterable/
+    "useDefineForClassFields": true, // 启用类字段的 define 模式，用于支持 TypeScript 类字段的初始化
+    "skipLibCheck": true, // 跳过库文件的类型检查，以提高编译速度
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react-jsx",
-    "outDir": "dist",
+    "moduleResolution": "bundler",  // 模块解析模式为 bundler，即使用 bundler 来解析模块
+    "allowImportingTsExtensions": true, // 允许导入 .ts 扩展名的文件
+    "resolveJsonModule": true,  // 允许解析 JSON 模块
+    "isolatedModules": true,  // 启用孤立模块模式，每个文件都是一个模块
+    "noEmit": true,   // 不生成输出文件
+    "jsx": "react-jsx", // 使用 React 的 JSX 语法
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./",
+    "strict": true,  // 启用严格模式，启用所有严格的类型检查
+    "strictNullChecks": true,  // 启用严格的 null 检查,
+    "noImplicitAny": true,  // 禁止隐式的 any 类型，强制指定所有变量和函数的类型
+    "noUnusedLocals": true,  // 禁止未使用的局部变量
+    "noUnusedParameters": true,  // 禁止未使用的参数
+    "noFallthroughCasesInSwitch": true, // 禁止 switch 语句中的贯穿情况
+    "useUnknownInCatchVariables": false, // 允许在 catch 语句中使用 unknown 类型的变量
+
+    /* Paths */
+    "baseUrl": ".",
     "paths": {
-      "@/*":["src/*"],
-      "~/*":["./*"],
-      "@toast-ui/editor":[
-        "node_modules/@toast-ui/editor/types/index.d.ts",
-      ]
+      "@/*": ["src/*"],
+      "#/*": ["src/types/*"],
+      "~/*": ["./*"],
     },
-    "types": ["vite-plugin-svgr/client", "vitest"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.json",
-    "mock/*.ts",
+    "src",
+    "src/locales/lang/**/*.json",
+    "mock",
     "vite.config.ts",
+    "tailwind.config.ts",
+    "tests"
   ],
   "exclude": ["node_modules", "dist"]
 }
