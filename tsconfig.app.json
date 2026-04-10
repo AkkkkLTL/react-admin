@@ -27,6 +27,7 @@
 		"useUnknownInCatchVariables": false, // 允许在 catch 语句中使用 unknown 类型的变量
 
 		/* Paths */
+		"ignoreDeprecations": "6.0",
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["src/*"],

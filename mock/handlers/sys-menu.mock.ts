@@ -718,51 +718,51 @@ var dataSysNavList_demo: MenuInfo[] = [
 		path: "/menu_level/1b/2b/3b",
 		component: "/pages/menu-level/menu-level-1b/menu-level-2b/menu-level-3b",
 	},
-	// // erros
-	// {
-	//     id: "error",
-	//     parentId: "group_pages",
-	//     name: "sys.nav.error.index",
-	//     code: "error",
-	//     icon: "bxs:error-alt",
-	//     type: CATALOGUE,
-	//     path: "/error"
-	// },
-	// {
-	//     id: "error_403",
-	//     parentId: "error",
-	//     name: "sys.nav.error.403",
-	//     code: "error:403",
-	//     type: MENU,
-	//     path: "/error/403",
-	//     component: "/pages/sys/error/Page403"
-	// },
-	// {
-	//     id: "error_404",
-	//     parentId: "error",
-	//     name: "sys.nav.error.404",
-	//     code: "error:404",
-	//     type: MENU,
-	//     path: "/error/404",
-	//     component: "/pages/sys/error/Page404"
-	// },
-	// {
-	//     id: "error_500",
-	//     parentId: "error",
-	//     name: "sys.nav.error.500",
-	//     code: "error:500",
-	//     type: MENU,
-	//     path: "/error/500",
-	//     component: "/pages/sys/error/Page500"
-	// },
+	// erros
+	{
+		id: "error",
+		parentId: "group_pages",
+		name: "sys.nav.error.index",
+		// perms: "error",
+		icon: "bxs:error-alt",
+		type: CATALOGUE,
+		path: "/error",
+	},
+	{
+		id: "error_403",
+		parentId: "error",
+		name: "sys.nav.error.403",
+		// perms: ": "error:403",
+		type: MENU,
+		path: "/error/403",
+		component: "/pages/sys/error/page-403",
+	},
+	{
+		id: "error_404",
+		parentId: "error",
+		name: "sys.nav.error.404",
+		// perms: ": "error:404",
+		type: MENU,
+		path: "/error/404",
+		component: "/pages/sys/error/page-404",
+	},
+	{
+		id: "error_500",
+		parentId: "error",
+		name: "sys.nav.error.500",
+		// perms: ": "error:500",
+		type: MENU,
+		path: "/error/500",
+		component: "/pages/sys/error/page-500",
+	},
 
-	// // group_ui
-	// // components
+	// group_ui
+	// components
 	// {
 	// 	id: "components",
 	// 	parentId: "group_ui",
 	// 	name: "sys.nav.components",
-	// 	code: "components",
+	// 	perms: "components",
 	// 	icon: "solar:widget-5-bold-duotone",
 	// 	type: CATALOGUE,
 	// 	path: "/components",
