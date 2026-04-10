@@ -58,7 +58,7 @@ export const presetsColors = {
  *  + dark : 700
  *  + darker : 900
  */
-export const paletteColors:ThemeTokens["colors"]["palette"] = {
+export const paletteColors: Exclude<ThemeTokens["colors"], undefined>["palette"] = {
 	primary: presetsColors[ThemeColorPresets.DEFAULT],
 	success: {
 		lighter: "#D8FBDE",
@@ -101,12 +101,12 @@ export const paletteColors:ThemeTokens["colors"]["palette"] = {
 	},
 };
 
-export const commonColors:ThemeTokens["colors"]["common"] = {
+export const commonColors: Exclude<ThemeTokens["colors"], undefined>["common"] = {
 	white: "#FFFFFF",
 	black: "#000000",
 };
 
-export const actionColors:ThemeTokens["colors"]["action"] = {
+export const actionColors: Exclude<ThemeTokens["colors"], undefined>["action"] = {
 	hover: rgbAlpha(paletteColors.gray[500], 0.08),
 	selected: rgbAlpha(paletteColors.gray[500], 0.08),
 	focus: rgbAlpha(paletteColors.gray[500], 0.12),
@@ -114,7 +114,7 @@ export const actionColors:ThemeTokens["colors"]["action"] = {
 	active: rgbAlpha(paletteColors.gray[500], 1),
 };
 
-export const lightColorTokens:ThemeTokens["colors"] = {
+export const lightColorTokens: Exclude<ThemeTokens["colors"], undefined> = {
 	palette: paletteColors,
 	common: commonColors,
 	action: actionColors,
@@ -130,7 +130,7 @@ export const lightColorTokens:ThemeTokens["colors"] = {
 	},
 };
 
-export const darkColorTokens:ThemeTokens["colors"] = {
+export const darkColorTokens: Exclude<ThemeTokens["colors"], undefined> = {
 	palette: paletteColors,
 	common: commonColors,
 	action: actionColors,

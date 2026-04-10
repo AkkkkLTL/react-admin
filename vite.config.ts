@@ -1,73 +1,91 @@
-/// <reference types="vitest" />
-
-import { defineConfig, loadEnv } from 'vite';
+import { resolve } from "node:path";
+import tailwindcss from "@tailwindcss/vite";
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
-import react from '@vitejs/plugin-react-swc'
-import tsconfigPaths from "vite-tsconfig-paths"
-import path from 'path'
-import tailwindcss from '@tailwindcss/vite';
+import react from "@vitejs/plugin-react-swc";
+// import { visualizer } from "rollup-plugin-visualizer";
+import { defineConfig, loadEnv } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  const base = env.VITE_APP_BASE_PATH || "/";
-  const isProduction = mode === "production";
+	const env = loadEnv(mode, process.cwd(), "");
+	const base = env.VITE_APP_BASE_PATH || "/";
+	// const isProduction = mode === "production";
 
-  return {
-    base,
-    plugins: [
-      react(),
-      tsconfigPaths(),
-      tailwindcss(),
-      vanillaExtractPlugin({
-        identifiers: ({debugId}) => `${debugId}`
-      }),
-    ].filter(Boolean),  // 过滤掉空值
+	return {
+		base,
+		plugins: [
+			react(),
+			tsconfigPaths(),
+			tailwindcss(),
+			vanillaExtractPlugin({
+				identifiers: ({ debugId }) => `${debugId}`,
+			}),
 
-    resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),  // 别名 @ 指向 src 目录
-        "#": path.resolve(__dirname, "./src/types"),  // 别名 # 指向 src/types 目录
-        "~": path.resolve(__dirname, "./"),  // 别名 ~ 指向根目录
-      }
-    },
+			// isProduction &&
+			// 	visualizer({
+			// 		open: true,
+			// 		gzipSize: true,
+			// 		brotliSize: true,
+			// 		template: "treemap",
+			// 	}),
+		].filter(Boolean), // 过滤掉空值
 
-    server: {
-      open: true,
-      host: true,
-      port: 3001,
-      proxy: {
-        "/api": {
-          target: `http://localhost:3000`,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
-          secure: false,
-        }
-      }
-    },
+		resolve: {
+			alias: {
+				"@": resolve(__dirname, "./src"), // 别名 @ 指向 src 目录
+				"#": resolve(__dirname, "./src/types"), // 别名 # 指向 src/types 目录
+				"~": resolve(__dirname, "./"), // 别名 ~ 指向根目录
+			},
+		},
 
-    build: {
-      target: "esnext",
-      minify: "terser",
-      terserOptions: {
-        compress: {
-          // 生成环境移除 console
-          keep_infinity: true,
-          drop_debugger: true
-        }
-      },
-      outDir: 'dist'
-    },
+		server: {
+			open: true,
+			host: true,
+			port: 3001,
+			proxy: {
+				"/api": {
+					target: `http://localhost:3000`,
+					changeOrigin: true,
+					rewrite: (path) => path.replace(/^\/api/, ""),
+					secure: false,
+				},
+			},
+		},
 
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      coverage: {
-        enabled: true,
-        provider: "v8",
-        cleanOnRerun: true,
-        reporter: ['text', 'json', 'html']
-      }
-    },
-  }
-})
+		build: {
+			target: "esnext",
+			minify: "terser",
+			terserOptions: {
+				compress: {
+					// 生成环境移除 console
+					keep_infinity: true,
+					drop_debugger: true,
+				},
+			},
+			outDir: "dist",
+		},
+
+		// optimizeDeps: {
+		// 	include: ["react", "react-dom", "react-router", "axios"],
+		// 	exclude: ["@iconify/react"],
+		// },
+
+		// esbuild: {
+		// 	drop: isProduction ? ["console", "debugger"] : [],
+		// 	legalComments: "none",
+		// 	target: "esnext",
+		// },
+
+		// test: {
+		// 	globals: true,
+		// 	environment: "jsdom",
+		// 	coverage: {
+		// 		enabled: true,
+		// 		provider: "v8",
+		// 		cleanOnRerun: true,
+		// 		reporter: ["text", "json", "html"],
+		// 	},
+		// },
+	};
+});

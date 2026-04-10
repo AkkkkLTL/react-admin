@@ -1,49 +1,65 @@
-import { useTranslation } from "react-i18next"
-import en_US from "antd/locale/en_US";
-import zh_C from "antd/locale/zh_CN";
-import type { Locale as AntdLocale } from "antd/es/locale";
-
+import type { Locale as AntdLocal } from "antd/es/locale";
+import en_us from "antd/es/locale/en_US";
+import zh_cn from "antd/es/locale/zh_CN";
+import { useTranslation } from "react-i18next";
 import { LocalEnum } from "@/types/enum";
 
+/**
+ * @name 语言选项类型
+ * @desc 语言选项类型定义
+ */
 type Locale = keyof typeof LocalEnum;
-type Language = {
-  locale: keyof typeof LocalEnum;
-  icon: string;
-  label: string;
-  antdLocale: AntdLocale
+
+/**
+ * @name 语言
+ * @desc 语言配置
+ */
+export type Language = {
+	locale: keyof typeof LocalEnum;
+	icon: string;
+	label: string;
+	antdLocal: AntdLocal;
+};
+
+/**
+ * @name 语言映射
+ * @desc 语言映射配置
+ */
+export const LANGUAGE_MAP: Record<Locale, Language> = {
+	[LocalEnum.zh_cn]: {
+		locale: LocalEnum.zh_cn,
+		icon: "flag-cn",
+		label: "Chinese",
+		antdLocal: zh_cn,
+	},
+	[LocalEnum.en_us]: {
+		locale: LocalEnum.en_us,
+		icon: "flag-us",
+		label: "English",
+		antdLocal: en_us,
+	},
+};
+
+/**
+ * 语言 hooks
+ * @returns
+ */
+export default function useLocale() {
+	const { t, i18n } = useTranslation();
+
+	const locale = (i18n.resolvedLanguage || LocalEnum.en_us) as Locale;
+	const language = LANGUAGE_MAP[locale];
+
+	/* 切换语言 */
+	const setLocale = (locale: Locale) => {
+		i18n.changeLanguage(locale);
+		document.documentElement.lang = locale;
+	};
+
+	return {
+		t,
+		locale,
+		language,
+		setLocale,
+	};
 }
-
-const LANGUAGE_MAP: Record<Locale, Language> = {
-  [LocalEnum.ZH_CN]: {
-    locale: LocalEnum.ZH_CN,
-    icon: "🇨🇳",
-    label: "简体中文",
-    antdLocale: zh_C,
-  },
-  [LocalEnum.EN_US]: {
-    locale: LocalEnum.EN_US,
-    icon: "🇺🇸",
-    label: "English",
-    antdLocale: en_US, 
-  }
-}
-
-const useLocale = () => {
-  const { i18n } = useTranslation();
-
-  const locale = (i18n.resolvedLanguage || LocalEnum.ZH_CN) as Locale;
-  const language = LANGUAGE_MAP[locale];
-
-  // 切换语言
-  const setLocale = (locale: Locale) => {
-    i18n.changeLanguage(locale);
-    document.documentElement.lang = locale;
-  };
-
-  return {
-    locale,
-    language,
-    setLocale,
-  }
-}
-export default useLocale;

@@ -1,19 +1,20 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 /**
  * 引用 https://github.com/d3george/slash-admin/blob/main/src/router/hooks/use-router.ts
- * @returns 
+ * @returns
  */
 export function useRouter() {
+	const navigate = useNavigate();
 
-  const navigate = useNavigate();
+	const router = useMemo(
+		() => ({
+			push: (href: string) => navigate(href),
+			replace: (href: string) => navigate(href, { replace: true }),
+		}),
+		[navigate],
+	);
 
-  const router = useMemo(
-    () => ({
-      replace: (href: string) => navigate(href, {replace: true}),
-    }), [navigate]
-  )
-
-  return router;
+	return router;
 }

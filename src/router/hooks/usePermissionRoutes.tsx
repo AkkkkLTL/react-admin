@@ -1,48 +1,47 @@
 // quote from
-import { Suspense, lazy, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { flattenTrees } from "@/utils/tree";
-import { Permission } from "@/types/entity";
-import { getRoutesFromModules } from "../utils";
-import type { AppRouteObject } from "../types";
-import { PermissionType } from "@/types/enum";
-import { CircleLoading } from "@/components/loading";
-import { Navigate, Outlet } from "react-router-dom";
+
 import { isEmpty } from "ramda";
+import { lazy, Suspense, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
+import { LineLoading } from "@/components/loading";
+import type { RootState } from "@/store";
+import type { Permission } from "@/types/entity";
+import { PermissionType } from "@/types/enum";
+import { flattenTrees } from "@/utils/tree";
+import type { AppRouteObject } from "../types";
+import { getRoutesFromModules } from "../utils";
 
 const ENTRY_PATH = "/src/pages";
 const PAGES = import.meta.glob("/src/pages/**/*.tsx");
 console.log("PAGES", PAGES);
-const loadComponentFromPath = (path:string) => PAGES[`${ENTRY_PATH}${path}`];
+const loadComponentFromPath = (path: string) => PAGES[`${ENTRY_PATH}${path}`];
 
 function buildCompleteRoute(
-  permission: Permission,
-  flattenedPermissions: Permission[],
-  segments: string[] = [],
-):string {
-  // 添加当前路由的路径段
-  segments.unshift(permission.route);
+	permission: Permission,
+	flattenedPermissions: Permission[],
+	segments: string[] = [],
+): string {
+	// 添加当前路由的路径段
+	segments.unshift(permission.route);
 
-  // 如果是父级路由，返回 /parent/ 的形式
-  if (!permission.parentId) {
-    return `/${segments.join("/")}`;
-  }
-  const parent = flattenedPermissions.find(
-    (item) => item.id === permission.parentId,
-  );
-  if (!parent) {
-    console
-    return `/${segments.join("/")}`;
-  }
-  return buildCompleteRoute(parent, flattenedPermissions, segments);
+	// 如果是父级路由，返回 /parent/ 的形式
+	if (!permission.parentId) {
+		return `/${segments.join("/")}`;
+	}
+	const parent = flattenedPermissions.find((item) => item.id === permission.parentId);
+	if (!parent) {
+		console;
+		return `/${segments.join("/")}`;
+	}
+	return buildCompleteRoute(parent, flattenedPermissions, segments);
 }
 
 /**
  * 创建基础路由对象
  * @param permission 权限对象
  * @param completeRoute 完整路由路径
- * @returns 树形路由对象 
+ * @returns 树形路由对象
  * {
  *  path: string;
  *  order?: number;
@@ -51,47 +50,47 @@ function buildCompleteRoute(
  *    key: string;
  *    hideMenu: boolean;
  *    icon?: string;
- *  } 
+ *  }
  * }
  */
-function createBaseRoute(permission: Permission, completeRoute:string):AppRouteObject {
-  const { route, label, hide, order, icon } = permission;
-  const baseRoute:AppRouteObject = {
-    path: route,
-    meta: {
-      label,
-      key: completeRoute,
-      hideMenu: !!hide,
-    }
-  };
+function createBaseRoute(permission: Permission, completeRoute: string): AppRouteObject {
+	const { route, label, hide, order, icon } = permission;
+	const baseRoute: AppRouteObject = {
+		path: route,
+		meta: {
+			label,
+			key: completeRoute,
+			hideMenu: !!hide,
+		},
+	};
 
-  if (order) baseRoute.order = order;
-  if (baseRoute.meta) {
-    if (icon) baseRoute.meta.icon = icon;
-  }
-  return baseRoute;
+	if (order) baseRoute.order = order;
+	if (baseRoute.meta) {
+		if (icon) baseRoute.meta.icon = icon;
+	}
+	return baseRoute;
 }
 
-function createCatalogueRoute(permission:Permission, flattenedPermissions:Permission[]):AppRouteObject {
-  const baseRoute = createBaseRoute(permission, buildCompleteRoute(permission, flattenedPermissions));
+function createCatalogueRoute(permission: Permission, flattenedPermissions: Permission[]): AppRouteObject {
+	const baseRoute = createBaseRoute(permission, buildCompleteRoute(permission, flattenedPermissions));
 
-  const { parentId, children = [] } = permission;
-  if (!parentId) {
-    baseRoute.element = (
-      <Suspense fallback={<CircleLoading />}>
-        <Outlet />
-      </Suspense>
-    );
-  }
+	const { parentId, children = [] } = permission;
+	if (!parentId) {
+		baseRoute.element = (
+			<Suspense fallback={<LineLoading />}>
+				<Outlet />
+			</Suspense>
+		);
+	}
 
-  baseRoute.children = transformPermissionsToRoutes(children, flattenedPermissions);
-  if (!isEmpty(children)) {
-    baseRoute.children.unshift({
-      index:true,
-      element: <Navigate to={children[0].route} replace />,
-    });
-  }
-  return baseRoute;
+	baseRoute.children = transformPermissionsToRoutes(children, flattenedPermissions);
+	if (!isEmpty(children)) {
+		baseRoute.children.unshift({
+			index: true,
+			element: <Navigate to={children[0].route} replace />,
+		});
+	}
+	return baseRoute;
 }
 
 /**
@@ -100,33 +99,33 @@ function createCatalogueRoute(permission:Permission, flattenedPermissions:Permis
  * @param flattenedPermissions 完整的扁平权限数组
  * @returns 树形路由对象
  */
-function createMenuRoute(permission: Permission, flattenedPermissions: Permission[]):AppRouteObject {
-  const baseRoute = createBaseRoute(permission, buildCompleteRoute(permission, flattenedPermissions));
-  if (permission.component) {
-    const Element = lazy(loadComponentFromPath(permission.component) as any);
+function createMenuRoute(permission: Permission, flattenedPermissions: Permission[]): AppRouteObject {
+	const baseRoute = createBaseRoute(permission, buildCompleteRoute(permission, flattenedPermissions));
+	if (permission.component) {
+		const Element = lazy(loadComponentFromPath(permission.component) as any);
 
-    if (!permission.parentId) {
-      baseRoute.element = (
-        <Suspense fallback={<CircleLoading />}>
-          <Element />
-        </Suspense>
-      );
-    } else {
-      baseRoute.element = (
-        <Element /> // 子路由直接使用 Element，无需包裹 Suspens
-      );
-    }
-  }
-  return baseRoute;
+		if (!permission.parentId) {
+			baseRoute.element = (
+				<Suspense fallback={<LineLoading />}>
+					<Element />
+				</Suspense>
+			);
+		} else {
+			baseRoute.element = (
+				<Element /> // 子路由直接使用 Element，无需包裹 Suspens
+			);
+		}
+	}
+	return baseRoute;
 }
 
-function transformPermissionsToRoutes(permissions: Permission[], flattenedPermissions: Permission[]):AppRouteObject[] {
-  return permissions.map((permission) => {
-    if (permission.type === PermissionType.CATALOGUE) {
-      return createCatalogueRoute(permission, flattenedPermissions);
-    }
-    return createMenuRoute(permission, flattenedPermissions);
-  })
+function transformPermissionsToRoutes(permissions: Permission[], flattenedPermissions: Permission[]): AppRouteObject[] {
+	return permissions.map((permission) => {
+		if (permission.type === PermissionType.CATALOGUE) {
+			return createCatalogueRoute(permission, flattenedPermissions);
+		}
+		return createMenuRoute(permission, flattenedPermissions);
+	});
 }
 
 // 从环境变量中获取路由模式，默认为模块模式
@@ -140,20 +139,19 @@ const ROUTER_MODE = import.meta.env.VITE_APP_ROUTER_MODE || "frontend";
  * @returns 树形路由数组
  */
 export function usePermissionRoutes() {
+	// 路由模式为模块时，直接从模块中获取路由
+	if (ROUTER_MODE === "frontend") {
+		return getRoutesFromModules();
+	}
 
-  // 路由模式为模块时，直接从模块中获取路由
-  if (ROUTER_MODE === "frontend") {
-    return getRoutesFromModules();
-  }
+	// 路由模式为权限时，从权限中获取路由
+	const permissions = useSelector((state: RootState) => state.user.userInfo.permissions);
+	return useMemo(() => {
+		if (!permissions) return [];
 
-  // 路由模式为权限时，从权限中获取路由
-  const permissions = useSelector((state:RootState) => state.user.userInfo.permissions);
-  return useMemo(() => {
-    if (!permissions) return [];
-    
-    // 扁平化权限树
-    const flattenedPermissions = flattenTrees<Permission>(permissions);
+		// 扁平化权限树
+		const flattenedPermissions = flattenTrees<Permission>(permissions);
 
-    return transformPermissionsToRoutes(permissions, flattenedPermissions);
-  }, []);
+		return transformPermissionsToRoutes(permissions, flattenedPermissions);
+	}, [permissions]);
 }

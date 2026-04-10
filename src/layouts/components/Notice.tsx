@@ -1,90 +1,62 @@
-import { Icon } from "@/components/icon";
-import { themeVars } from "@/theme/theme.css";
-import { Button } from "@/ui/Button";
 import { faker } from "@faker-js/faker";
-import { Badge, Drawer } from "antd";
-import { CSSProperties, ReactNode, useState } from "react";
+import { type CSSProperties, type ReactNode, useState } from "react";
+import { Icon } from "@/components/icon";
+import { Badge } from "@/ui/badge";
+import { Button } from "@/ui/button";
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/ui/sheet";
 
-export default function Notice() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [count, setCount] = useState(4);
+export default function NoticeButton() {
+	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [count, setCount] = useState(4);
 
-  const style:CSSProperties = {
-    backdropFilter: "blur(20px)",
-    backgroundPosition: "right top, left bottom",
-    backgroundSize: "50, 50%",
-  };
+	const style: CSSProperties = {
+		backdropFilter: "blur(20px)",
+		backgroundRepeat: "no-repeat, no-repeat",
+		backgroundPosition: "right top, left bottom",
+		backgroundSize: "50%, 50%",
+	};
 
-  return (
-    <div>
-      <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setDrawerOpen(true)}>
-        <Badge 
-          count={count}
-          styles={{
-            root: { color: "inherit" },
-            indicator: { color: themeVars.colors.common.white },
-          }}
-        >
-          <Icon icon="solar:bell-bing-bold-duotone" size={24} />
-        </Badge>
-        <Drawer
-          placement="right"
-          title="Notifications"
-          onClose={() => setDrawerOpen(false)}
-          open={drawerOpen}
-          closable={false}
-          width={420}
-          styles={{
-            body: { padding: 0},
-            mask: { backgroundColor: "transparent" },
-          }}
-          style={style}
-          extra={
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-primary"
-              onClick={() => {
-                setCount(0);
-                setDrawerOpen(false);
-              }}
-            >
-              <Icon icon="solar:check-read-broken" size={20} />
-            </Button>
-          }
-          footer={
-            <div
-              style={{ color: themeVars.colors.text.primary }}
-              className="flex h-10 w-full items-center justify-center font-semibold"
-            >
-              View All
-            </div>
-          }
-        >
-          <NoticeTab />
-        </Drawer>
-      </Button>
-    </div>
-  )
-
+	return (
+		<>
+			<div className="relative">
+				<Button variant="ghost" size="icon" className="rounded-full" onClick={() => setDrawerOpen(true)}>
+					<Icon icon="solar:bell-bing-bold-duotone" size={24} />
+				</Button>
+				<Badge variant="destructive" shape="circle" className="absolute -right-2 -top-2">
+					{count}
+				</Badge>
+			</div>
+			<Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
+				<SheetContent side="right" className="sm:max-w-md p-0 [&>button]:hidden flex flex-col" style={style}>
+					<SheetHeader className="flex flex-row items-center justify-between p-4 h-16 shrink-0">
+						<SheetTitle>Notifications</SheetTitle>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="rounded-full text-primary"
+							onClick={() => {
+								setCount(0);
+								setDrawerOpen(false);
+							}}
+						>
+							<Icon icon="solar:check-read-broken" size={20} />
+						</Button>
+					</SheetHeader>
+					<div className="px-4 flex-1 overflow-hidden">
+						<NoticeTab />
+					</div>
+					<SheetFooter className="flex flex-row h-16 w-full items-center justify-between p-4 shrink-0">
+						<Button variant="outline" className="flex-1 mr-2">
+							Archive All
+						</Button>
+						<Button className="flex-1 ml-2">Mark all as read</Button>
+					</SheetFooter>
+				</SheetContent>
+			</Sheet>
+		</>
+	);
 }
 
 function NoticeTab() {
-
-  const tabChilren:ReactNode = (
-    <div className="text-sm">
-      <div className="flex">
-        <img className="h-10 w-10 rounded-full" src={faker.image.avatarGitHub()} alt="" />
-        <div className="ml-2">
-          <div>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
-  return (
-    <div>NoticeTab</div>
-  )
+	return <div>NoticeTab</div>;
 }

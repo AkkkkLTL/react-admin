@@ -1,136 +1,88 @@
-import { PayloadAction, createAsyncThunk, createSlice, type Reducer } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction, type Reducer } from "@reduxjs/toolkit";
+import { useMutation } from "@tanstack/react-query";
 import { produce } from "immer";
-import userService, { SignInReq, SignInRes } from "@/api/services/userService";
-import type { UserInfo, UserToken } from "#/entity";
-import { useSelector } from "react-redux";
-import { RootState } from "..";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import type { MenuInfo, UserInfo, UserToken } from "#/entity";
+import { apiSysLogin, type SysLoginReq } from "@/api/services/sys-login.service";
+import type { RootState } from "..";
 
 // 定义用户状态类型
 type UserState = {
-  userInfo: Partial<UserInfo>;
-  userToken: UserToken;
-}
-
-// 初始状态
-const initialState:UserState = {
-  userInfo: {},
-  userToken: {},
+	userInfo: Partial<UserInfo>;
+	userToken: UserToken;
+	menuList: MenuInfo[];
+	permissions: string[];
 };
 
-// 异步登录操作
-export const signIn = createAsyncThunk(
-  "user/login",
-  async (data:SignInReq, { dispatch }) => {
-
-    // const signInMutation = useMutation({
-    //   mutationFn: userService.signin,
-    // });
-
-    try {
-      const res = await userService.signin(data);
-      const { user, accessToken, refreshToken } = res;
-      dispatch(setUserInfo(user));
-      dispatch(setUserToken({ accessToken, refreshToken }));
-      sessionStorage.setItem("isLogined", "true");
-    } catch (error) {
-      toast.error(error.message, {
-        position: "top-center",
-      });
-      throw error;
-    }
-  }
-)
+// 初始状态
+const initialState: UserState = {
+	userInfo: {},
+	userToken: {},
+	menuList: [],
+	permissions: [],
+};
 
 // 创建 slice
 const userSlice = createSlice({
-  name: "user",
-  initialState,
-  reducers: {
-    setUserInfo: (state, action: PayloadAction<UserInfo>) => {
-      return produce(state, draft => {
-        Object.assign(draft.userInfo, action.payload);
-      });
-    },
-    setUserToken: (state, action: PayloadAction<UserToken>) => {
-      return produce(state, draft => {
-        Object.assign(draft.userToken, action.payload);
-      });;
-    },
-    clearUserInfoAndToken: (state) => {
-      return produce(state, draft => {
-        Object.assign(draft, initialState);
-      })
-      debugger;
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(signIn.fulfilled, (state, action) => {});
-  }
+	name: "user",
+	initialState,
+	reducers: {
+		// 设置用户信息
+		setUserInfo: (state, action: PayloadAction<UserInfo>) => {
+			return produce(state, (draft) => {
+				Object.assign(draft.userInfo, action.payload);
+			});
+		},
+		// 设置用户令牌
+		setUserToken: (state, action: PayloadAction<UserToken>) => {
+			return produce(state, (draft) => {
+				Object.assign(draft.userToken, action.payload);
+			});
+		},
+		// 清除用户信息和令牌
+		clearUserInfoAndToken: (state) => {
+			return produce(state, (draft) => {
+				Object.assign(draft, initialState);
+			});
+		},
+	},
 });
 
 // 导出 action
-export const {
-  setUserInfo,
-  setUserToken,
-  clearUserInfoAndToken,
-} = userSlice.actions;
-
-export const useUserInfo = () => useSelector((state:RootState) => state.user.userInfo);
-export const useUserToken = () => useSelector((state:RootState) => state.user.userToken);
-export const useUserPermissions = () => useSelector((state:RootState) => state.user.userInfo.permissions || []);
-export const useUserRoles = () => useSelector((state:RootState) => state.user.userInfo.roles || []);
+export const { setUserInfo, setUserToken, clearUserInfoAndToken } = userSlice.actions;
 
 // 导出 reducer
 export default userSlice.reducer as Reducer<UserState>;
 
-/*
-export const getInfo:any = createAsyncThunk(
-  "fetch/getInfo",
-  async (token:string, {dispatch}) => {
-    getInfoApi(token).then(response => {
-      const { data } = response;
-      if (!data) {
-        throw new Error("Verification failed, please Login again");
-      }
-      const { name, avatar, roles, introduction } = data;
+// 获取用户信息
+export const useUserInfo = () => useSelector((state: RootState) => state.user.userInfo);
+// 获取用户令牌
+export const useUserToken = () => useSelector((state: RootState) => state.user.userToken);
+// 获取用户权限
+export const useUserPermissions = () => useSelector((state: RootState) => state.user.permissions || []);
+// 获取用户角色
+export const useUserRoles = () => useSelector((state: RootState) => state.user.userInfo.roleIdList || []);
 
-      if (!roles || roles.length <= 0) {
-        throw new Error("getInfo: roles must be a non-null array!")
-      }
-      dispatch(setRoles(roles));
-      dispatch(setName(name));
-      dispatch(setAvatar(avatar));
-      dispatch(setIntroduction(introduction));
-      return data;
-    }).catch(error => {
-      throw new Error(error);
-    })
-  }
-)
+export const useSignIn = () => {
+	const dispatch = useDispatch();
 
-export const logout:any = ():AppThunk => async (dispatch:Dispatch) => {
-  logoutApi().then(() => {
-    removeToken();
-    dispatch(resetState());
-    dispatch(setRoles([]));
-  }).catch(error => {
-    throw new Error(error);
-  })
-}
+	const signInMutation = useMutation({
+		mutationFn: apiSysLogin,
+	});
 
-export const resetToken:any = ():AppThunk => async (dispatch:Dispatch) => {
-  removeToken();
-  dispatch(resetState());
-  dispatch(setRoles([]));
-}
+	const signIn = async (data: SysLoginReq) => {
+		try {
+			const res = await signInMutation.mutateAsync(data);
+			const { expire, token } = res;
+			dispatch(setUserToken({ expire, token }));
+		} catch (error) {
+			toast.error(error.message, {
+				position: "top-center",
+			});
+			throw error;
+		}
+	};
 
-export const changeRoles:any = (role:string):AppThunk => async (dispatch:Dispatch) => {
-  const token = role + '-token';
-  dispatch(setToken(token));
-  auth_setToken(token);
-
-  const { roles } = await dispatch(getInfo(token));
-}
-*/
+	return signIn;
+};

@@ -4,27 +4,26 @@ import { initReactI18next } from "react-i18next";
 
 import { LocalEnum, StorageEnum } from "@/types/enum";
 import { getStringItem } from "@/utils/storage";
+import en_us from "./lang/en_us";
+import zh_cn from "./lang/zh_cn";
 
-import ZH_CN from "./lang/ZH_CN";
-import EN_US from "./lang/EN_US";
-
-const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.ZH_CN as string);
+const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.zh_cn as string);
 
 i18n
-  .use(LanguageDetector)  // 检测用户语言
-  .use(initReactI18next)  // 初始化react-i18next
-  .init({
-    debug: true,
-    lng: defaultLng,
-    fallbackLng: LocalEnum.ZH_CN,
-    interpolation: {
-      escapeValue: false,
-    },
-    resources: {
-      ZH_CN: { translation: ZH_CN },
-      EN_US: { translation: EN_US }
-    }
-  });
+	.use(LanguageDetector) // 检测用户语言
+	.use(initReactI18next) // 初始化react-i18next
+	.init({
+		debug: true,
+		lng: defaultLng,
+		fallbackLng: LocalEnum.zh_cn,
+		interpolation: {
+			escapeValue: false,
+		},
+		resources: {
+			zh_cn: { translation: zh_cn },
+			en_us: { translation: en_us },
+		},
+	});
 
 export default i18n;
 export const { t } = i18n;

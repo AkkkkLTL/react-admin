@@ -1,10 +1,7 @@
-import { MenuMetaInfo, MenuTree } from "@/types/entity";
+import { Navigate, type RouteObject } from "react-router-dom";
+import type { MenuMetaInfo, MenuTree } from "@/types/entity";
 import { PermissionType } from "@/types/enum";
-import { Navigate, RouteObject } from "react-router-dom";
 import { Component } from "./utils";
-import { converFlatToTree } from "@/utils/tree";
-import { DB_SYS_MENUS } from "~/mock/assets";
-import { useUserToken } from "@/store/modules/userSlice";
 
 /**
  * get route path from menu path and parent path
@@ -90,8 +87,3 @@ export const convertToRoute = (items: MenuTree[], parent?: MenuTree): RouteObjec
 	}
 	return routes;
 };
-
-export const getBackendDashboardRoutes = () => {
-    const backendDashboardRoutes = convertToRoute(converFlatToTree(DB_SYS_MENUS));
-	return backendDashboardRoutes;
-}

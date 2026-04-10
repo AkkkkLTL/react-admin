@@ -1,6 +1,6 @@
 import type { ThemeTokens } from "../type";
 
-export const breakpointsTokens:ThemeTokens["screens"] = {
+export const breakpointsTokens: Exclude<ThemeTokens["screens"], undefined> = {
 	xs: "375px", // mobile => @media (min-width: 0px) { ... }
 	sm: "576px", // mobile => @media (min-width: 576px) { ... }
 	md: "768px", // tablet => @media (min-width: 768px) { ... }
