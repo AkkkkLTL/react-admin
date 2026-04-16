@@ -8,6 +8,10 @@ export function fBytes(number: InputValue) {
 	return result(format, ".0");
 }
 
+export function fNumber(number: InputValue) {
+	return numeral(number).format();
+}
+
 function result(format: string, key = ".00") {
 	const isInteger = format.includes(key);
 

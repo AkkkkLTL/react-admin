@@ -1,7 +1,7 @@
 import type { GetProp, MenuProps } from "antd";
 import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
 import { Icon } from "@/components/icon";
+import useLocale from "@/locales/useLocale";
 import type { AppRouteObject } from "../types";
 
 type MenuItem = GetProp<MenuProps, "items">[number];
@@ -11,7 +11,7 @@ type MenuItem = GetProp<MenuProps, "items">[number];
  * @returns MenuItem
  */
 export function useRouteToMenu() {
-	const { t } = useTranslation();
+	const { t } = useLocale();
 
 	const routeToMenuFn = useCallback(
 		(items: AppRouteObject[]): MenuItem[] => {

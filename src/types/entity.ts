@@ -170,6 +170,8 @@ export interface MenuInfo {
 	icon?: string;
 	/** 菜单排序 */
 	orderNum?: number;
+	/** 菜单说明 */
+	caption?: string;
 	/** 菜单是否打开 */
 	open?: number;
 	/** 子菜单列表 */

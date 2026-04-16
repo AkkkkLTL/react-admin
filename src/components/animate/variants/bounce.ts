@@ -1,7 +1,11 @@
-import type { VariantsType } from "../types";
+import type { VariantsReturnType, VariantsType } from "../types";
 import { varTranEnter, varTranExit } from "./transition";
 
-export const varBounce = (props?: VariantsType) => {
+export const varBounce = (
+	props?: VariantsType,
+): VariantsReturnType<
+	"in" | "inUp" | "inDown" | "inLeft" | "inRight" | "out" | "outUp" | "outDown" | "outLeft" | "outRight"
+> => {
 	const durationIn = props?.durationIn;
 	const durationOut = props?.durationOut;
 	const easeIn = props?.easeIn;

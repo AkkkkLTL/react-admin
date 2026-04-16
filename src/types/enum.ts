@@ -31,7 +31,7 @@ export enum StorageEnum {
 	/** 主题设置字段 */
 	SETTINGS = "settings",
 	/** 国际化字段 */
-	I18N = "i18nextlang",
+	I18N = "i18nextLng",
 }
 
 /**
