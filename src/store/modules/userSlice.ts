@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction, type Reducer } from "@reduxjs/toolkit";
 import { useMutation } from "@tanstack/react-query";
 import { produce } from "immer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import type { MenuInfo, UserInfo, UserToken } from "#/entity";
 import { apiSysLogin, type SysLoginReq } from "@/api/services/sys-login.service";
@@ -40,6 +40,12 @@ const userSlice = createSlice({
 				Object.assign(draft.userToken, action.payload);
 			});
 		},
+		// 设置用户权限
+		setPermissions: (state, action: PayloadAction<string[]>) => {
+			return produce(state, (draft) => {
+				draft.permissions = action.payload;
+			});
+		},
 		// 清除用户信息和令牌
 		clearUserInfoAndToken: (state) => {
 			return produce(state, (draft) => {
@@ -50,19 +56,19 @@ const userSlice = createSlice({
 });
 
 // 导出 action
-export const { setUserInfo, setUserToken, clearUserInfoAndToken } = userSlice.actions;
+export const { setUserInfo, setUserToken, clearUserInfoAndToken, setPermissions } = userSlice.actions;
 
 // 导出 reducer
 export default userSlice.reducer as Reducer<UserState>;
 
 // 获取用户信息
-export const useUserInfo = () => useSelector((state: RootState) => state.user.userInfo);
+export const selectUserInfo = (state: RootState) => state.user.userInfo;
 // 获取用户令牌
-export const useUserToken = () => useSelector((state: RootState) => state.user.userToken);
+export const selectUserToken = (state: RootState) => state.user.userToken;
 // 获取用户权限
-export const useUserPermissions = () => useSelector((state: RootState) => state.user.permissions || []);
+export const selectUserPermissions = (state: RootState) => state.user.permissions;
 // 获取用户角色
-export const useUserRoles = () => useSelector((state: RootState) => state.user.userInfo.roleIdList || []);
+export const selectUserRoles = (state: RootState) => state.user.userInfo.roleIdList;
 
 export const useSignIn = () => {
 	const dispatch = useDispatch();

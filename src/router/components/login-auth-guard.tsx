@@ -1,6 +1,7 @@
 // quote from https://github.com/d3george/slash-admin/tree/main
 import { type ReactNode, useCallback, useEffect } from "react";
-import { useUserToken } from "@/store/modules/userSlice";
+import { useSelector } from "react-redux";
+import { selectUserToken } from "@/store/modules/userSlice";
 import { useRouter } from "../hooks/useRouter";
 
 interface LoginAuthGuardProps {
@@ -13,7 +14,7 @@ interface LoginAuthGuardProps {
  */
 export default function LoginAuthGuard({ children }: LoginAuthGuardProps) {
 	const router = useRouter();
-	const { token } = useUserToken();
+	const { token } = useSelector(selectUserToken);
 
 	const check = useCallback(() => {
 		// 若未登录，则重定向到登录页

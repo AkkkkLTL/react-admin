@@ -1,5 +1,7 @@
 import { configureStore, type EnhancedStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
 import storage from "redux-persist/lib/storage";
 import { StorageEnum } from "@/types/enum";
 import settingsReducer from "./modules/settingsSlice";
@@ -9,7 +11,7 @@ import userReducer from "./modules/userSlice";
 const userPersistConfig = {
 	key: "userStore", // 存储到localStorage的key
 	storage,
-	whitelist: [StorageEnum.USERINFO, StorageEnum.USERTOKEN], // 需要持久化的字段
+	whitelist: [StorageEnum.USERINFO, StorageEnum.USERTOKEN, StorageEnum.PERMISSIONS, StorageEnum.MENU_LIST], // 需要持久化的字段
 };
 
 const settingsPersistConfig = {
@@ -46,3 +48,11 @@ export const storePersistor = persistStore(store);
 
 // 导出类型
 export type RootState = ReturnType<typeof store.getState>;
+
+export function Store({ children }: { children: React.ReactNode }) {
+	return (
+		<Provider store={store}>
+			<PersistGate persistor={storePersistor}>{children}</PersistGate>
+		</Provider>
+	);
+}

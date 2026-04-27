@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
+import { useSelector } from "react-redux";
 import bannerImage from "@/assets/images/background/banner-1.png";
 import { Icon } from "@/components/icon";
-import { useUserInfo } from "@/store/modules/userSlice";
+import { selectUserInfo } from "@/store/modules/userSlice";
 import { themeVars } from "@/theme/theme.css";
 import { Avatar, AvatarImage } from "@/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
@@ -35,7 +36,7 @@ const tabs = [
 ];
 
 export default function UserProfile() {
-	const { avatar, username } = useUserInfo();
+	const { avatar, username } = useSelector(selectUserInfo);
 
 	const bgStyle: CSSProperties = {
 		position: "absolute",

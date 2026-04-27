@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { Icon } from "@/components/icon";
 import type { NavItemDataProps, NavProps } from "@/components/nav/types";
 
-import { useUserPermissions } from "@/store/modules/userSlice";
 import type { Menu, MenuInfo, MenuTree } from "@/types/entity";
 import { PermissionType } from "@/types/enum";
 import { Badge } from "@/ui/badge";

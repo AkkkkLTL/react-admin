@@ -28,6 +28,10 @@ export enum StorageEnum {
 	USERINFO = "userInfo",
 	/** 用户token字段 */
 	USERTOKEN = "userToken",
+	/** 用户权限字段 */
+	PERMISSIONS = "permissions",
+	/** 菜单列表字段 */
+	MENU_LIST = "menuList",
 	/** 主题设置字段 */
 	SETTINGS = "settings",
 	/** 国际化字段 */

@@ -10,6 +10,7 @@ import { registerLocalIcons } from "./components/icon/index.tsx";
 // 全局配置
 import { GLOBAL_CONFIG } from "./global-config.ts";
 import AppRoutes from "./router/index.tsx";
+import { Store } from "./store/index.tsx";
 import { urlJoin } from "./utils";
 
 // 注册图标
@@ -29,6 +30,8 @@ if (GLOBAL_CONFIG.openMock) {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<StrictMode>
-		<AppRoutes />
+		<Store>
+			<AppRoutes />
+		</Store>
 	</StrictMode>,
 );

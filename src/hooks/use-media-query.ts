@@ -74,6 +74,9 @@ export const useMediaQuery = (config: MediaQueryConfig | string) => {
 type Breakpoints = typeof breakpointsTokens;
 type BreakpointsKeys = keyof Breakpoints;
 
+export const up = (key: BreakpointsKeys) => ({
+	minWidth: removePx(breakpointsTokens[key]),
+});
 export const down = (key: BreakpointsKeys) => ({
 	maxWidth: removePx(breakpointsTokens[key]) - 0.05, // 减去0.05px避免断点重叠
 });

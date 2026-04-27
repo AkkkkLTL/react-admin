@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { Timeline } from "antd";
+import { useSelector } from "react-redux";
 import { Icon } from "@/components/icon";
-import { useUserInfo } from "@/store/modules/userSlice";
+import { selectUserInfo } from "@/store/modules/userSlice";
 import { themeVars } from "@/theme/theme.css";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
@@ -9,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/
 import { Text } from "@/ui/typography";
 
 export default function ProfileTab() {
-	const { username } = useUserInfo();
+	const { username } = useSelector(selectUserInfo);
 
 	const AboutItems = [
 		{

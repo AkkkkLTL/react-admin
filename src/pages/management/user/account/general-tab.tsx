@@ -1,8 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { UploadAvatar } from "@/components/upload/upload-avatar";
-import { useUserInfo } from "@/store/modules/userSlice";
+import { selectUserInfo } from "@/store/modules/userSlice";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardFooter } from "@/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
@@ -20,7 +21,7 @@ type FieldType = {
 	about: string;
 };
 export default function GeneralTab() {
-	const { avatar, username, email } = useUserInfo();
+	const { avatar, username, email } = useSelector(selectUserInfo);
 	const form = useForm<FieldType>({
 		defaultValues: {
 			name: username,

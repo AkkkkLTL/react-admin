@@ -1,8 +1,8 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useLocale from "@/locales/useLocale";
 import { useRouter } from "@/router/hooks";
-import { clearUserInfoAndToken, useUserInfo } from "@/store/modules/userSlice";
+import { clearUserInfoAndToken, selectUserInfo } from "@/store/modules/userSlice";
 import { Button } from "@/ui/button";
 import {
 	DropdownMenu,
@@ -19,7 +19,7 @@ export default function AccountDropdown() {
 	const { replace } = useRouter();
 	const { t } = useLocale();
 	const dispatch = useDispatch();
-	const { username, email, avatar } = useUserInfo();
+	const { username, email, avatar } = useSelector(selectUserInfo);
 
 	const logout = () => {
 		try {

@@ -1,9 +1,10 @@
-import { useUserInfo, useUserPermissions, useUserRoles, useUserToken } from "@/store/modules/userSlice";
+import { useSelector } from "react-redux";
+import { selectUserPermissions, selectUserRoles, selectUserToken } from "@/store/modules/userSlice";
 
 export const useAuthCheck = (baseOn: "role" | "permission" = "permission") => {
-	const { token } = useUserToken();
-	const permissions = useUserPermissions();
-	const roles = useUserRoles();
+	const { token } = useSelector(selectUserToken);
+	const permissions = useSelector(selectUserPermissions);
+	const roles = useSelector(selectUserRoles) || [];
 
 	// 基于角色还是权限检查
 	const resourcePool = baseOn === "role" ? roles : permissions;

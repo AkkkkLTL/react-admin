@@ -17,6 +17,7 @@ export function NavVertical({ data, className, ...props }: NavProps) {
 						group.items.map((item, index) => <NavList key={item.title || index} data={item} depth={1} />)}
 					{group.type === PermissionType.MENU && (
 						<NavItem
+							key={group.items[0].title || index}
 							// 数据
 							title={group.items[0].title}
 							path={group.items[0].path}

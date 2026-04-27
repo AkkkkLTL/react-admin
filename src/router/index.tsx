@@ -1,9 +1,11 @@
 import { lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { useDispatch } from "react-redux";
 import { createBrowserRouter, Navigate, Outlet, type RouteObject, RouterProvider } from "react-router-dom";
 import { apiSysMenuNav } from "@/api/services/sys-menu.service";
 import { GLOBAL_CONFIG } from "@/global-config";
 import DashboardLayout from "@/layouts/dashboard";
+import { setPermissions } from "@/store/modules/userSlice.ts";
 import { convertToTree } from "@/utils/tree";
 import ErrorFallback from "./components/error-fallback";
 import LoginAuthGuard from "./components/login-auth-guard";
@@ -22,6 +24,8 @@ export default function AppRoutes() {
 	const [routes, setRoutes] = useState<RouteObject[]>([]);
 	// 加载状态
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+
+	const dispatch = useDispatch();
 
 	// 初始化路由
 	const initializeRouter = useCallback(() => {
@@ -73,6 +77,7 @@ export default function AppRoutes() {
 				sessionStorage.setItem("menuList", JSON.stringify(convertToTree(data.menuList) || "[]"));
 				// 保存权限
 				sessionStorage.setItem("permissions", JSON.stringify(data.permissions || "[]"));
+				dispatch(setPermissions(data.permissions || []));
 				// 标记已添加动态路由
 				sessionStorage.setItem("isAddDynamicRoutes", "true");
 			} else {

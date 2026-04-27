@@ -1,14 +1,14 @@
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-
 import Logo from "@/components/logo";
 import { GLOBAL_CONFIG } from "@/global-config";
-import { useUserToken } from "@/store/modules/userSlice";
+import { selectUserToken } from "@/store/modules/userSlice";
 import LoginForm from "./login-form";
 import LoginProvider from "./providers/login-provider";
 
 export default function LoginPage() {
 	// 获取用户权限令牌
-	const { token } = useUserToken();
+	const { token } = useSelector(selectUserToken);
 	// 检查是否需要重定向到登录页（todo：将storage的字段信息存为常量）
 	const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
 

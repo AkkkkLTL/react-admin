@@ -166,6 +166,8 @@ export interface MenuInfo {
 	perms?: string;
 	/** 菜单类型 */
 	type: PermissionType;
+	/** 菜单是否禁用 */
+	disabled?: boolean;
 	/** 菜单图标 */
 	icon?: string;
 	/** 菜单排序 */
@@ -179,5 +181,5 @@ export interface MenuInfo {
 	/** 组件路径 */
 	component?: string;
 	/** 外部链接 */
-	externalLink?: string;
+	externalLink?: URL;
 }
