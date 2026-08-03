@@ -30,6 +30,12 @@ export function beforeAvatarUpload(file: RcFile) {
 	return isJpgOrPng && isLt2M;
 }
 
+export function getBase64(img: RcFile, callback: (url: string) => void) {
+	const reader = new FileReader();
+	reader.addEventListener("load", () => callback(reader.result as string));
+	reader.readAsDataURL(img);
+}
+
 export function getBlobUrl(imgFile: RcFile) {
 	const fileBlob = new Blob([imgFile]);
 	const thumbnailUrl = URL.createObjectURL(fileBlob);

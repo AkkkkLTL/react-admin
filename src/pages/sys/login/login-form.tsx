@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { apiSysLoginCaptcha, type SysLoginReq } from "@/api/services/sys-login.service";
+import { Icon } from "@/components/icon";
 import { GLOBAL_CONFIG } from "@/global-config";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import { useRouterContext } from "@/router/router-provider";
 import { useSignIn } from "@/store/modules/userSlice";
 import { Button } from "@/ui/button";
@@ -19,13 +20,14 @@ export default function LoginForm({ className, ...props }: React.ComponentPropsW
 	const { t } = useLocale();
 	const [loading, setLoading] = useState(false);
 	const [remember, setRemember] = useState(true);
+	const navigate = useNavigate();
+
+	const { loginState, setLoginState } = useLoginStateContext();
+	const signIn = useSignIn();
+
+	const { fetchMenuData } = useRouterContext();
 	const [captchaPath, setCaptchaPath] = useState("");
 	const [uuid, setUuid] = useState("");
-
-	const navigate = useNavigate();
-	const signIn = useSignIn();
-	const { loginState, setLoginState } = useLoginStateContext();
-	const { fetchMenuData } = useRouterContext();
 
 	const getCaptcha = async () => {
 		const uuid = getUUID();
@@ -33,17 +35,17 @@ export default function LoginForm({ className, ...props }: React.ComponentPropsW
 		setCaptchaPath((await apiSysLoginCaptcha(uuid)).data);
 	};
 
-	useEffect(() => {
-		getCaptcha();
-	}, []);
-
 	const form = useForm<SysLoginReq>({
 		defaultValues: {
-			username: "",
-			password: "",
+			username: "admin",
+			password: "123456",
 			captcha: "",
 		},
 	});
+
+	useEffect(() => {
+		getCaptcha();
+	}, []);
 
 	if (loginState !== LoginStateEnum.LOGIN) return null;
 
@@ -148,6 +150,42 @@ export default function LoginForm({ className, ...props }: React.ComponentPropsW
 						{loading && <Loader2 className="animate-spin mr-2" />}
 						{t("sys.login.loginButton")}
 					</Button>
+
+					{/* 手机登录/二维码登录 */}
+					<div className="grid gap-4 sm:grid-cols-2">
+						<Button variant={"outline"} className="w-full" onClick={() => setLoginState(LoginStateEnum.MOBILE)}>
+							<Icon icon="uil:mobile-android" size={20} />
+							{t("sys.login.mobileSignInFormTitle")}
+						</Button>
+						<Button variant={"outline"} className="w-full" onClick={() => setLoginState(LoginStateEnum.QR_CODE)}>
+							<Icon icon="uil:qrcode-scan" size={20} />
+							{t("sys.login.qrSignInFormTitle")}
+						</Button>
+					</div>
+
+					{/* 其他登陆方式 */}
+					<div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:items-center after:border-t after:border-border">
+						<span className="relative z-10 bg-background px-2 text-muted-foreground">{t("sys.login.otherSignIn")}</span>
+					</div>
+					<div className="flex cursor-pointer justify-around text-2xl">
+						<Button variant={"ghost"} size={"icon"}>
+							<Icon icon="mdi:github" size={24} />
+						</Button>
+						<Button variant={"ghost"} size={"icon"}>
+							<Icon icon="mdi:wechat" size={24} />
+						</Button>
+						<Button variant={"ghost"} size={"icon"}>
+							<Icon icon="ant-design:google-circle-filled" size={24} />
+						</Button>
+					</div>
+
+					{/* 注册 */}
+					<div className="text-center text-sm">
+						{t("sys.login.noAccount")}
+						<Button variant={"link"} className="px-1" onClick={() => setLoginState(LoginStateEnum.REGISTER)}>
+							{t("sys.login.signUpFormTitle")}
+						</Button>
+					</div>
 				</form>
 			</Form>
 		</div>

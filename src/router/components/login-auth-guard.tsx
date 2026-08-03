@@ -2,7 +2,7 @@
 import { type ReactNode, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "@/store/modules/userSlice";
-import { useRouter } from "../hooks/useRouter";
+import { useRouter } from "../hooks/use-router";
 
 interface LoginAuthGuardProps {
 	children: ReactNode;

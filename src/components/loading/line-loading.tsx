@@ -1,3 +1,4 @@
+import "./line-loading.css";
 import { useSettings } from "@/store/modules/settingsSlice";
 import { commonColors, paletteColors } from "@/theme/tokens/color";
 import { ThemeMode } from "@/types/enum";

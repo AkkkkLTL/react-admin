@@ -6,7 +6,7 @@ import { apiSysMenuNav } from "@/api/services/sys-menu.service";
 import { GLOBAL_CONFIG } from "@/global-config";
 import DashboardLayout from "@/layouts/dashboard";
 import { setPermissions } from "@/store/modules/userSlice.ts";
-import { convertToTree } from "@/utils/tree";
+import { convertFlatToToTree } from "@/utils/tree";
 import ErrorFallback from "./components/error-fallback";
 import LoginAuthGuard from "./components/login-auth-guard";
 import { RouterContextProvider } from "./router-provider";
@@ -74,7 +74,7 @@ export default function AppRoutes() {
 
 			if (data) {
 				// 保存菜单列表和权限
-				sessionStorage.setItem("menuList", JSON.stringify(convertToTree(data.menuList) || "[]"));
+				sessionStorage.setItem("menuList", JSON.stringify(convertFlatToToTree(data.menuList) || "[]"));
 				// 保存权限
 				sessionStorage.setItem("permissions", JSON.stringify(data.permissions || "[]"));
 				dispatch(setPermissions(data.permissions || []));

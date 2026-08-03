@@ -11,19 +11,21 @@ import { type Task, TaskPriority } from "./types";
 
 interface KanbanTaskProps {
 	index: number;
+	id: string;
 	task: Task;
-	columnId: string;
+	// columnId: string;
+	isDragging?: boolean;
 }
 
-export default memo(function KanbanTask({ index, task, columnId }: KanbanTaskProps) {
+export default memo(function KanbanTask({ index, task, isDragging }: KanbanTaskProps) {
 	const [drawerOpen, setDrawerOpen] = useState(false);
-	const { ref, isDragging } = useSortable({
+	const { ref } = useSortable({
 		id: task.id,
 		index,
 		type: "task",
 		accept: "task",
-		group: columnId,
-		data: { columnId },
+		// group: columnId,
+		// data: { columnId },
 	});
 
 	const { title, comments = [], attachments = [], priority, assignee } = task;

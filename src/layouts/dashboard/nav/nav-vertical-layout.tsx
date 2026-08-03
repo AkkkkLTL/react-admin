@@ -17,7 +17,7 @@ interface Props {
 /**
  * DashboardLayout 左侧菜单（垂直模式）
  */
-export default function NavVerticalLayout({ data, className }: Props) {
+export function NavVerticalLayout({ data, className }: Props) {
 	const settings = useSettings();
 	const { themeLayout } = settings;
 	const dispatch = useDispatch();

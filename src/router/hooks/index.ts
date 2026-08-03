@@ -1,6 +1,4 @@
-export { useFlattenedRoutes } from "./useFlattenedRoutes";
-export { usePathname } from "./usePathname";
-export { usePermissionRoutes } from "./usePermissionRoutes";
-export { useRouter } from "./useRouter";
-export { useRouteToMenu } from "./useRouteToMenu";
-
+export { useParams } from "./use-params";
+export { usePathname } from "./use-pathname";
+export { useRouter } from "./use-router";
+export { useSearchParams } from "./use-search-params";

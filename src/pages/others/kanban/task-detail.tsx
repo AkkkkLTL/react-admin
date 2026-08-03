@@ -104,7 +104,7 @@ export default function TaskDetail({ task }: TaskDetailProps) {
 					</div>
 				</div>
 			</Container>
-
+			{/* comments */}
 			<div
 				className="flex flex-col gap-4"
 				style={{

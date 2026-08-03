@@ -9,6 +9,17 @@ import { GLOBAL_CONFIG } from "./global-config.ts";
 import { AntdAdapter } from "./theme/adapter/antd.adapter.tsx";
 import { ThemeProvider } from "./theme/theme-provider.tsx";
 
+if (import.meta.env.DEV) {
+	import("react-scan").then(({ scan }) => {
+		scan({
+			enabled: false,
+			showToolbar: true,
+			log: false,
+			animationSpeed: "fast",
+		});
+	});
+}
+
 interface IProps {
 	children: ReactNode;
 }

@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import bgImg from "@/assets/images/background/banner-1.png";
+import Character from "@/assets/images/characters/character_3.png";
 import { Icon } from "@/components/icon";
 import { GLOBAL_CONFIG } from "@/global-config";
 import { Button } from "@/ui/button";
@@ -11,6 +13,11 @@ export default function BannerCard() {
 		left: 0,
 		right: 0,
 		bottom: 0,
+		backgroundImage: `url("${bgImg}")`,
+		backgroundSize: "100%",
+		backgroundPosition: "50%",
+		backgroundRepeat: "no-repeat",
+		opacity: 0.5,
 	};
 
 	return (
@@ -39,10 +46,13 @@ export default function BannerCard() {
 					</div>
 
 					<div className="col-span-2 md:col-span-1">
-						<div className="w-full h-full flex items-center justify-end"></div>
+						<div className="w-full h-full flex items-center justify-end">
+							<img src={Character} alt="character" className="w-56 h-56" />
+						</div>
 					</div>
 				</div>
 			</div>
+			<div style={bgStyle} className="z-1" />
 		</div>
 	);
 }

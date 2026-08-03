@@ -1,5 +1,4 @@
 import type { MotionProps } from "motion/react";
-import { props } from "ramda";
 import type { BackgroundType, VariantsReturnType } from "../types";
 
 export const varBgColor = (props?: BackgroundType): MotionProps => {

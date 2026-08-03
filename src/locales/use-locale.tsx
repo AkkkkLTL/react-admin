@@ -1,6 +1,8 @@
+import "dayjs/locale/zh-cn";
 import type { Locale as AntdLocal } from "antd/es/locale";
 import en_us from "antd/es/locale/en_US";
 import zh_cn from "antd/es/locale/zh_CN";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { LocalEnum } from "@/types/enum";
 
@@ -54,6 +56,7 @@ export default function useLocale() {
 	const setLocale = (locale: Locale) => {
 		i18n.changeLanguage(locale);
 		document.documentElement.lang = locale;
+		dayjs.locale(locale);
 	};
 
 	return {

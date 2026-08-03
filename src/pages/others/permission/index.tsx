@@ -1,10 +1,11 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AuthGuard, useAuthCheck } from "@/components/auth";
 import { CodeBlock } from "@/components/code/code-bock";
-import { selectUserInfo, selectUserPermissions } from "@/store/modules/userSlice";
+import { selectUserInfo, selectUserPermissions, useSignIn } from "@/store/modules/userSlice";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/ui/tabs";
 import { Text } from "@/ui/typography";
 
 const Component_Auth_1 = `
@@ -78,23 +79,71 @@ checkAll(["permission:read", "permission:create"]) ? (
   <Text variant="body1" color="error">
 `;
 
+// todo: 获取所有用户列表
+const DB_USERS = [
+	{
+		username: "admin",
+		roleIdList: ["1"],
+		permissions: ["permission:delete"],
+	},
+	{
+		username: "user",
+		roleIdList: ["2"],
+		permissions: ["permission:update"],
+	},
+];
+
 export default function PermissionPage() {
 	const permissions = useSelector(selectUserPermissions);
 	// const roles = useUserRoles();
-	const { username } = useSelector(selectUserInfo);
+	const { username, roleIdList: roles } = useSelector(selectUserInfo);
+	const signIn = useSignIn();
 	const { check, checkAny, checkAll } = useAuthCheck();
+	const dispatch = useDispatch();
+
+	const handleSwitch = (_username: string) => {
+		if (_username === username) return;
+		// todo:
+		// 根据用户名查找是否存在指定用户
+		const user = {
+			username: _username,
+			roleIdList: roles,
+			permissions,
+		};
+		// 如果存在，切换到指定用户
+		if (user) {
+			signIn({ username: user.username, password: "123456", uuid: "", captcha: "" });
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="w-full flex items-center justify-center">
 				<Text variant={"subTitle1"}>当前用户：{username}</Text>
+				<Tabs defaultValue={username} onValueChange={handleSwitch}>
+					<TabsList>
+						{DB_USERS.map((item) => (
+							<TabsTrigger key={item.username} value={item.username}>
+								{item.username}
+							</TabsTrigger>
+						))}
+					</TabsList>
+				</Tabs>
 			</div>
 			<Card>
 				<CardContent>
 					<div className="flex items-center gap-2">
 						<Text variant={"body1"}>当前用户角色：</Text>
 						{permissions && permissions.length > 0 ? (
-							<Text variant={"body1"}>{permissions.join(", ")}</Text>
+							<Text variant={"body1"}>[{roles?.map((role) => role).join(", ")}]</Text>
+						) : (
+							<Text variant={"body1"}>[]</Text>
+						)}
+					</div>
+					<div className="flex items-center gap-2">
+						<Text variant={"body1"}>当前用户权限：</Text>
+						{permissions && permissions.length > 0 ? (
+							<Text variant={"body1"}>[{permissions?.map((permission) => permission).join(", ")}]</Text>
 						) : (
 							<Text variant={"body1"}>[]</Text>
 						)}

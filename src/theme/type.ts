@@ -5,87 +5,181 @@ import type { ThemeMode } from "@/types/enum";
  * 主题 token 默认值
  */
 export const themeTokens = {
+	/** 主题颜色 */
 	colors: {
+		/** 主题颜色调色板 */
 		palette: {
+			/** 主色 */
 			primary: {
+				/** 主色-浅色 */
 				lighter: null,
+				/** 主色-中色 */
 				light: null,
+				/** 主色-默认色 */
 				default: null,
+				/** 主色-深色 */
 				dark: null,
+				/** 主色-更深色 */
 				darker: null,
 			},
+			/** 成功色 */
 			success: {
+				/** 成功色-浅色 */
 				lighter: null,
+				/** 成功色-中色 */
 				light: null,
+				/** 成功色-默认色 */
 				default: null,
+				/** 成功色-深色 */
 				dark: null,
+				/** 成功色-更深色 */
 				darker: null,
 			},
+			/** 警告色 */
 			warning: {
+				/** 警告色-浅色 */
 				lighter: null,
+				/** 警告色-中色 */
 				light: null,
+				/** 警告色-默认色 */
 				default: null,
+				/** 警告色-深色 */
 				dark: null,
+				/** 警告色-更深色 */
 				darker: null,
 			},
+			/** 错误色 */
 			error: {
+				/** 错误色-浅色 */
 				lighter: null,
+				/** 错误色-中色 */
 				light: null,
+				/** 错误色-默认色 */
 				default: null,
+				/** 错误色-深色 */
 				dark: null,
+				/** 错误色-更深色 */
 				darker: null,
 			},
+			/** 信息色 */
 			info: {
+				/** 信息色-浅色 */
 				lighter: null,
+				/** 信息色-中色 */
 				light: null,
+				/** 信息色-默认色 */
 				default: null,
+				/** 信息色-深色 */
 				dark: null,
+				/** 信息色-更深色 */
 				darker: null,
 			},
+			/** 灰色 */
 			gray: {
+				/** 灰色-100 */
 				"100": null,
+				/** 灰色-200 */
 				"200": null,
+				/** 灰色-300 */
 				"300": null,
+				/** 灰色-400 */
 				"400": null,
+				/** 灰色-500 */
 				"500": null,
+				/** 灰色-600 */
 				"600": null,
+				/** 灰色-700 */
 				"700": null,
+				/** 灰色-800 */
 				"800": null,
+				/** 灰色-900 */
 				"900": null,
 			},
 		},
+		/** 主题颜色通用 */
 		common: {
+			/** 白色 */
 			white: null,
+			/** 黑色 */
 			black: null,
 		},
+		/** 主题颜色操作 */
 		action: {
+			/** 操作-悬停 */
 			hover: null,
+			/** 操作-选中 */
 			selected: null,
+			/** 操作-聚焦 */
 			focus: null,
+			/** 操作-禁用 */
 			disabled: null,
+			/** 操作-激活 */
 			active: null,
 		},
+		/** 主题颜色文本 */
 		text: {
+			/** 主本-主色 */
 			primary: null,
+			/** 主本-次色 */
 			secondary: null,
+			/** 主本-禁用 */
 			disabled: null,
 		},
+		/** 主题颜色背景 */
 		background: {
+			/** 背景-默认色 */
 			default: null,
+			/** 背景-纸色 */
 			paper: null,
+			/** 背景-中性色 */
 			neutral: null,
 		},
 	},
 	typography: {
 		fontFamily: {
+			/**
+			 * @desc 字体-Open Sans
+			 * cssVar:--typography-fontFamily-openSans
+			 * themeVar:typography.fontFamily.openSans
+			 */
 			openSans: null,
+			/**
+			 * @desc 字体-Inter
+			 * cssVar:--typography-fontFamily-inter
+			 * themeVar:typography.fontFamily.inter
+			 */
 			inter: null,
 		},
 		fontSize: {
+			/**
+			 * @desc 字体大小-小
+			 * cssVar:--typography-fontSize-xs
+			 * themeVar:typography.fontSize.xs
+			 */
 			xs: null,
+			/**
+			 * @desc 字体大小-中
+			 * cssVar:--typography-fontSize-sm
+			 * themeVar:typography.fontSize.sm
+			 */
 			sm: null,
+			/**
+			 * @desc 字体大小-默认
+			 * cssVar:--typography-fontSize-default
+			 * themeVar:typography.fontSize.default
+			 */
 			default: null,
+			/**
+			 * @desc 字体大小-大
+			 * cssVar:--typography-fontSize-lg
+			 * themeVar:typography.fontSize.lg
+			 */
 			lg: null,
+			/**
+			 * @desc 字体大小-超大
+			 * cssVar:--typography-fontSize-xl
+			 * themeVar:typography.fontSize.xl
+			 */
 			xl: null,
 		},
 		fontWeight: {
@@ -231,7 +325,7 @@ export type AddChannelToLeaf<T> = T extends object
 /**
  * 将 themeTokens 中的 null 值转换为字符串
  */
-export type TransNulltoString<T> = T extends object
+type TransNulltoString<T> = T extends object
 	? IsLeafObject<T> extends true
 		? { [K in keyof T]: string }
 		: { [K in keyof T]: TransNulltoString<T[K]> }

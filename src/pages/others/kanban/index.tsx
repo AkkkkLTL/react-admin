@@ -1,10 +1,11 @@
-import type { DragEndEvent } from "@dnd-kit/abstract";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/abstract";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
-import { move } from "@dnd-kit/helpers";
+import { arrayMove, move } from "@dnd-kit/helpers";
 import {
 	type DragDropEventHandlers,
 	DragDropProvider,
 	type DragOverEvent,
+	DragOverlay,
 	KeyboardSensor,
 	PointerSensor,
 } from "@dnd-kit/react";
@@ -32,50 +33,132 @@ const sensors = [
 
 export default function Kanban() {
 	/** 保存看板数据状态 */
-	const [data, setData] = useState<DndDataType>(initialData);
-	const [taskItems, setTaskItems] = useState<Record<string, string[]>>({});
-	const [columns, setColumns] = useState(Object.keys(taskItems));
-	const snapshot = useRef(structuredClone(taskItems));
-
+	const [state, setState] = useState<DndDataType>(initialData);
+	const [activeId, setActiveId] = useState<string | null>(null);
+	const [activeType, setActiveType] = useState<"column" | "task" | null>(null);
 	const [addingColumn, setAddingColumn] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const items = useMemo(() => {
-		return data.columnOrder.reduce(
-			(acc, value) => {
-				acc[value] = data.columns[value].taskIds;
-				return acc;
-			},
-			{} as Record<string, string[]>,
-		);
-	}, [data]);
+	// const items = useMemo(() => {
+	// 	return data.columnOrder.reduce(
+	// 		(acc, value) => {
+	// 			acc[value] = data.columns[value].taskIds;
+	// 			return acc;
+	// 		},
+	// 		{} as Record<string, string[]>,
+	// 	);
+	// }, [data]);
 
-	useEffect(() => {
-		setTaskItems(items);
-		setColumns(Object.keys(items));
-	}, [items]);
+	// useEffect(() => {
+	// 	setTaskItems(items);
+	// 	setColumns(Object.keys(items));
+	// }, [items]);
 
 	/** 开始拖动 */
-	const handleDragStart = useCallback<DragDropEventHandlers["onDragStart"]>(() => {
-		snapshot.current = structuredClone(taskItems);
-	}, [taskItems]);
+	const handleDragStart = useCallback<DragDropEventHandlers["onDragStart"]>((event) => {
+		const { operation } = event;
+		setActiveId(operation.source?.id as string);
+		// 通过判断 id 格式来确定拖拽类型
+		setActiveType(operation.source?.id.toString().startsWith("task-") ? "task" : "column");
+		// snapshot.current = structuredClone(taskItems);
+	}, []);
 
 	/** 拖动 */
-	const handleDragOver = useCallback<DragDropEventHandlers["onDragOver"]>((event: DragOverEvent) => {
-		const { source, target } = event.operation;
-		console.log(source, target);
-		// 处理列拖动
-		if (source?.type === "column") {
-			setColumns((columns) => move(columns, event));
-		} else setTaskItems((taskItems) => move(taskItems, event));
-	}, []);
+	// const handleDragOver = useCallback<DragDropEventHandlers["onDragOver"]>((event: DragOverEvent) => {
+	// 	const { operation:{
+	// 		source, target
+	// 	} } = event;
+
+	// 	if (!target) {
+	// 		setActiveId(null);
+	// 		setActiveType(null);
+	// 		return;
+	// 	}
+	// 	console.log(source, target);
+
+	// }, []);
 
 	/** 拖动结束 */
 	const handleDragEnd = useCallback<DragDropEventHandlers["onDragEnd"]>((event: DragEndEvent) => {
-		if (event.canceled) {
-			setTaskItems(snapshot.current);
+		const {
+			operation: { source, target },
+		} = event;
+
+		if (!target) {
+			setActiveId(null);
+			setActiveType(null);
 			return;
 		}
+		console.log(source, target);
+
+		if (source?.id !== target?.id) {
+			if (activeType === "column") {
+				// 处理列的拖拽
+				const oldIndex = state.columnOrder.indexOf(source?.id as string);
+				const newIndex = state.columnOrder.indexOf(target?.id as string);
+
+				setState({
+					...state,
+					columnOrder: arrayMove(state.columnOrder, oldIndex, newIndex),
+				});
+			} else {
+				// 处理任务的拖拽
+				const activeColumn = Object.values(state.columns).find((col) => col.taskIds.includes(source?.id as string));
+				const overColumn = Object.values(state.columns).find(
+					(col) => col.taskIds.includes(target.id as string) || col.id === target.id,
+				);
+
+				if (!activeColumn || !overColumn) return;
+
+				if (activeColumn === overColumn) {
+					// 同列内移动
+					const newTaskIds = arrayMove(
+						activeColumn.taskIds,
+						activeColumn.taskIds.indexOf(source?.id as string),
+						activeColumn.taskIds.indexOf(target.id as string),
+					);
+
+					setState({
+						...state,
+						columns: {
+							...state.columns,
+							[activeColumn.id]: {
+								...activeColumn,
+								taskIds: newTaskIds,
+							},
+						},
+					});
+				} else {
+					// 跨列移动
+					const sourceTaskIds = activeColumn.taskIds.filter((id) => id !== source?.id);
+					const destinationTaskIds = [...overColumn.taskIds];
+					const overTaskIndex = overColumn.taskIds.indexOf(target.id as string);
+
+					destinationTaskIds.splice(
+						overTaskIndex >= 0 ? overTaskIndex : destinationTaskIds.length,
+						0,
+						source?.id as string,
+					);
+
+					setState({
+						...state,
+						columns: {
+							...state.columns,
+							[activeColumn.id]: {
+								...activeColumn,
+								taskIds: sourceTaskIds,
+							},
+							[overColumn.id]: {
+								...overColumn,
+								taskIds: destinationTaskIds,
+							},
+						},
+					});
+				}
+			}
+		}
+		setActiveId(null);
+		setActiveType(null);
 	}, []);
 
 	const handleClickOutside = (event: MouseEvent) => {
@@ -96,124 +179,109 @@ export default function Kanban() {
 
 	/** 创建任务列 */
 	const createColumn = (column: Column) => {
-		if (!data) return;
-
-		const newData: DndDataType = {
-			...data,
+		const newState: DndDataType = {
+			...state,
 			columns: {
-				...data.columns,
+				...state.columns,
 				[column.id]: column,
 			},
-			columnOrder: [...data.columnOrder, column.id],
+			columnOrder: [...state.columnOrder, column.id],
 		};
-		setData(newData);
+		setState(newState);
 	};
 
 	/** 创建任务 */
 	const createTask = (columnId: string, task: Task) => {
-		if (!data) return;
-
-		const column = data.columns[columnId];
+		const column = state.columns[columnId];
 		const newData: DndDataType = {
-			...data,
+			...state,
 			tasks: {
-				...data.tasks,
+				...state.tasks,
 				[task.id]: task,
 			},
 			columns: {
-				...data.columns,
+				...state.columns,
 				[columnId]: {
 					...column,
 					taskIds: [...column.taskIds, task.id],
 				},
 			},
 		};
-		setData(newData);
+		setState(newData);
 	};
 
 	const deleteColumn = (columnId: string) => {
-		if (!data) return;
-
-		const column = data.columns[columnId];
-		const newTasks = Object.keys(data.tasks)
+		const column = state.columns[columnId];
+		const newTasks = Object.keys(state.tasks)
 			.filter((key) => !column.taskIds.includes(key))
 			.reduce((result, key) => {
-				result[key] = data.tasks[key];
+				result[key] = state.tasks[key];
 				return result;
 			}, {} as Tasks);
 
-		const newColumns = Object.keys(data.columns)
+		const newColumns = Object.keys(state.columns)
 			.filter((key) => key !== columnId)
 			.reduce((result, key) => {
-				result[key] = data.columns[key];
+				result[key] = state.columns[key];
 				return result;
 			}, {} as Columns);
-		const newColumnOrder = Array.from(data.columnOrder).filter((item) => item !== columnId);
+		const newColumnOrder = Array.from(state.columnOrder).filter((item) => item !== columnId);
 
 		const newData: DndDataType = {
 			tasks: newTasks,
 			columns: newColumns,
 			columnOrder: newColumnOrder,
 		};
-		setData(newData);
+		setState(newData);
 	};
 
 	const clearColumn = (columnId: string) => {
-		if (!data) return;
-
-		const column = data.columns[columnId];
-		const newTasks = Object.keys(data.tasks)
+		const column = state.columns[columnId];
+		const newTasks = Object.keys(state.tasks)
 			.filter((key) => !column.taskIds.includes(key))
 			.reduce((result, key) => {
-				result[key] = data.tasks[key];
+				result[key] = state.tasks[key];
 				return result;
 			}, {} as Tasks);
 		const newColumns = {
-			...data.columns,
+			...state.columns,
 			[columnId]: {
 				...column,
 				taskIds: [],
 			},
 		};
 		const newData: DndDataType = {
-			...data,
+			...state,
 			tasks: newTasks,
 			columns: newColumns,
 		};
-		setData(newData);
+		setState(newData);
 	};
 
 	const renameColumn = (column: Column) => {
-		if (!data) return;
-
 		const { id, title } = column;
 		const newColumns = {
-			...data.columns,
+			...state.columns,
 			[id]: {
-				...data.columns[id],
+				...state.columns[id],
 				title,
 			},
 		};
 		const newData: DndDataType = {
-			...data,
+			...state,
 			columns: newColumns,
 		};
-		setData(newData);
+		setState(newData);
 	};
 
 	return (
 		<ScrollArea type="hover">
 			<div className="flex w-full">
-				<DragDropProvider
-					sensors={sensors}
-					onDragStart={handleDragStart}
-					onDragOver={handleDragOver}
-					onDragEnd={handleDragEnd}
-				>
+				<DragDropProvider sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
 					<div className="flex h-full items-start gap-6 p-1">
-						{columns.map((columnId, index) => {
-							const column = initialData.columns[columnId];
-							const tasks = taskItems[columnId].map((taskId) => initialData.tasks[taskId]);
+						{state.columnOrder.map((columnId, index) => {
+							const column = state.columns[columnId];
+							const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
 
 							return (
 								<KanbanColumn
@@ -229,6 +297,29 @@ export default function Kanban() {
 								/>
 							);
 						})}
+						<DragOverlay>
+							{activeId && activeType === "column" ? (
+								<KanbanColumn
+									id={activeId}
+									index={state.columnOrder.indexOf(activeId)}
+									column={state.columns[activeId]}
+									tasks={state.columns[activeId].taskIds.map((id) => state.tasks[id])}
+									createTask={createTask}
+									clearColumn={clearColumn}
+									deleteColumn={deleteColumn}
+									renameColumn={renameColumn}
+									isDragging
+								/>
+							) : null}
+							{activeId && activeType === "task" ? (
+								<KanbanTask
+									id={activeId}
+									index={state.columnOrder.indexOf(activeId)}
+									task={state.tasks[activeId]}
+									isDragging
+								/>
+							) : null}
+						</DragOverlay>
 					</div>
 				</DragDropProvider>
 

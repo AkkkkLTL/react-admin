@@ -2,7 +2,7 @@ import { ChevronDown } from "lucide-react";
 import { Fragment, useCallback, useMemo } from "react";
 import { Link, useMatches } from "react-router-dom";
 import type { NavItemDataProps } from "@/components/nav/types";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import {
 	Breadcrumb,
 	BreadcrumbEllipsis,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/icon";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import { useRouter } from "@/router/hooks";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
@@ -72,7 +72,7 @@ export default function SearchBar() {
 			replace(path);
 			setOpen(false);
 		},
-		[replace],
+		[replace, setOpen],
 	);
 
 	useEffect(() => {

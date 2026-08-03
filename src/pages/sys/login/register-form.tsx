@@ -1,0 +1,121 @@
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import useLocale from "@/locales/use-locale";
+import { Button } from "@/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/ui/form";
+import { Input } from "@/ui/input";
+import { ReturnButton } from "./components/return-button";
+import { LoginStateEnum, useLoginStateContext } from "./providers/login-provider";
+
+export default function RegisterForm() {
+	const { t } = useLocale();
+	const { loginState, backToLogin } = useLoginStateContext();
+
+	// 注册
+	const signUpMutation = useMutation({
+		// mutationFn: userService.signup,
+	});
+
+	const form = useForm({
+		defaultValues: {
+			username: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+		},
+	});
+
+	const onFinish = async (values: any) => {
+		console.log("Received values of form: ", values);
+		// await signUpMutation.mutate(values);
+		backToLogin();
+	};
+
+	if (loginState !== LoginStateEnum.REGISTER) return null;
+
+	return (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onFinish)} className="space-y-4">
+				<div className="flex flex-col items-center gap-2 text-center">
+					<h1 className="text-2xl font-bold">{t("sys.login.signUpFormTitle")}</h1>
+				</div>
+
+				<FormField
+					control={form.control}
+					name="username"
+					rules={{ required: t("sys.login.accountPlaceholder") }}
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input placeholder={t("sys.login.userName")} {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="email"
+					rules={{ required: t("sys.login.emaildPlaceholder") }}
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input placeholder={t("sys.login.email")} {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="password"
+					rules={{ required: t("sys.login.passwordPlaceholder") }}
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input type="password" placeholder={t("sys.login.password")} {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="confirmPassword"
+					rules={{
+						required: t("sys.login.confirmPasswordPlaceholder"),
+						validate: (value) => value === form.getValues("password") || t("sys.login.diffPwd"),
+					}}
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input type="password" placeholder={t("sys.login.confirmPassword")} {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<Button type="submit" className="w-full">
+					{t("sys.login.registerButton")}
+				</Button>
+
+				<div className="mb-2 text-xs text-gray">
+					<span>{t("sys.login.registerAndAgree")}</span>
+					<a href="./" className="text-sm underline! text-primary!">
+						{t("sys.login.termsOfService")}
+					</a>
+					{" & "}
+					<a href="./" className="text-sm underline! text-primary!">
+						{t("sys.login.privacyPolicy")}
+					</a>
+				</div>
+
+				<ReturnButton onClick={backToLogin} />
+			</form>
+		</Form>
+	);
+}

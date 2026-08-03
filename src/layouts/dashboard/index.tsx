@@ -4,10 +4,7 @@ import { useSettings } from "@/store/modules/settingsSlice";
 import { ThemeLayout } from "@/types/enum";
 import Header from "./header";
 import Main from "./main";
-import { NavMobileLayout } from "./nav";
-import { useFilteredNavData } from "./nav/nav-data";
-import { NavHorizontalLayout } from "./nav/nav-horizontal-layout";
-import NavVerticalLayout from "./nav/nav-vertical-layout";
+import { NavHorizontalLayout, NavMobileLayout, NavVerticalLayout, useFilteredNavData } from "./nav";
 
 export default function DashboardLayout() {
 	const isMobile = useMediaQuery(down("md"));

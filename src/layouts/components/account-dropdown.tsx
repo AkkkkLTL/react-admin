@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
+import { useLoginStateContext } from "@/pages/sys/login/providers/login-provider";
 import { useRouter } from "@/router/hooks";
 import { clearUserInfoAndToken, selectUserInfo } from "@/store/modules/userSlice";
 import { Button } from "@/ui/button";
@@ -20,11 +21,13 @@ export default function AccountDropdown() {
 	const { t } = useLocale();
 	const dispatch = useDispatch();
 	const { username, email, avatar } = useSelector(selectUserInfo);
+	const { backToLogin } = useLoginStateContext();
 
 	const logout = () => {
 		try {
 			// 清除用户信息和token
 			dispatch(clearUserInfoAndToken());
+			backToLogin();
 		} catch (error) {
 			// 清除用户信息和token失败时的处理
 			console.log(error);

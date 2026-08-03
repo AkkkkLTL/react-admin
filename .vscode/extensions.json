@@ -5,6 +5,9 @@
         "lokalise.i18n-ally",
         "antfu.iconify",
         "biomejs.biome",
-        "vunguyentuan.vscode-css-variables"
+        "vunguyentuan.vscode-css-variables",
+        "ms-ceintl.vscode-language-pack-zh-hans",
+        "formulahendry.auto-rename-tag",
+        "styled-components.vscode-styled-components"
     ]
 }

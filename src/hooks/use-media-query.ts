@@ -46,6 +46,7 @@ export const useMediaQuery = (config: MediaQueryConfig | string) => {
 	useEffect(() => {
 		// 客户端渲染时立即检查当前状态
 		const mediaQuery = window.matchMedia(mediaQueryString);
+		setMatches(mediaQuery.matches);
 
 		// 监听变化
 		const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
@@ -79,4 +80,8 @@ export const up = (key: BreakpointsKeys) => ({
 });
 export const down = (key: BreakpointsKeys) => ({
 	maxWidth: removePx(breakpointsTokens[key]) - 0.05, // 减去0.05px避免断点重叠
+});
+export const between = (start: BreakpointsKeys, end: BreakpointsKeys) => ({
+	minWidth: removePx(breakpointsTokens[start]),
+	maxWidth: removePx(breakpointsTokens[end]) - 0.05, // 减去0.05px避免断点重叠
 });

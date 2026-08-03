@@ -1,8 +1,8 @@
 import Color from "color";
+import type { ThemeTokens } from "../type";
 import { commonColors, paletteColors } from "./color";
-import { ThemeTokens } from "../type";
 
-export const lightShadowTokens:ThemeTokens["shadows"] = {
+export const lightShadowTokens: ThemeTokens["shadows"] = {
 	none: "none",
 	sm: `0 1px 2px 0 ${Color(paletteColors.gray[500]).alpha(0.16)}`,
 	default: `0 4px 8px 0 ${Color(paletteColors.gray[500]).alpha(0.16)}`,
@@ -24,7 +24,7 @@ export const lightShadowTokens:ThemeTokens["shadows"] = {
 	error: `0 8px 16px 0 ${Color(paletteColors.error.default).alpha(0.24)}`,
 };
 
-export const darkShadowTokens:ThemeTokens["shadows"] = {
+export const darkShadowTokens: ThemeTokens["shadows"] = {
 	none: "none",
 	sm: `0 1px 2px 0 ${Color(commonColors.black).alpha(0.16)}`,
 	default: `0 4px 8px 0 ${Color(commonColors.black).alpha(0.16)}`,

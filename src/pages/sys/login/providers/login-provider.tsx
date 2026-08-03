@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from "react";
 
 /**
  * 登录状态上下文
@@ -10,6 +10,8 @@ export enum LoginStateEnum {
 	REGISTER = 1,
 	/** 重置密码状态 */
 	RESET_PASSWORD = 2,
+	MOBILE = 3,
+	QR_CODE = 4,
 }
 
 interface LoginStateContext {
@@ -36,7 +38,6 @@ export default function LoginProvider({ children }: PropsWithChildren) {
 		setLoginState(LoginStateEnum.LOGIN);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <false>
 	const value: LoginStateContext = useMemo(
 		() => ({
 			loginState,

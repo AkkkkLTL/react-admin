@@ -1,6 +1,6 @@
 import { StyleProvider } from "@ant-design/cssinjs";
 import { App, ConfigProvider, type ThemeConfig, theme } from "antd";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import { useSettings } from "@/store/modules/settingsSlice";
 import { ThemeMode } from "@/types/enum";
 import { removePx } from "@/utils/theme";

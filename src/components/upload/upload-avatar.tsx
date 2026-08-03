@@ -26,6 +26,7 @@ export function UploadAvatar({ defaultAvatar = "", helperText, ...props }: Props
 			return;
 		}
 		if (info.file.status === "done" || info.file.status === "error") {
+			// TODO: Get this url from response in real world.
 			if (info.file.originFileObj) {
 				setImageUrl(getBlobUrl(info.file.originFileObj));
 			}

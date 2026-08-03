@@ -1,5 +1,5 @@
 import { Icon } from "@/components/icon";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import { themeVars } from "@/theme/theme.css";
 import { LocalEnum } from "@/types/enum";
 import { Button } from "@/ui/button";

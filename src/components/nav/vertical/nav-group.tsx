@@ -1,6 +1,6 @@
 import { useToggle } from "react-use";
 import { Icon } from "@/components/icon";
-import useLocale from "@/locales/useLocale";
+import useLocale from "@/locales/use-locale";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collapsible";
 import { cn } from "@/utils";
 import type { NavGroupProps } from "../types";
@@ -13,12 +13,12 @@ interface GroupProps {
 }
 
 export function NavGroup({ name, items }: NavGroupProps) {
-	const [open, setOpen] = useToggle(true);
+	const [open, toggleOpen] = useToggle(true);
 
 	return (
 		<Collapsible open={open}>
 			<CollapsibleTrigger asChild>
-				<Group name={name} open={open} onClick={setOpen} />
+				<Group name={name} open={open} onClick={toggleOpen} />
 			</CollapsibleTrigger>
 			<CollapsibleContent>
 				<ul className="flex w-full flex-col gap-1">

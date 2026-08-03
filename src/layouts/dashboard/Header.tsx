@@ -5,7 +5,9 @@ import { Button } from "@/ui/button";
 import { cn } from "@/utils";
 import AccountDropdown from "../components/account-dropdown";
 import BreadCrumb from "../components/bread-crumb";
+import NoticeButton from "../components/notice";
 import SearchBar from "../components/search-bar";
+import SettingButton from "../components/setting-button";
 
 interface HeaderProps {
 	leftSlot?: ReactNode;
@@ -29,6 +31,8 @@ export default function Header({ leftSlot }: HeaderProps) {
 		>
 			<div className="flex items-center">
 				{/* 面包屑 */}
+				{leftSlot}
+
 				<div className="hidden md:block ml-4">{breadCrumb && <BreadCrumb />}</div>
 			</div>
 
@@ -52,8 +56,8 @@ export default function Header({ leftSlot }: HeaderProps) {
 				>
 					<Icon icon="carbon:logo-discord" size={24} />
 				</Button>
-				{/* todo: NoticeButton */}
-				{/* todo: SettingButton */}
+				<NoticeButton />
+				<SettingButton />
 				<AccountDropdown />
 			</div>
 		</header>

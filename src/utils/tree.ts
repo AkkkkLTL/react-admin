@@ -28,9 +28,9 @@ export function flattenTrees<T extends { children?: T[] }>(trees: T[] = []): T[]
 /**
  * 把数组转换为树结构
  */
-export function convertToTree<T extends { id: number | string; parentId: number | string | null; children?: T[] }>(
-	items: T[],
-): T[] {
+export function convertFlatToToTree<
+	T extends { id: number | string; parentId: number | string | null; children?: T[] },
+>(items: T[]): T[] {
 	const map: Record<string, T> = {};
 	const result: T[] = [];
 
@@ -46,4 +46,10 @@ export function convertToTree<T extends { id: number | string; parentId: number 
 	});
 
 	return result;
+}
+
+export function convertArrayToTree<T extends { children?: T[] }>(items: T[]): T[] {
+	const tree = items.map((item) => ({ ...item, children: convertArrayToTree(item.children || []) }));
+
+	return tree;
 }

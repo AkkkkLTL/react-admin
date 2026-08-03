@@ -1,3 +1,4 @@
+import { as } from "vitest/dist/chunks/reporters.nr4dxCkA.js";
 import type { NavItemDataProps } from "@/components/nav/types";
 import type { BasicStatus, PermissionType } from "@/types/enum";
 
@@ -53,6 +54,8 @@ export interface Role extends CommonOption {
 	id: string; // uuid
 	/** 角色名称 */
 	name: string;
+	/** 备注 */
+	remark?: string;
 	/** 角色权限 */
 	code: string;
 	/** 角色权限 */
@@ -77,8 +80,10 @@ export interface Permission extends CommonOption {
  * @interface MenuMetaInfo
  */
 export type MenuMetaInfo = Partial<
-	Pick<NavItemDataProps, "path" | "icon" | "caption" | "info" | "disabled" | "auth" | "hidden">
+	Pick<NavItemDataProps, "path" | "caption" | "info" | "disabled" | "auth" | "hidden">
 > & {
+	/** 图标 */
+	icon?: string;
 	/** 外链 */
 	externalLink?: URL;
 	/** 组件 */
@@ -96,7 +101,7 @@ export interface Menu extends CommonOption, MenuMetaInfo {
 	parentId: string | null;
 	/** 菜单名称 */
 	name: string;
-	code: string;
+	code?: string;
 	/** 菜单排序 */
 	order?: number;
 	/** 菜单类型 */

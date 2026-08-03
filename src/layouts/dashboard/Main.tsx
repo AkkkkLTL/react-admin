@@ -1,5 +1,5 @@
 import { concat } from "ramda";
-import { type CSSProperties, Suspense, useCallback, useMemo } from "react";
+import { Suspense, useCallback, useMemo } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { AuthGuard } from "@/components/auth";
 import { LineLoading } from "@/components/loading";
@@ -32,12 +32,6 @@ export default function Main() {
 	);
 
 	const currentNavAuth = findAuthByPath(pathname);
-
-	const mainStyle: CSSProperties = {
-		paddingTop: 0,
-		transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms", // this is for the slide,
-		width: "100%",
-	};
 
 	return (
 		<AuthGuard checkAny={currentNavAuth} fallback={<Page403 />}>

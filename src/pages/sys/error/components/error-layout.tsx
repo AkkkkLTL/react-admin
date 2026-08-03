@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 import { NavLink } from "react-router-dom";
 import MotionContainer from "@/components/animate/motion-container";
-import { varBounce } from "@/components/animate/variants/bounce";
+import { getVariant } from "@/components/animate/variants";
 import { GLOBAL_CONFIG } from "@/global-config";
 import { Button } from "@/ui/button";
 import { Text, Title } from "@/ui/typography";
@@ -29,6 +29,7 @@ export default function ErrorLayout({
 	buttonText = "Go to Home",
 	slots = {},
 }: ErrorLayoutProps) {
+	const bounceIn = getVariant("bounceIn");
 	return (
 		<>
 			{helmetTitle && (
@@ -38,19 +39,19 @@ export default function ErrorLayout({
 			)}
 			<div className="m-auto max-w-[400px] flex items-center justify-center h-full">
 				<MotionContainer className="flex flex-col items-center justify-center px-2 w-full gap-2">
-					<m.div variants={varBounce().in}>
+					<m.div variants={bounceIn}>
 						<Title as="h2" className="text-center">
 							{title}
 						</Title>
 					</m.div>
 					{desc && (
-						<m.div variants={varBounce().in}>
+						<m.div variants={bounceIn}>
 							<Text variant={"subTitle1"} color={"secondary"} align={"center"}>
 								{desc}
 							</Text>
 						</m.div>
 					)}
-					{svg && <m.div variants={varBounce().in}>{svg}</m.div>}
+					{svg && <m.div variants={bounceIn}>{svg}</m.div>}
 
 					{/* Slots: footer */}
 					{slots.footer ? (

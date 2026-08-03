@@ -8,6 +8,7 @@ import en_us from "./lang/en_us";
 import zh_cn from "./lang/zh_cn";
 
 const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.zh_cn as string);
+document.documentElement.lang = defaultLng;
 
 i18n
 	.use(LanguageDetector) // 检测用户语言

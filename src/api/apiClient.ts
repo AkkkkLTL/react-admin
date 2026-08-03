@@ -14,7 +14,7 @@ import { ResultEnum } from "@/types/enum";
  * @interface Result
  */
 export interface Result {
-	code: number;
+	code: ResultEnum;
 	msg: string;
 	[key: string]: any;
 }

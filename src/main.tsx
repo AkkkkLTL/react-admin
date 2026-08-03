@@ -13,11 +13,12 @@ import AppRoutes from "./router/index.tsx";
 import { Store } from "./store/index.tsx";
 import { urlJoin } from "./utils";
 
-// 注册图标
+/** 注册图标 */
 await registerLocalIcons();
 
-// 判断开启mock服务
+/** 判断开启mock服务 */
 if (GLOBAL_CONFIG.openMock) {
+	// 引入mock服务
 	const { worker } = import.meta.glob(["/mock/index.ts"], { eager: true })[`/mock/index.ts`] as any;
 	console.log(worker);
 	await worker.start({

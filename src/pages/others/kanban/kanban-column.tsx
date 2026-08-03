@@ -33,9 +33,10 @@ export default memo(function KanbanColumn({
 	clearColumn,
 	deleteColumn,
 	renameColumn,
+	isDragging,
 }: PropsWithChildren<KanbanColumnProps>) {
 	const { themeMode } = useSettings();
-	const { ref, isDragging } = useSortable({
+	const { ref } = useSortable({
 		id,
 		index,
 		type: "column",
@@ -174,7 +175,7 @@ export default memo(function KanbanColumn({
 
 			<div className="min-h-[10px]">
 				{tasks.map((task) => (
-					<KanbanTask key={task.id} task={task} columnId={column.id} index={index} />
+					<KanbanTask key={task.id} id={task.id} task={task} index={index} />
 				))}
 			</div>
 

@@ -1,6 +1,6 @@
 import { Icon } from "@/components/icon";
-import useLocale from "@/locales/useLocale";
-import { Tooltip, TooltipProvider, TooltipTrigger } from "@/ui/tooltip";
+import useLocale from "@/locales/use-locale";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/ui/tooltip";
 import { cn } from "@/utils";
 import { NavItemRender } from "../components/nav-item-render";
 import { navItemClasses, navItemStyles } from "../styles";
@@ -22,13 +22,16 @@ export function NavItem(item: NavItemProps) {
 			</span>
 
 			{/* Caption */}
-			<TooltipProvider>
-				<Tooltip>
-					<TooltipTrigger>
-						<Icon icon="solar:info-circle-linear" size={16} className="ml-1.5" style={navItemStyles.caption} />
-					</TooltipTrigger>
-				</Tooltip>
-			</TooltipProvider>
+			{item.caption && (
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger>
+							<Icon icon="solar:info-circle-linear" size={16} className="ml-1.5" style={navItemStyles.caption} />
+						</TooltipTrigger>
+						<TooltipContent side="bottom">{t(item.caption)}</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+			)}
 
 			{/* Info */}
 			{item.info && <span style={navItemStyles.info}>{item.info}</span>}

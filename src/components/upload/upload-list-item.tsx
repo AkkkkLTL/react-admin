@@ -21,6 +21,7 @@ export default function UploadListItem({ file, actions, thumbnail = false }: Uol
 	const [imgThumbUrl, setImgThumbUrl] = useState("");
 
 	useEffect(() => {
+		// TODO: mock upload sucess, you should delete 'error' in the production environment
 		if (file.status && ["done", "error"].includes(file.status) && format === "img") {
 			if (file.originFileObj) {
 				setImgThumbUrl(getBlobUrl(file.originFileObj));

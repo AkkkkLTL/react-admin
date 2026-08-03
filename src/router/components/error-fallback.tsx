@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
-import type { FallbackProps } from "react-error-boundary";
-import { isRouteErrorResponse } from "react-router-dom";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { themeVars } from "@/theme/theme.css";
 import { ScrollArea } from "@/ui/scroll-area";
 import { Title } from "@/ui/typography";
@@ -8,7 +7,9 @@ import { Title } from "@/ui/typography";
 /**
  * 错误边界组件
  */
-export default function ErrorFallback({ error }: FallbackProps) {
+export default function ErrorFallback() {
+	const error = useRouteError();
+
 	return (
 		<ScrollArea className="w-full h-screen">
 			<div style={rootStyles()}>

@@ -14,8 +14,6 @@ type GlobalConfig = {
 	publicPath: string;
 	/** API基础路径 */
 	apiBaseUrl: string;
-	/** 路由模式：前端路由或后端路由 */
-	routerMode: "frontend" | "backend";
 	/** 是否开启mock */
 	openMock: boolean;
 };
@@ -26,6 +24,5 @@ export const GLOBAL_CONFIG: GlobalConfig = {
 	defaultRoute: import.meta.env.VITE_APP_DEFAULT_ROUTE || "/workbench",
 	publicPath: import.meta.env.VITE_APP_PUBLIC_PATH || "/",
 	apiBaseUrl: import.meta.env.VITE_APP_API_BASE_URL || "/api",
-	routerMode: import.meta.env.VITE_APP_ROUTER_MODE || "backend",
 	openMock: import.meta.env.VITE_APP_MOCK_ENABLE || true,
 };
