@@ -3,6 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useDispatch } from "react-redux";
 import { createBrowserRouter, Navigate, Outlet, type RouteObject, RouterProvider } from "react-router-dom";
 import { apiSysMenuNav } from "@/api/services/sys-menu.service";
+import { LineLoading } from "@/components/loading";
 import { GLOBAL_CONFIG } from "@/global-config";
 import DashboardLayout from "@/layouts/dashboard";
 import { setPermissions } from "@/store/modules/userSlice.ts";
@@ -126,7 +127,7 @@ export default function AppRoutes() {
 	}, [routes, fetchMenuData, initializeRouter]);
 
 	if (isLoading || !router) {
-		return <div>路由加载中...</div>;
+		return <LineLoading />;
 	}
 
 	return (
