@@ -4,7 +4,7 @@ import useLocale from "@/locales/use-locale";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
-import { InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/ui/input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/ui/input-otp";
 import { ReturnButton } from "./components/return-button";
 import { LoginStateEnum, useLoginStateContext } from "./providers/login-provider";
 
@@ -113,20 +113,22 @@ export default function MobileForm() {
 								</span>
 							</FormLabel>
 							<FormControl>
-								<InputOTPGroup>
-									<InputOTPSlot index={0} />
-									<InputOTPSlot index={1} />
-								</InputOTPGroup>
-								<InputOTPSeparator />
-								<InputOTPGroup>
-									<InputOTPSlot index={2} />
-									<InputOTPSlot index={3} />
-								</InputOTPGroup>
-								<InputOTPSeparator />
-								<InputOTPGroup>
-									<InputOTPSlot index={4} />
-									<InputOTPSlot index={5} />
-								</InputOTPGroup>
+								<InputOTP maxLength={6}>
+									<InputOTPGroup>
+										<InputOTPSlot index={0} />
+										<InputOTPSlot index={1} />
+									</InputOTPGroup>
+									<InputOTPSeparator />
+									<InputOTPGroup>
+										<InputOTPSlot index={2} />
+										<InputOTPSlot index={3} />
+									</InputOTPGroup>
+									<InputOTPSeparator />
+									<InputOTPGroup>
+										<InputOTPSlot index={4} />
+										<InputOTPSlot index={5} />
+									</InputOTPGroup>
+								</InputOTP>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
