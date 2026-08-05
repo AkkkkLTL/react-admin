@@ -1,10 +1,62 @@
 {
+  "npm.packageManager": "pnpm",
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+
+  "tailwindCSS.classFunctions": ["cn", "clsx", "cva", "twMerge"],
+  "tailwindCSS.emmetCompletions": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
   "i18n-ally.localesPaths": [
     "src/locales/lang"
   ],
   "i18n-ally.enabledParsers": ["json"],
   "i18n-ally.pathMatcher": "{locale}/{namespaces}.{ext}",
-  "i18n-ally.displayLanguage": "zh_CN",
   "i18n-ally.keystyle": "nested",
-  "marscode.chatLanguage": "cn"
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "zh_cn",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "iconify.includes": [
+    "material-symbols",
+    "solar",
+    "bi",
+    "mdi",
+    "mingcute",
+    "lucide",
+    "carbon",
+    "ion",
+    "uil",
+    "ant-design",
+    "eva"
+  ],
+  "iconify.cdnEntry": "https://icones.js.org/collections",
 }

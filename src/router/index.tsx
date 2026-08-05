@@ -1,76 +1,35 @@
-import menuService from "@/api/services/menuService";
 import { lazy, useCallback, useEffect, useMemo, useState } from "react";
-import { createBrowserRouter, Navigate, Outlet, RouteObject, RouterProvider } from "react-router-dom";
-import { authRoutes } from "./sections/auth";
-import { errorRoutes } from "./sections/error";
+import { ErrorBoundary } from "react-error-boundary";
+import { useDispatch } from "react-redux";
+import { createBrowserRouter, Navigate, Outlet, type RouteObject, RouterProvider } from "react-router-dom";
+import { apiSysMenuNav } from "@/api/services/sys-menu.service";
+import { LineLoading } from "@/components/loading";
 import { GLOBAL_CONFIG } from "@/global-config";
-import { convertToRoute } from "./sections/dashboard/backend";
 import DashboardLayout from "@/layouts/dashboard";
-import AuthGuard from "./components/AuthGuard";
-import { RouterContext } from "./context";
-
-// 类型定义
-interface MenuItem {
-  menuId: string | number;
-  name: string;
-  url: string;
-  list?: MenuItem[];
-  [key: string]: any;
-}
-
-interface MenuData {
-  menuList: MenuItem[];
-  permissions: string[];
-}
+import { setPermissions } from "@/store/modules/userSlice.ts";
+import { convertFlatToToTree } from "@/utils/tree";
+import ErrorFallback from "./components/error-fallback";
+import LoginAuthGuard from "./components/login-auth-guard";
+import { RouterContextProvider } from "./router-provider";
+import { authRoutes } from "./sections/auth";
+import { convertToRoute } from "./sections/dashboard/backend";
+import { errorRoutes } from "./sections/error";
 
 const App = lazy(() => import("@/App"));
 
 /**
  * 路由配置组件
  */
-export default function AppRoutes ()
-{
-    // 路由
-    const [routes, setRoutes] = useState<RouteObject[]>([]);
-    // 加载状态
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+export default function AppRoutes() {
+	// 路由
+	const [routes, setRoutes] = useState<RouteObject[]>([]);
+	// 加载状态
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	useEffect(() => {
-		// 检查是否已添加动态路由
-		if (sessionStorage.getItem("isAddDynamicRoutes") === "true") {
-			if (routes.length === 0) initializeRouter();
-			return;
-		}
-		console.warn("执行路由请求");
-		fetchMenuData();
-	}, [routes]);
+	const dispatch = useDispatch();
 
-    // 获取菜单列表和权限
-    const fetchMenuData = useCallback(async () => {
-      try {
-        // 发送获取菜单列表和权限的请求
-        const data = await menuService.getMenuList();
-
-        if ( data ) {
-          // 保存菜单列表和权限
-          sessionStorage.setItem("menuList", JSON.stringify(data || '[]'));
-          sessionStorage.setItem("permissions", JSON.stringify(data || '[]'));
-          sessionStorage.setItem("isAddDynamicRoutes", "true");
-        } else {
-          sessionStorage.setItem('menuList', '[]');
-          sessionStorage.setItem('permissions', '[]');
-        }
-		sessionStorage.removeItem("redirectToLogin");
-      } catch (error) {
-        console.log('%c 请求菜单列表和权限失败，跳转至登录页！！', 'color:blue');
-        sessionStorage.setItem("redirectToLogin", "true");
-      } finally {
-        initializeRouter();
-      }
-    }, []);
-
-    // 初始化路由
-    const initializeRouter = useCallback(() => {
+	// 初始化路由
+	const initializeRouter = useCallback(() => {
 		try {
 			const menuListStr = sessionStorage.getItem("menuList");
 			const menuList = menuListStr ? JSON.parse(menuListStr) : [];
@@ -79,26 +38,24 @@ export default function AppRoutes ()
 			// 检查是否需要跳转至登录页
 			const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
 
-			const newRoutes:RouteObject[] = redirectToLogin ? [
-				...authRoutes,
-				{path: "*", element: <Navigate to="/auth/login" />}
-			] : [
-				...authRoutes,
-				{
-					element: (
-						<AuthGuard>
-							<DashboardLayout />
-						</AuthGuard>
-					),
-					children: [
-						{ index: true, element: <Navigate to={GLOBAL_CONFIG.defaultRoute} replace /> },
-						...dynamicRoutes
-					],
-				},
-				...errorRoutes,
-				{path: "*", element: <Navigate to="/404" />}
-			];
-			debugger;
+			const newRoutes: RouteObject[] = redirectToLogin
+				? [...authRoutes, { path: "*", element: <Navigate to="/auth/login" /> }]
+				: [
+						...authRoutes,
+						{
+							element: (
+								<LoginAuthGuard>
+									<DashboardLayout />
+								</LoginAuthGuard>
+							),
+							children: [
+								{ index: true, element: <Navigate to={GLOBAL_CONFIG.defaultRoute} replace /> },
+								...dynamicRoutes,
+							],
+						},
+						...errorRoutes,
+						{ path: "*", element: <Navigate to="/404" replace /> },
+					];
 			console.log("%c 初始化路由", "color:blue", newRoutes);
 			setRoutes(newRoutes);
 		} catch (err) {
@@ -108,10 +65,39 @@ export default function AppRoutes ()
 		} finally {
 			setIsLoading(false);
 		}
-    }, []);
+	}, []);
 
-    const router = useMemo(() => {
-		const newRouter =createBrowserRouter(
+	// 获取菜单列表和权限
+	const fetchMenuData = useCallback(async () => {
+		try {
+			// 发送获取菜单列表和权限的请求
+			const data = await apiSysMenuNav();
+
+			if (data) {
+				// 保存菜单列表和权限
+				sessionStorage.setItem("menuList", JSON.stringify(convertFlatToToTree(data.menuList) || "[]"));
+				// 保存权限
+				sessionStorage.setItem("permissions", JSON.stringify(data.permissions || "[]"));
+				dispatch(setPermissions(data.permissions || []));
+				// 标记已添加动态路由
+				sessionStorage.setItem("isAddDynamicRoutes", "true");
+			} else {
+				sessionStorage.setItem("menuList", "[]");
+				sessionStorage.setItem("permissions", "[]");
+			}
+			sessionStorage.removeItem("redirectToLogin");
+		} catch (error) {
+			console.log("%c 请求菜单列表和权限失败，跳转至登录页！！", "color:blue", error);
+			// 使用 sessionStorege 标记需要重定向至登录页
+			sessionStorage.setItem("redirectToLogin", "true");
+		} finally {
+			// 初始化路由
+			initializeRouter();
+		}
+	}, [initializeRouter]);
+
+	const router = useMemo(() => {
+		const newRouter = createBrowserRouter(
 			[
 				{
 					element: (
@@ -119,24 +105,34 @@ export default function AppRoutes ()
 							<Outlet />
 						</App>
 					),
-					errorElement: <div>404 Not Found</div>,
+					errorElement: <ErrorBoundary FallbackComponent={ErrorFallback} />,
 					children: routes,
-				}
+				},
 			],
 			{
 				basename: GLOBAL_CONFIG.publicPath,
-			}
+			},
 		);
 		return newRouter;
 	}, [routes]);
 
-    if (isLoading || !router) {
-        return <div>路由加载中...</div>;
-    }
+	useEffect(() => {
+		// 检查是否已添加动态路由
+		if (sessionStorage.getItem("isAddDynamicRoutes") === "true") {
+			if (routes.length === 0) initializeRouter();
+			return;
+		}
+		console.warn("执行路由请求");
+		fetchMenuData();
+	}, [routes, fetchMenuData, initializeRouter]);
 
-    return (
-		<RouterContext.Provider value={{fetchMenuData}}>
+	if (isLoading || !router) {
+		return <LineLoading />;
+	}
+
+	return (
+		<RouterContextProvider value={{ fetchMenuData }}>
 			<RouterProvider router={router} />
-		</RouterContext.Provider>
-	)
+		</RouterContextProvider>
+	);
 }

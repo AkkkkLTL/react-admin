@@ -1,0 +1,166 @@
+/* 导入 tailwind */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@config "../tailwind.config.ts";
+
+/* 基础层级 */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  /* 设置对话框或弹出框元素后面的视图框的边框颜色 */
+  ::backdrop,
+  /* 文件选择器按钮边框颜色 */
+  ::file-selector-button {
+    border-color: rgba(var(--colors-palette-gray-500Channel) / var(--opacity-border));
+  }
+
+  body {
+    background-color: var(--background);
+  }
+}
+
+@theme {
+  --animate-collapsible-down: collapsible-down 0.2s ease-in-out;
+  --animate-collapsible-up: collapsible-up 0.2s ease-in-out;
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  --animate-slow-spin: spin 4s linear infinite;
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@source "./src/**/*.{js,ts,jsx,tsx,mdx}";
+
+/* Shadcn UI 浅色主题 */
+:root {
+  --radius: 0.5rem;
+  /* 页面背景色 */
+  --background: var(--colors-common-white);
+  /* 页面文字色 */
+  --foreground: var(--colors-common-black);
+  /* 卡片背景色 */
+  --card: var(--colors-common-white);
+  /* 卡片文字色 */
+  --card-foreground: var(--colors-common-black);
+  /* 弹出层背景色 */
+  --popover: var(--colors-common-white);
+  /** 弹出层文字色 */
+  --popover-foreground: var(--colors-common-black);
+  /* 主色（按钮、链接） */
+  --primary: var(--colors-palette-primary-default);
+  /* 主色上的文字色 */
+  --primary-foreground: var(--colors-palette-primary-lighter);
+  /* 次要颜色 */
+  --secondary: var(--colors-palette-gray-200);
+  /* 次要颜色上的文字色 */
+  --secondary-foreground: var(--colors-palette-gray-600);
+  /* 柔和背景色 */
+  --muted: var(--colors-palette-gray-200);
+  /* 柔和背景色上的文字色 */
+  --muted-foreground: var(--colors-palette-gray-500);
+  /* 强调色 */
+  --accent: var(--colors-palette-gray-200);
+  /* 强调色上的文字色 */
+  --accent-foreground: var(--colors-palette-gray-600);
+  /* 危险操作（删除按钮） */
+  --destructive: var(--colors-palette-error-default);
+  /* 边框颜色 */
+  --border: rgba(var(--colors-palette-gray-500Channel)/ var(--opacity-border));
+  /* 输入框边框颜色 */
+  --input: rgba(var(--colors-palette-gray-500Channel)/ var(--opacity-border));
+  /* 输入框聚焦时的边框颜色 */
+  --ring: var(--colors-palette-primary-default);
+
+  /* 图表颜色 */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* 侧边栏背景色 */
+  --sidebar: var(--colors-palette-gray-200);
+  /* 侧边栏文字色 */
+  --sidebar-foreground: var(--colors-palette-gray-800);
+  /* 侧边栏主色 */
+  --sidebar-primary: var(--colors-palette-primary-default);
+  /* 侧边栏主色上的文字色 */
+  --sidebar-primary-foreground: var(--colors-palette-primary-lighter);
+  /* 侧边栏强调色 */
+  --sidebar-accent: var(--colors-palette-gray-200);
+  /* 侧边栏强调色上的文字色 */
+  --sidebar-accent-foreground: var(--colors-palette-gray-800);
+  /* 侧边栏边框颜色 */
+  --sidebar-border: var(--colors-palette-gray-200);
+  /* 侧边栏环颜色 */
+  --sidebar-ring: var(--colors-palette-primary-default);
+}
+
+/* Shadcn UI 深色主题 */
+[data-theme-mode="dark"] {
+  /* 页面背景色 */
+  --background: var(--colors-common-black);
+  --foreground: var(--colors-common-white);
+  --card: var(--colors-common-black);
+  --card-foreground: var(--colors-common-white);
+  --popover: var(--colors-common-black);
+  --popover-foreground: var(--colors-common-white);
+  --primary: var(--colors-palette-primary-default);
+  --primary-foreground: var(--colors-palette-primary-darker);
+  --secondary: var(--colors-background-neutral);
+  --secondary-foreground: var(--colors-palette-gray-500);
+  --muted: var(--colors-background-neutral);
+  --muted-foreground: var(--colors-palette-gray-400);
+  --accent: var(--colors-background-neutral);
+  --accent-foreground: var(--colors-palette-gray-500);
+  --destructive: var(--colors-palette-error-default);
+  --border: rgba(var(--colors-palette-gray-500Channel)/ var(--opacity-border));
+  --input: rgba(var(--colors-palette-gray-500Channel)/ var(--opacity-border));
+  --ring: var(--colors-palette-primary-default);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: var(--colors-background-neutral);
+  --sidebar-foreground: var(--colors-common-white);
+  --sidebar-primary: var(--colors-palette-primary-default);
+  --sidebar-primary-foreground: var(--colors-palette-primary-darker);
+  --sidebar-accent: var(--colors-background-neutral);
+  --sidebar-accent-foreground: var(--colors-common-white);
+  --sidebar-border: rgba(var(--colors-palette-gray-500Channel)/ var(--opacity-border));
+  --sidebar-ring: var(--colors-palette-primary-default);
+}
+
+/* 层级样式 */
+:root {
+  --layout-nav-width: 260px;
+  --layout-nav-width-mini: 88px;
+  --layout-nav-height-horizontal: 48px;
+  --layout-header-height: 64px;
+  --layout-multi-tabs-height: 48px;
+}

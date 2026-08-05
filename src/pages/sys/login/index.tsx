@@ -1,52 +1,64 @@
-import { Layout, Typography } from "antd";
-import { FC } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-
-import { RootState } from "@/store";
-import DashboardImg from "@/assets/images/dashboard.png";
-import LoginStateProvider from "./providers/LoginStateProvider";
-import LoginForm from "./LoginForm";
+import PlaceholderImg from "@/assets/images/background/placeholder.svg";
+import { LocalePicker } from "@/components/locale-picker";
+import Logo from "@/components/logo";
 import { GLOBAL_CONFIG } from "@/global-config";
-import { useUserToken } from "@/store/modules/userSlice";
+import SettingButton from "@/layouts/components/setting-button";
+import { selectUserToken } from "@/store/modules/userSlice";
+import LoginForm from "./login-form";
+import MobileForm from "./mobile-form";
+import LoginProvider from "./providers/login-provider";
+import QrCodeFrom from "./qrcode-form";
+import RegisterForm from "./register-form";
+import ResetForm from "./reset-form";
 
-const Login:FC = () => {
-  // 获取用户权限
-  const {accessToken} = useUserToken();
-  const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
+export default function LoginPage() {
+	// 获取用户权限令牌
+	const { token } = useSelector(selectUserToken);
+	// 检查是否需要重定向到登录页（todo：将storage的字段信息存为常量）
+	const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
 
-  // 判断用户权限是否存在
-  if (accessToken && !redirectToLogin) {
-    // 权限存在，跳转到首页
-    return <Navigate to={GLOBAL_CONFIG.defaultRoute} replace />;
-  }
-  
-  return (
-    <Layout className="relative flex !flex-row !min-h-screen !w-full">
-      <div
-        className="grow flex-col items-center justify-center md:flex"
-      >
-        <div
-          
-        >Slash Admin</div>
-        <img className="max-w-[480px]" src={DashboardImg} alt="" />
-        <Typography.Text>
-          @copyright 2025
-        </Typography.Text>
-      </div>
-      <div
-        className="flex flex-col justify-center m-auto max-w-[480px] w-full ps-[16px]"
-      >
-        <LoginStateProvider>
-          <LoginForm />
-        </LoginStateProvider>
-      </div>
-      <div
-        className="flex flex-row absolute"
-      >
-        设置
-      </div>
-    </Layout>
-  )
+	// 判断用户权限存在 且 不需要重定向到登录页
+	if (token && !redirectToLogin) {
+		// 跳转到首页
+		return <Navigate to={GLOBAL_CONFIG.defaultRoute} replace />;
+	}
+
+	return (
+		<div className="relative grid min-h-svh lg:grid-cols-2 bg-background">
+			<div className="flex flex-col gap-4 p-6 md:p-10">
+				<div className="flex justify-center gap-2 md:justify-start">
+					<div className="flex items-center gap-2 font-medium cursor-pointer">
+						<Logo size={28} />
+						<span>{GLOBAL_CONFIG.appName}</span>
+					</div>
+				</div>
+				<div className="flex flex-1 items-center justify-center">
+					<div className="w-full max-w-xs">
+						<LoginProvider>
+							<LoginForm />
+							<MobileForm />
+							<QrCodeFrom />
+							<RegisterForm />
+							<ResetForm />
+						</LoginProvider>
+					</div>
+				</div>
+			</div>
+
+			<div className="relative hidden bg-background-paper lg:block">
+				<img
+					src={PlaceholderImg}
+					alt="placeholder img"
+					className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.5] dark:grayscale"
+				/>
+			</div>
+
+			<div className="absolute right-2 top-0 flex flex-row">
+				<LocalePicker />
+				<SettingButton />
+			</div>
+		</div>
+	);
 }
-export default Login;

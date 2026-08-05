@@ -1,16 +1,15 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
+import HeaderSimple from "../components/header-simple";
 
 interface IProps {
-    children: ReactNode;
+	children: ReactNode;
 }
 
-export default function SimpleLayout({
-    children
-}:IProps) {
-    return (
-        <div className="flex h-screen w-full flex-col">
-            {/* HeaderSimple */}
-            {children}
-        </div>
-    );
+export default function SimpleLayout({ children }: IProps) {
+	return (
+		<div className="flex h-screen w-full flex-col text-text-base bg-bg">
+			<HeaderSimple />
+			{children}
+		</div>
+	);
 }

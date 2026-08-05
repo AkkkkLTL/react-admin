@@ -1,14 +1,14 @@
-import { ThemeTokens } from "../type";
+import type { ThemeTokens } from "../type";
 
 export const FontFamilyPreset = {
 	openSans: "Open Sans Variable",
 	inter: "Inter Variable",
 };
 
-export const typographyTokens:ThemeTokens["typography"] = {
+export const typographyTokens: ThemeTokens["typography"] = {
 	fontFamily: {
-		primary: FontFamilyPreset.openSans,
-		secondary: FontFamilyPreset.inter,
+		openSans: FontFamilyPreset.openSans,
+		inter: FontFamilyPreset.inter,
 	},
 	fontSize: {
 		xs: "12",

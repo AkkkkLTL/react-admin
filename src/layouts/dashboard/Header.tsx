@@ -1,63 +1,65 @@
+import { type CSSProperties, FC, type ReactNode } from "react";
 import { Icon } from "@/components/icon";
-import Logo from "@/components/logo";
-import { Button } from "antd";
-import { CSSProperties, FC } from "react";
-import BreadCrumb from "../components/BreadCrumb";
-import { rgbAlpha } from "@/utils/theme";
-import { themeVars } from "@/theme/theme.css";
-import { HEADER_HEIGHT } from "./config";
-import AccountDropdown from "../components/AccountDropdown";
-import SearchBar from "../components/SearchBar";
+import { useSettings } from "@/store/modules/settingsSlice";
+import { Button } from "@/ui/button";
+import { cn } from "@/utils";
+import AccountDropdown from "../components/account-dropdown";
+import BreadCrumb from "../components/bread-crumb";
+import NoticeButton from "../components/notice";
+import SearchBar from "../components/search-bar";
+import SettingButton from "../components/setting-button";
+
+interface HeaderProps {
+	leftSlot?: ReactNode;
+}
 
 /**
  * DahboardLayout 头部
  */
-export default function Header() {
-    const headerStyle:CSSProperties = {
-        backgroundColor: rgbAlpha(themeVars.colors.background.defaultChannel, 0.9),
-        width: "100%",
-    }
+export default function Header({ leftSlot }: HeaderProps) {
+	const { breadCrumb } = useSettings();
 
-    return (
-        <header 
-            className="sticky top-0 right-0 left-auto"
-            style={headerStyle}
-        >
-            <div 
-                className="flex grow items-center justify-between px-4"
-                style={{
-                    height: HEADER_HEIGHT,
-                }}
-            >
-                {/* 面包屑 */}
-                <div>
-                    <BreadCrumb />
-                </div>
-                {/* 头部右侧配置 */}
-                <div className="flex items-center">
-                    <SearchBar />
-                    {/* LocalePicker */}
-                    <Button
-                        variant="dashed"
-                        size="middle"
-                        className="rounded-full"
-                        onClick={() => window.open("https://github.com/akkkltl/react-admin")}
-                    >
-                        <Icon icon="mdi:github" size={24} />
-                    </Button>
-                    <Button
-                        variant="dashed"
-                        size="middle"
-                        className="rounded-full"
-                        onClick={() => window.open("https://github.com/akkkltl")}
-                    >
-                        <Icon icon="carbon:logo-discord" size={24} />
-                    </Button>
-                    {/* NoticeButton */}
-                    {/* SettingButton */}
-                    <AccountDropdown />
-                </div>
-            </div>
-        </header>
-    )
+	return (
+		<header
+			data-slot="layout-header"
+			className={cn(
+				"sticky top-0 left-0 right-0 z-app-bar",
+				"flex items-center justify-between px-2 grow-0 shrink-0",
+				"bg-background/60 backdrop-blur-xl",
+				"h-[var(--layout-header-height)]",
+			)}
+		>
+			<div className="flex items-center">
+				{/* 面包屑 */}
+				{leftSlot}
+
+				<div className="hidden md:block ml-4">{breadCrumb && <BreadCrumb />}</div>
+			</div>
+
+			{/* 头部右侧配置 */}
+			<div className="flex items-center gap-1">
+				<SearchBar />
+				{/* todo: LocalePicker */}
+				<Button
+					variant="ghost"
+					size="icon"
+					className="rounded-full"
+					onClick={() => window.open("https://github.com/akkkltl/react-admin")}
+				>
+					<Icon icon="mdi:github" size={24} />
+				</Button>
+				<Button
+					variant="ghost"
+					size="icon"
+					className="rounded-full"
+					onClick={() => window.open("https://github.com/akkkltl")}
+				>
+					<Icon icon="carbon:logo-discord" size={24} />
+				</Button>
+				<NoticeButton />
+				<SettingButton />
+				<AccountDropdown />
+			</div>
+		</header>
+	);
 }

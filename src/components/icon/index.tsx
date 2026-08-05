@@ -1,2 +1,4 @@
-export { default as registerLocalIcons } from "./registerLocalIcons";
-export { default as Icon } from "./Icon";
+import Icon from "./icon";
+import registerLocalIcons from "./register-icons";
+
+export { Icon, registerLocalIcons };

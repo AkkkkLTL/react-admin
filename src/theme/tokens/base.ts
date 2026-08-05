@@ -1,19 +1,11 @@
 import type { ThemeTokens } from "../type";
 import { breakpointsTokens } from "./breakpoints";
 
-interface BaseThemeTokens {
-	spacing: ThemeTokens["spacing"];
-	borderRadius: ThemeTokens["borderRadius"];
-	screens: ThemeTokens["screens"];
-	opacity: ThemeTokens["opacity"];
-	zIndex: ThemeTokens["zIndex"];
-}
-
 /**
  * 通用主题 token
  */
-export const baseThemeTokens:BaseThemeTokens = {
-  spacing: {
+export const baseThemeTokens: Pick<ThemeTokens, "spacing" | "borderRadius" | "screens" | "opacity" | "zIndex"> = {
+	spacing: {
 		0: "0px",
 		1: "4px",
 		2: "8px",
@@ -69,10 +61,12 @@ export const baseThemeTokens:BaseThemeTokens = {
 		disabledBackground: "24%",
 	},
 	zIndex: {
-		appBar: "1100",
-		drawer: "1200",
-		modal: "1300",
-		snackbar: "1400",
-		tooltip: "1500",
+		appBar: "10", // z-index of the navigation bar at the top of the application
+		nav: "20", // z-index of the navigation bar at the top of the application
+		drawer: "50", // z-index of the drawer/navigation menu
+		modal: "50", // z-index of the modal/dialog
+		snackbar: "50", // z-index of the notification/toast/alert/message
+		tooltip: "50", // z-index of the tooltip
+		scrollbar: "100", // z-index of the scrollbar
 	},
-}
+};
