@@ -7,13 +7,5 @@
 		{
 			"path": "./tsconfig.node.json"
 		}
-	],
-	// shadcn-ui 路径别名
-	"compilerOptions": {
-		"ignoreDeprecations": "6.0",
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
-	}
+	]
 }

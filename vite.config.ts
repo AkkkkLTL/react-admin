@@ -1,4 +1,5 @@
-import { resolve } from "node:path";
+// import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
@@ -33,9 +34,9 @@ export default defineConfig(({ mode }) => {
 
 		resolve: {
 			alias: {
-				"@": resolve(__dirname, "./src"), // 别名 @ 指向 src 目录
-				"#": resolve(__dirname, "./src/types"), // 别名 # 指向 src/types 目录
-				"~": resolve(__dirname, "./"), // 别名 ~ 指向根目录
+				"@": fileURLToPath(new URL("./src", import.meta.url)), // 别名 @ 指向 src 目录
+				"#": fileURLToPath(new URL("./src/types", import.meta.url)), // 别名 # 指向 src/types 目录
+				"~": fileURLToPath(new URL("./", import.meta.url)), // 别名 ~ 指向根目录
 			},
 		},
 

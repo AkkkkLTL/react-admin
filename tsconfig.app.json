@@ -26,13 +26,10 @@
 		"noFallthroughCasesInSwitch": true, // 禁止 switch 语句中的贯穿情况
 		"useUnknownInCatchVariables": false, // 允许在 catch 语句中使用 unknown 类型的变量
 
-		/* Paths */
-		"ignoreDeprecations": "6.0",
-		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"],
-			"#/*": ["src/types/*"],
-			"~/*": ["./*"]
+			"@/*": ["./src/*"],
+			"#/*": ["./src/types/*"],
+			"~/*": ["./src/*"]
 		}
 	},
 	"include": ["src", "src/locales/lang/**/*.json", "mock", "vite.config.ts", "tailwind.config.ts", "tests"],

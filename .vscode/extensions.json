@@ -8,6 +8,7 @@
         "vunguyentuan.vscode-css-variables",
         "ms-ceintl.vscode-language-pack-zh-hans",
         "formulahendry.auto-rename-tag",
-        "styled-components.vscode-styled-components"
+        "styled-components.vscode-styled-components",
+        "github.vscode-github-actions"
     ]
 }
