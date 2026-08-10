@@ -133,3 +133,15 @@ export enum HtmlDataAttribute {
 	/** 主题布局 */
 	THEMEMODE = "data-theme-mode",
 }
+
+/**
+ * 图书状态枚举
+ */
+export enum BookStatus {
+	WANTTOREAD = 0,
+	UNREAD = 1,
+	READING = 2,
+	STOPREAD = 3,
+	GIVEUPREAD = 4,
+	READED = 5,
+}

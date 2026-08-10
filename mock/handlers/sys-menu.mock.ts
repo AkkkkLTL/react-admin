@@ -561,6 +561,29 @@ var dataSysNavList_demo: MenuInfo[] = [
 		type: GROUP,
 	},
 
+	// Temp
+	{
+		id: "group_library",
+		parentId: null,
+		name: "阅读与笔记管理",
+		type: GROUP,
+	},
+	{
+		id: "library_book",
+		parentId: "group_library",
+		name: "图书管理",
+		type: CATALOGUE,
+		path: "/library/book",
+	},
+	{
+		id: "library_book_list",
+		parentId: "library_book",
+		name: "图书列表",
+		type: MENU,
+		path: "/library/book/list",
+		component: "/pages/virtual-library/book/book-list",
+	},
+
 	// group_dashboard
 	{
 		id: "workbench",
