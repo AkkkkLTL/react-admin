@@ -142,6 +142,8 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 	useEffect(() => {
 		// 初始化出版社列表
 		getPublisherDataList();
+		// 初始化分类列表
+		getCategoryDataList();
 	}, []);
 
 	const getPublisherDataList = async () => {
