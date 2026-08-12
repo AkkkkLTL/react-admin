@@ -20,7 +20,7 @@ import {
 	type LibraryBookSourceSaveReq,
 } from "@/api/services/library-book.service";
 import { Icon } from "@/components/icon";
-import { BookStatus } from "@/types/enum";
+import { ReadStatus } from "@/types/enum";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/ui/dialog";
@@ -65,27 +65,27 @@ const CURRENY = [
 
 const BOOK_STATUS = [
 	{
-		value: BookStatus.WANTTOREAD,
+		value: ReadStatus.WANTTOREAD,
 		label: "想读",
 	},
 	{
-		value: BookStatus.UNREAD,
+		value: ReadStatus.UNREAD,
 		label: "未读",
 	},
 	{
-		value: BookStatus.READING,
-		label: "正在读",
+		value: ReadStatus.STOPREAD,
+		label: "暂停",
 	},
 	{
-		value: BookStatus.STOPREAD,
-		label: "已暂停",
+		value: ReadStatus.READING,
+		label: "在读",
 	},
 	{
-		value: BookStatus.GIVEUPREAD,
-		label: "已放弃",
+		value: ReadStatus.GIVEUPREAD,
+		label: "弃读",
 	},
 	{
-		value: BookStatus.READED,
+		value: ReadStatus.READED,
 		label: "已读",
 	},
 ];
@@ -320,7 +320,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 														</Button>
 													</div>
 												</FormControl>
-												<FormMessage />
+												<FormMessage className="col-span-4" />
 											</FormItem>
 										)}
 									/>
@@ -353,7 +353,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 														</Button>
 													</div>
 												</FormControl>
-												<FormMessage />
+												<FormMessage className="col-span-4" />
 											</FormItem>
 										)}
 									/>

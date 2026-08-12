@@ -137,11 +137,11 @@ export enum HtmlDataAttribute {
 /**
  * 图书状态枚举
  */
-export enum BookStatus {
+export enum ReadStatus {
 	WANTTOREAD = 0,
 	UNREAD = 1,
-	READING = 2,
-	STOPREAD = 3,
+	STOPREAD = 2,
+	READING = 3,
 	GIVEUPREAD = 4,
 	READED = 5,
 }

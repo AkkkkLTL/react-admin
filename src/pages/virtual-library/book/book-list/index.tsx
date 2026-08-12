@@ -2,7 +2,7 @@ import Table, { type ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { apiLibraryBookList, type LibraryBookSaveReq } from "@/api/services/library-book.service";
 import { Icon } from "@/components/icon";
-import { BookStatus } from "@/types/enum";
+import { ReadStatus } from "@/types/enum";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { BookModal, type BookModalProps } from "./book-modal";
@@ -38,7 +38,7 @@ const DEFAULT_BOOK_VALUE: BookFormType = {
 	price: undefined,
 	categoryId: undefined,
 	sourceId: undefined,
-	status: BookStatus.UNREAD,
+	status: ReadStatus.UNREAD,
 	rating: 0,
 	noteBookId: "",
 	tagId: "",
