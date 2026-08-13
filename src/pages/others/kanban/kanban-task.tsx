@@ -7,6 +7,7 @@ import { Avatar, AvatarImage } from "@/ui/avatar";
 import { Button } from "@/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 import { Sheet, SheetContent, SheetHeader } from "@/ui/sheet";
+import TaskDetail from "./task-detail";
 import { type Task, TaskPriority } from "./types";
 
 interface KanbanTaskProps {
@@ -91,6 +92,7 @@ export default memo(function KanbanTask({ index, task, isDragging }: KanbanTaskP
 							</div>
 						</div>
 					</SheetHeader>
+					<TaskDetail task={task} />
 				</SheetContent>
 			</Sheet>
 		</>
