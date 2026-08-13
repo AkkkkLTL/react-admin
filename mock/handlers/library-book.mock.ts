@@ -61,7 +61,7 @@ const mockLibraryBookSave = http.post(`${apiPrefix}${LibraryBookApi.BookSave}`, 
 });
 
 /** 模拟更新图书 */
-const mockLibraryBookUpdate = http.post(`${apiPrefix}${LibraryBookApi.BookUpdate}`, async ({ request }) => {
+const mockLibraryBookUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookUpdate}`, async ({ request }) => {
 	// 更新数据
 	await db.put(store.Book, await request.json());
 
@@ -117,7 +117,7 @@ const mockLibraryBookPublisherSave = http.post(
 );
 
 /** 模拟更新出版社 */
-const mockLibraryBookPublisherUpdate = http.post(
+const mockLibraryBookPublisherUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookPublisherUpdate}`,
 	async ({ request }) => {
 		// 更新数据
@@ -173,7 +173,7 @@ const mockLibraryBookCategorySave = http.post(`${apiPrefix}${LibraryBookApi.Book
 });
 
 /** 模拟更新分类 */
-const mockLibraryBookCategoryUpdate = http.post(
+const mockLibraryBookCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookCategoryUpdate}`,
 	async ({ request }) => {
 		// 更新数据
@@ -229,7 +229,7 @@ const mockLibraryBookSourceSave = http.post(`${apiPrefix}${LibraryBookApi.BookSo
 });
 
 /** 模拟更新阅读来源 */
-const mockLibraryBookSourceUpdate = http.post(`${apiPrefix}${LibraryBookApi.BookSourceUpdate}`, async ({ request }) => {
+const mockLibraryBookSourceUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookSourceUpdate}`, async ({ request }) => {
 	// 更新数据
 	await db.put(store.Source, await request.json());
 

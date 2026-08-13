@@ -599,6 +599,14 @@ var dataSysNavList_demo: MenuInfo[] = [
 		path: "/library/book/publisher",
 		component: "/pages/virtual-library/book/book-publisher-list",
 	},
+	{
+		id: "library_book_source",
+		parentId: "library_book",
+		name: "图书阅读来源",
+		type: MENU,
+		path: "/library/book/source",
+		component: "/pages/virtual-library/book/book-source-list",
+	},
 
 	// group_dashboard
 	{

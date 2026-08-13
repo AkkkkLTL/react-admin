@@ -122,7 +122,7 @@ const apiLibraryBookSave = (data: LibraryBookSaveReq) =>
 	});
 
 const apiLibraryBookUpdate = (data: LibraryBookSaveReq) =>
-	apiClient.post<void>({
+	apiClient.put<void>({
 		url: LibraryBookApi.BookUpdate,
 		data,
 	});
@@ -139,7 +139,7 @@ const apiLibraryBookPublisherSave = (data: LibraryBookPublisherSaveReq) =>
 	});
 
 const apiLibraryBookPublisherUpdate = (data: LibraryBookPublisherSaveReq) =>
-	apiClient.post<void>({
+	apiClient.put<void>({
 		url: LibraryBookApi.BookPublisherUpdate,
 		data,
 	});
@@ -156,7 +156,7 @@ const apiLibraryBookCategorySave = (data: LibraryBookCategorySaveReq) =>
 	});
 
 const apiLibraryBookCategoryUpdate = (data: LibraryBookCategorySaveReq) =>
-	apiClient.post<void>({
+	apiClient.put<void>({
 		url: LibraryBookApi.BookCategoryUpdate,
 		data,
 	});
@@ -173,7 +173,7 @@ const apiLibraryBookSourceSave = (data: LibraryBookSourceSaveReq) =>
 	});
 
 const apiLibraryBookSourceUpdate = (data: LibraryBookSourceSaveReq) =>
-	apiClient.post<void>({
+	apiClient.put<void>({
 		url: LibraryBookApi.BookSourceUpdate,
 		data,
 	});

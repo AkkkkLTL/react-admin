@@ -144,6 +144,8 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		getPublisherDataList();
 		// 初始化分类列表
 		getCategoryDataList();
+		// 初始化来源列表
+		getSourceDataList();
 	}, []);
 
 	const getPublisherDataList = async () => {
