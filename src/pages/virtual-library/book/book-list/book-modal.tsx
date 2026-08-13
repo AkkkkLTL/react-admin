@@ -1,6 +1,6 @@
 import { DatePicker, Rate, Select } from "antd";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
 	apiLibraryBookCategoryList,
@@ -27,6 +27,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
+import { useBookEnumContext } from "./book-enum-provider";
 import type { BookFormType } from "./index";
 
 export interface BookModalProps {
@@ -113,13 +114,18 @@ const isValidDate = (date: Date | undefined) => {
 export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalProps) {
 	// Publisher
 	const [publisherSearch, setPublisherSearch] = useState("");
-	const [publisherList, setPublisherList] = useState<LibraryBookPublisherListRes["page"]["list"]>([]);
 	// Category
 	const [categorySearch, setCategorySearch] = useState("");
-	const [categoryList, setCategoryList] = useState<LibraryBookCategoryListRes["page"]["list"]>([]);
 	// Source
 	const [sourceSearch, setSourceSearch] = useState("");
-	const [sourceList, setSourceList] = useState<LibraryBookSourceListRes["page"]["list"]>([]);
+	const {
+		publisher: publisherList,
+		category: categoryList,
+		source: sourceList,
+		setPublisher: setPublisherList,
+		setCategory: setCategoryList,
+		setSource: setSourceList,
+	} = useBookEnumContext();
 	// Publish Date
 	// const [publishDatePanelOpen, setPublishDatePanelOpen] = useState(false);
 	// const [publishDate, setPublishDate] = useState<Date | undefined>(new Date(formValue.publishDate || "2025-06-01"));
@@ -138,15 +144,6 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		name: "translator",
 		control: form.control,
 	});
-
-	useEffect(() => {
-		// 初始化出版社列表
-		getPublisherDataList();
-		// 初始化分类列表
-		getCategoryDataList();
-		// 初始化来源列表
-		getSourceDataList();
-	}, []);
 
 	const getPublisherDataList = async () => {
 		const publisherDataList = (await apiLibraryBookPublisherList()).page.list;

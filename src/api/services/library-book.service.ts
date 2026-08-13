@@ -1,4 +1,15 @@
+import type { ReadStatus } from "@/types/enum";
 import apiClient from "../apiClient";
+
+export interface LibraryBookFilterParams {
+	page: number;
+	limit: number;
+	publisherId?: number;
+	categoryId?: number;
+	readStatus?: ReadStatus;
+	rating?: number;
+	search?: string;
+}
 
 export interface LibraryBookSaveReq {
 	id?: number;
@@ -110,9 +121,10 @@ export enum LibraryBookApi {
 	BookSourceUpdate = "/library/booksource/update",
 }
 
-const apiLibraryBookList = () =>
+const apiLibraryBookList = (params: URLSearchParams) =>
 	apiClient.get<LibraryBookListRes>({
 		url: LibraryBookApi.BookList,
+		params,
 	});
 
 const apiLibraryBookSave = (data: LibraryBookSaveReq) =>
