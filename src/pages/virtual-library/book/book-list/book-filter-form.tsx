@@ -62,12 +62,17 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-4">
-				<div className="grid grid-cols-5 gap-4">
+				<div
+					className="grid gap-4"
+					style={{
+						gridTemplateColumns: "1fr 1fr 1fr 1fr 2fr",
+					}}
+				>
 					<FormField
 						control={form.control}
 						name="publisherId"
 						render={({ field }) => (
-							<FormItem className="col-span-1">
+							<FormItem>
 								<FormLabel>Publisher</FormLabel>
 								<FormControl>
 									<Select
@@ -85,7 +90,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 						control={form.control}
 						name="categoryId"
 						render={({ field }) => (
-							<FormItem className="col-span-1">
+							<FormItem>
 								<FormLabel>Category</FormLabel>
 								<FormControl>
 									<Select
@@ -103,7 +108,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 						control={form.control}
 						name="readStatus"
 						render={({ field }) => (
-							<FormItem className="col-span-1">
+							<FormItem>
 								<FormLabel>Read Status</FormLabel>
 								<FormControl>
 									<Select
@@ -121,7 +126,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 						control={form.control}
 						name="rating"
 						render={({ field }) => (
-							<FormItem className="col-span-1">
+							<FormItem>
 								<FormLabel>Rating</FormLabel>
 								<FormControl>
 									<Rate {...field} />
@@ -134,7 +139,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 						control={form.control}
 						name="search"
 						render={({ field }) => (
-							<FormItem className="col-span-1">
+							<FormItem>
 								<FormLabel>ISBN & Title</FormLabel>
 								<FormControl>
 									<Input {...field} />
@@ -143,7 +148,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 						)}
 					/>
 				</div>
-				<Button type="submit" className="col-span-1 self-end">
+				<Button type="submit" className="self-end">
 					Search
 				</Button>
 			</form>
