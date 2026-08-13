@@ -561,6 +561,53 @@ var dataSysNavList_demo: MenuInfo[] = [
 		type: GROUP,
 	},
 
+	// Temp
+	{
+		id: "group_library",
+		parentId: null,
+		name: "阅读与笔记管理",
+		type: GROUP,
+	},
+	{
+		id: "library_book",
+		parentId: "group_library",
+		name: "图书管理",
+		type: CATALOGUE,
+		path: "/library/book",
+	},
+	{
+		id: "library_book_list",
+		parentId: "library_book",
+		name: "图书列表",
+		type: MENU,
+		path: "/library/book/list",
+		component: "/pages/virtual-library/book/book-list",
+	},
+	{
+		id: "library_book_category",
+		parentId: "library_book",
+		name: "图书分类",
+		type: MENU,
+		path: "/library/book/category",
+		component: "/pages/virtual-library/book/book-category-list",
+	},
+	{
+		id: "library_book_publisher",
+		parentId: "library_book",
+		name: "图书出版社",
+		type: MENU,
+		path: "/library/book/publisher",
+		component: "/pages/virtual-library/book/book-publisher-list",
+	},
+	{
+		id: "library_book_source",
+		parentId: "library_book",
+		name: "图书阅读来源",
+		type: MENU,
+		path: "/library/book/source",
+		component: "/pages/virtual-library/book/book-source-list",
+	},
+
 	// group_dashboard
 	{
 		id: "workbench",
