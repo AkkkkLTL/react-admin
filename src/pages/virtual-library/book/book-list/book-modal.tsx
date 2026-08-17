@@ -1,6 +1,6 @@
 import { DatePicker, Rate, Select } from "antd";
 import dayjs from "dayjs";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
 	apiLibraryBookCategoryList,
@@ -11,13 +11,7 @@ import {
 	apiLibraryBookSourceList,
 	apiLibraryBookSourceSave,
 	apiLibraryBookUpdate,
-	type LibraryBookCategoryListRes,
-	type LibraryBookCategorySaveReq,
-	type LibraryBookPublisherListRes,
-	type LibraryBookPublisherSaveReq,
 	type LibraryBookSaveReq,
-	type LibraryBookSourceListRes,
-	type LibraryBookSourceSaveReq,
 } from "@/api/services/library-book.service";
 import { Icon } from "@/components/icon";
 import { ReadStatus } from "@/types/enum";
@@ -27,11 +21,11 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
+import type { Book, BookCategory, BookPublisher, BookSource } from "../../ebook/types";
 import { useBookEnumContext } from "./book-enum-provider";
-import type { BookFormType } from "./index";
 
 export interface BookModalProps {
-	formValue: BookFormType;
+	formValue: Book;
 	title: string;
 	show: boolean;
 	onOk: VoidFunction;
@@ -131,7 +125,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 	// const [publishDate, setPublishDate] = useState<Date | undefined>(new Date(formValue.publishDate || "2025-06-01"));
 	// const [publishMonth, setPublishMonth] = useState<Date | undefined>(publishDate);
 
-	const form = useForm<BookFormType>({
+	const form = useForm<Book>({
 		defaultValues: formValue,
 	});
 
@@ -160,17 +154,17 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		setSourceList(sourceDataList);
 	};
 
-	const onSaveBookPublisher = async (values: LibraryBookPublisherSaveReq) => {
+	const onSaveBookPublisher = async (values: BookPublisher) => {
 		await apiLibraryBookPublisherSave(values);
 		await getPublisherDataList();
 	};
 
-	const onSaveBookCategory = async (values: LibraryBookCategorySaveReq) => {
+	const onSaveBookCategory = async (values: BookCategory) => {
 		await apiLibraryBookCategorySave(values);
 		await getCategoryDataList();
 	};
 
-	const onSaveBookSource = async (values: LibraryBookSourceSaveReq) => {
+	const onSaveBookSource = async (values: BookSource) => {
 		await apiLibraryBookSourceSave(values);
 		await getSourceDataList();
 	};
@@ -197,12 +191,12 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		form.setValue("categoryId", value);
 	};
 
-	const onSourceChange = (value: string) => {
+	const onSourceChange = (value: number[]) => {
 		setSourceSearch("");
 		form.setValue("sourceId", value);
 	};
 
-	const onSubmit = async (values: BookFormType) => {
+	const onSubmit = async (values: Book) => {
 		const { author, translator, ...rest } = values;
 
 		const newValues = {
@@ -211,21 +205,22 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 			authorName: author?.map((item) => item.name).join(","),
 			translatorId: translator?.map((item) => item.id).join(","),
 			translatorName: translator?.map((item) => item.name).join(","),
+			sourceId: (rest.sourceId as unknown as number[])?.join(","),
 		} as LibraryBookSaveReq;
+
+		// 处理空值
+		for (const [key, value] of Object.entries(newValues)) {
+			if (value === undefined || value === "") {
+				delete newValues[key as keyof LibraryBookSaveReq];
+			}
+		}
 
 		if (newValues.id) {
 			await apiLibraryBookUpdate(newValues);
 		} else {
 			await apiLibraryBookSave(newValues);
 		}
-		// Object.values(newValues).forEach((value) => {
-		// 	if (typeof value === "undefined" || value === "") {
-		// 		value = null;
-		// 	}
-		// });
 
-		// newValues = JSON.parse(JSON.stringify(newValues).replace(/""/g, "null"));
-		console.log(newValues);
 		onOk();
 	};
 

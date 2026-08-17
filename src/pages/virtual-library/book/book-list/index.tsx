@@ -1,65 +1,34 @@
-import { Select } from "antd";
 import Table, { type ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-	apiLibraryBookCategoryList,
-	apiLibraryBookList,
-	apiLibraryBookPublisherList,
-	apiLibraryBookSourceList,
-	type LibraryBookFilterParams,
-	type LibraryBookListRes,
-	type LibraryBookSaveReq,
-} from "@/api/services/library-book.service";
+import { apiLibraryBookList } from "@/api/services/library-book.service";
 import { Icon } from "@/components/icon";
 import { ReadStatus } from "@/types/enum";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
+import { toURLSearchParams } from "@/utils";
+import type { Book, BookFilterParams } from "../../ebook/types";
 import BookEnumProvider, { useBookEnumContext } from "./book-enum-provider";
 import { BookFilterForm } from "./book-filter-form";
 import { BookModal, type BookModalProps } from "./book-modal";
 
-export type BookFormType = Omit<LibraryBookSaveReq, "authorId" | "authorName" | "translatorId" | "translatorName"> & {
-	id?: number;
-	author?: {
-		id: string;
-		name: string;
-	}[];
-	translator?: {
-		id: string;
-		name: string;
-	}[];
-};
-
-const toURLSearchParams = <T extends Record<PropertyKey, any>>(record: T) => {
-	const params = new URLSearchParams();
-	for (const [key, value] of Object.entries(record)) {
-		if (value !== undefined && value !== "") params.append(key, value);
-	}
-	return params;
-};
-
-type DataType = LibraryBookListRes["page"]["list"][0];
-
-const DEFAULT_BOOK_VALUE: BookFormType = {
+const DEFAULT_BOOK_VALUE: Book = {
 	id: undefined,
 	isbn: "",
 	title: "",
-	oriTitle: undefined,
-	cover: undefined,
+	oriTitle: "",
+	cover: "",
 	author: [],
 	translator: [],
 	publisherId: undefined,
 	publishDate: "",
-	content: undefined,
+	content: "",
 	edition: undefined,
 	binding: undefined,
 	pages: undefined,
 	currency: undefined,
 	price: undefined,
 	categoryId: undefined,
-	sourceId: undefined,
+	sourceId: [],
 	status: ReadStatus.UNREAD,
 	rating: 0,
 	noteBookId: "",
@@ -67,8 +36,8 @@ const DEFAULT_BOOK_VALUE: BookFormType = {
 };
 
 export default function BookListPage() {
-	const [bookList, setBookList] = useState<BookFormType[]>([]);
-	const [tableParams, setTableParams] = useState<LibraryBookFilterParams>({
+	const [bookList, setBookList] = useState<Book[]>([]);
+	const [tableParams, setTableParams] = useState<BookFilterParams>({
 		page: 1,
 		limit: 10,
 		search: "",
@@ -95,11 +64,31 @@ export default function BookListPage() {
 
 	const getBookList = async () => {
 		const dataList = (await apiLibraryBookList(toURLSearchParams(tableParams))).page.list || [];
-		setBookList(dataList);
+		setBookList(
+			dataList.map((item) => {
+				const { authorId, authorName, translatorId, translatorName } = item;
+				const newAuthorId = authorId?.split(",") || [];
+				const newAuthorName = authorName?.split(",") || [];
+				const newTranslatorId = translatorId?.split(",") || [];
+				const newTranslatorName = translatorName?.split(",") || [];
+				return {
+					...item,
+					author: newAuthorId.map((item, index) => ({
+						id: item,
+						name: newAuthorName[index],
+					})),
+					translator: newTranslatorId.map((item, index) => ({
+						id: item,
+						name: newTranslatorName[index],
+					})),
+					sourceId: item.sourceId?.split(",").map(Number) || [],
+				};
+			}),
+		);
 		setLoading(false);
 	};
 
-	const columns: ColumnsType<LibraryBookListRes["page"]["list"][0]> = [
+	const columns: ColumnsType<Book> = [
 		{
 			title: "No",
 			render: (_, record, index) => index + 1,
@@ -117,19 +106,15 @@ export default function BookListPage() {
 		},
 		{
 			title: "Author",
-			dataIndex: "authorId",
+			dataIndex: "author",
 			width: 200,
-			render: (_, record) => {
-				const authorId = record.authorId?.split(",") || [];
-				const authorName = record.authorName?.split(",") || [];
-				return authorId.map((_, index) => `${authorName[index]}`).join(", ") || "-";
-			},
+			render: (author: Book["author"]) => author?.map((item) => item.name).join(", ") || "-",
 		},
 		{
 			title: "Publisher",
 			dataIndex: "publisherId",
 			width: 200,
-			render: (_, record) => <PublisherCell record={record} />,
+			render: (publisherId: Book["publisherId"]) => <PublisherCell publisherId={publisherId} />,
 		},
 		{
 			title: "Action",
@@ -161,22 +146,7 @@ export default function BookListPage() {
 		}));
 	};
 
-	const onEdit = (record: DataType) => {
-		const authorId = record.authorId?.split(",") || [];
-		const authorName = record.authorName?.split(",") || [];
-		const translatorId = record.translatorId?.split(",") || [];
-		const translatorName = record.translatorName?.split(",") || [];
-		const formValue: BookFormType = {
-			...record,
-			author: authorId.map((item, index) => ({
-				id: item,
-				name: authorName[index],
-			})),
-			translator: translatorId.map((item, index) => ({
-				id: item,
-				name: translatorName[index],
-			})),
-		};
+	const onEdit = (formValue: Book) => {
 		setBookModalProps((prev) => ({
 			...prev,
 			show: true,
@@ -216,8 +186,8 @@ export default function BookListPage() {
 	);
 }
 
-const PublisherCell = ({ record }: { record: DataType }) => {
+const PublisherCell = ({ publisherId }: { publisherId: Book["publisherId"] }) => {
 	const { publisher } = useBookEnumContext();
-	const publisherName = publisher.find((item) => item.id === record.publisherId)?.name || "-";
+	const publisherName = publisher.find((item) => item.id === publisherId)?.name || "-";
 	return publisherName;
 };
