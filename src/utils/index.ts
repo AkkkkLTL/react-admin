@@ -66,3 +66,16 @@ export function getUUID(): string {
 		return (c === "x" ? (Math.random() * 16) | 0 : ("r&0x3" as number | "0x8")).toString(16);
 	});
 }
+
+/**
+ * 将对象转换为URLSearchParams
+ * @param record 要转换的对象
+ * @returns 转换后的URLSearchParams
+ */
+export const toURLSearchParams = <T extends Record<PropertyKey, any>>(record: T) => {
+	const params = new URLSearchParams();
+	for (const [key, value] of Object.entries(record)) {
+		if (value !== undefined && value !== "") params.append(key, value);
+	}
+	return params;
+};
