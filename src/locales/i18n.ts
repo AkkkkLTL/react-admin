@@ -4,10 +4,10 @@ import { initReactI18next } from "react-i18next";
 
 import { LocalEnum, StorageEnum } from "@/types/enum";
 import { getStringItem } from "@/utils/storage";
-import en_us from "./lang/en_us";
-import zh_cn from "./lang/zh_cn";
+import en_US from "./lang/en_US";
+import zh_CN from "./lang/zh_CN";
 
-const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.zh_cn as string);
+const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.zh_CN as string);
 document.documentElement.lang = defaultLng;
 
 i18n
@@ -16,13 +16,13 @@ i18n
 	.init({
 		debug: true,
 		lng: defaultLng,
-		fallbackLng: LocalEnum.zh_cn,
+		fallbackLng: LocalEnum.zh_CN,
 		interpolation: {
 			escapeValue: false,
 		},
 		resources: {
-			zh_cn: { translation: zh_cn },
-			en_us: { translation: en_us },
+			zh_CN: { translation: zh_CN },
+			en_US: { translation: en_US },
 		},
 	});
 

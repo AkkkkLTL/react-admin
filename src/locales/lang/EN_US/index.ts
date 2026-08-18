@@ -1,4 +1,5 @@
-import common from "./common.json";
-import sys from "./sys.json";
+import common from "./common.json?raw";
+import sys from "./sys.json?raw";
 
-export default { ...common, ...sys };
+const en_US = { ...JSON.parse(common.replace(/^\uFEFF/, "")), ...JSON.parse(sys.replace(/^\uFEFF/, "")) };
+export default en_US;

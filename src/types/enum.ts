@@ -85,9 +85,9 @@ export enum ThemeColorPresets {
  */
 export enum LocalEnum {
 	/** 英文 */
-	en_us = "en_us",
+	en_US = "en_US",
 	/** 中文简体 */
-	zh_cn = "zh_cn",
+	zh_CN = "zh_CN",
 }
 
 /**

@@ -16,7 +16,7 @@ import { ScrollArea } from "@/ui/scroll-area";
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/ui/sheet";
 import { Slider } from "@/ui/slider";
 import { Switch } from "@/ui/switch";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/ui/tooltip";
 import { Text } from "@/ui/typography";
 import { cn } from "@/utils";
 
@@ -250,13 +250,15 @@ export default function SettingButton() {
 								</Card>
 							</div>
 							<div className="flex flex-row items-center justify-between">
-								<Tooltip delayDuration={700} defaultOpen={false} disableHoverableContent>
-									<TooltipTrigger>
-										<Text variant="subTitle2">{t("sys.settings.stretch")}</Text>
-										<Icon icon="solar:question-circle-linear" className="ml-1" />
-									</TooltipTrigger>
-									<TooltipContent>{t("sys.settings.stretchTip")}</TooltipContent>
-								</Tooltip>
+								<TooltipProvider>
+									<Tooltip delayDuration={700} defaultOpen={false} disableHoverableContent>
+										<TooltipTrigger>
+											<Text variant="subTitle2">{t("sys.settings.stretch")}</Text>
+											<Icon icon="solar:question-circle-linear" className="ml-1" />
+										</TooltipTrigger>
+										<TooltipContent>{t("sys.settings.stretchTip")}</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
 								<Switch
 									checked={themeStretch}
 									onCheckedChange={(checked) => updateSettings({ themeStretch: checked })}

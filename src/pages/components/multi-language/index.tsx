@@ -32,12 +32,12 @@ export default function MultiLanguagePage() {
 				<CardContent>
 					<RadioGroup onValueChange={(value: LocalEnum) => setLocale(value)} defaultValue={locale}>
 						<div className="flex items-center space-x-2">
-							<RadioGroupItem value={LocalEnum.en_us} id="en_us" />
-							<label htmlFor="en_us">English</label>
+							<RadioGroupItem value={LocalEnum.en_US} id="en_US" />
+							<label htmlFor="en_US">English</label>
 						</div>
 						<div className="flex items-center space-x-2">
-							<RadioGroupItem value={LocalEnum.zh_cn} id="zh_cn" />
-							<label htmlFor="zh_cn">Chinese</label>
+							<RadioGroupItem value={LocalEnum.zh_CN} id="zh_CN" />
+							<label htmlFor="zh_CN">Chinese</label>
 						</div>
 					</RadioGroup>
 
