@@ -28,14 +28,14 @@ export type Language = {
  * @desc 语言映射配置
  */
 export const LANGUAGE_MAP: Record<Locale, Language> = {
-	[LocalEnum.zh_cn]: {
-		locale: LocalEnum.zh_cn,
+	[LocalEnum.zh_CN]: {
+		locale: LocalEnum.zh_CN,
 		icon: "flag-cn",
 		label: "Chinese",
 		antdLocal: zh_cn,
 	},
-	[LocalEnum.en_us]: {
-		locale: LocalEnum.en_us,
+	[LocalEnum.en_US]: {
+		locale: LocalEnum.en_US,
 		icon: "flag-us",
 		label: "English",
 		antdLocal: en_us,
@@ -49,7 +49,7 @@ export const LANGUAGE_MAP: Record<Locale, Language> = {
 export default function useLocale() {
 	const { t, i18n } = useTranslation();
 
-	const locale = (i18n.resolvedLanguage || LocalEnum.en_us) as Locale;
+	const locale = (i18n.resolvedLanguage || LocalEnum.en_US) as Locale;
 	const language = LANGUAGE_MAP[locale];
 
 	/* 切换语言 */

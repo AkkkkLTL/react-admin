@@ -1,24 +1,21 @@
 /**
  * 筛选数据配置上下文提供器
  */
-
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import {
 	apiLibraryBookCategoryList,
 	apiLibraryBookPublisherList,
 	apiLibraryBookSourceList,
-	type LibraryBookCategoryListRes,
-	type LibraryBookPublisherListRes,
-	type LibraryBookSourceListRes,
 } from "@/api/services/library-book.service";
+import type { BookCategory, BookPublisher, BookSource } from "../../types";
 
 interface BookEnumContext {
-	publisher: LibraryBookPublisherListRes["page"]["list"];
-	category: LibraryBookCategoryListRes["page"]["list"];
-	source: LibraryBookSourceListRes["page"]["list"];
-	setPublisher: (publisher: LibraryBookPublisherListRes["page"]["list"]) => void;
-	setCategory: (category: LibraryBookCategoryListRes["page"]["list"]) => void;
-	setSource: (source: LibraryBookSourceListRes["page"]["list"]) => void;
+	publisher: BookPublisher[];
+	category: BookCategory[];
+	source: BookSource[];
+	setPublisher: (publisher: BookPublisher[]) => void;
+	setCategory: (category: BookCategory[]) => void;
+	setSource: (source: BookSource[]) => void;
 }
 
 const BookEnumContext = createContext<BookEnumContext>({
@@ -36,9 +33,9 @@ export function useBookEnumContext() {
 }
 
 export default function BookEnumProvider({ children }: PropsWithChildren) {
-	const [publisher, setPublisher] = useState<LibraryBookPublisherListRes["page"]["list"]>([]);
-	const [category, setCategory] = useState<LibraryBookCategoryListRes["page"]["list"]>([]);
-	const [source, setSource] = useState<LibraryBookSourceListRes["page"]["list"]>([]);
+	const [publisher, setPublisher] = useState<BookPublisher[]>([]);
+	const [category, setCategory] = useState<BookCategory[]>([]);
+	const [source, setSource] = useState<BookSource[]>([]);
 
 	useEffect(() => {
 		getEnumInfo();

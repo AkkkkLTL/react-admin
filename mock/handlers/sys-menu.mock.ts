@@ -607,6 +607,37 @@ var dataSysNavList_demo: MenuInfo[] = [
 		path: "/library/book/source",
 		component: "/pages/virtual-library/book/book-source-list",
 	},
+	{
+		id: "library_ebook",
+		parentId: "group_library",
+		name: "电子书管理",
+		type: CATALOGUE,
+		path: "/library/ebook",
+	},
+	{
+		id: "library_ebook_list",
+		parentId: "library_ebook",
+		name: "电子书列表",
+		type: MENU,
+		path: "/library/ebook/list",
+		component: "/pages/virtual-library/ebook/ebook-list",
+	},
+	{
+		id: "library_ebook_category",
+		parentId: "library_ebook",
+		name: "电子书分类列表",
+		type: MENU,
+		path: "/library/ebook/category",
+		component: "/pages/virtual-library/ebook/ebook-category-list",
+	},
+	{
+		id: "library_ebook_publish_platform",
+		parentId: "library_ebook",
+		name: "电子书发布平台列表",
+		type: MENU,
+		path: "/library/ebook/publish-platform",
+		component: "/pages/virtual-library/ebook/ebook-publish-platform",
+	},
 
 	// group_dashboard
 	{

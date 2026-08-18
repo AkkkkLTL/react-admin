@@ -1,56 +1,19 @@
-import type { ReadStatus } from "@/types/enum";
+import type { Book, BookCategory, BookPublisher, BookSource } from "@/pages/virtual-library/types";
 import apiClient from "../apiClient";
 
-export interface LibraryBookFilterParams {
-	page: number;
-	limit: number;
-	publisherId?: number;
-	categoryId?: number;
-	readStatus?: ReadStatus;
-	rating?: number;
-	search?: string;
-}
-
-export interface LibraryBookSaveReq {
-	id?: number;
-	isbn: string;
-	title: string;
-	oriTitle?: string;
-	cover?: string;
+export type LibraryBookSaveReq = Book & {
 	authorId?: string;
 	authorName?: string;
 	translatorId?: string;
 	translatorName?: string;
-	publisherId?: number;
-	publishDate?: string;
-	content?: string;
-	edition?: number;
-	binding?: number;
-	pages?: number;
-	currency?: string;
-	price?: number;
-	categoryId?: number;
 	sourceId?: string;
-	status?: number;
-	rating?: number;
-	noteBookId?: string;
-	tagId?: string;
-}
+};
 
-export interface LibraryBookPublisherSaveReq {
-	id?: number;
-	name: string;
-}
+export type LibraryBookPublisherSaveReq = BookPublisher;
 
-export interface LibraryBookCategorySaveReq {
-	id?: number;
-	name: string;
-}
+export type LibraryBookCategorySaveReq = BookCategory;
 
-export interface LibraryBookSourceSaveReq {
-	id?: number;
-	name: string;
-}
+export type LibraryBookSourceSaveReq = BookSource;
 
 export interface LibraryBookListRes {
 	page: {

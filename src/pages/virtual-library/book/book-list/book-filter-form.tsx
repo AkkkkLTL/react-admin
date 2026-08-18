@@ -1,11 +1,11 @@
 import { Rate, Select } from "antd";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import type { LibraryBookFilterParams } from "@/api/services/library-book.service";
 import { ReadStatus } from "@/types/enum";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
 import { Input } from "@/ui/input";
+import type { BookFilterParams } from "../../types";
 import { useBookEnumContext } from "./book-enum-provider";
 
 const BOOK_STATUS = [
@@ -36,12 +36,12 @@ const BOOK_STATUS = [
 ];
 
 export interface BookFilterFormProps {
-	formValue: LibraryBookFilterParams;
-	setTableParams: (params: LibraryBookFilterParams) => void;
+	formValue: BookFilterParams;
+	setTableParams: (params: BookFilterParams) => void;
 	onSearch: () => void;
 }
 export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilterFormProps) {
-	const form = useForm<LibraryBookFilterParams>({
+	const form = useForm<BookFilterParams>({
 		defaultValues: formValue,
 	});
 
@@ -51,7 +51,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 		form.reset(formValue);
 	}, [formValue, form]);
 
-	const onSubmit = (values: LibraryBookFilterParams) => {
+	const onSubmit = (values: BookFilterParams) => {
 		setTableParams({
 			...values,
 			page: 1,
@@ -106,7 +106,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 
 					<FormField
 						control={form.control}
-						name="readStatus"
+						name="status"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Read Status</FormLabel>
