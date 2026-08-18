@@ -1,10 +1,10 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import en_US from "@/locales/lang/en_US";
-import zh_CN from "@/locales/lang/zh_CN";
 import { LocalEnum, StorageEnum } from "@/types/enum";
 import { getStringItem } from "@/utils/storage";
+import en_US from "./lang/en_US";
+import zh_CN from "./lang/zh_CN";
 
 const defaultLng = getStringItem(StorageEnum.I18N) || (LocalEnum.zh_CN as string);
 document.documentElement.lang = defaultLng;
