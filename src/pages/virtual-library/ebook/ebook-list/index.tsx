@@ -8,7 +8,7 @@ import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { toURLSearchParams } from "@/utils";
-import type { EBook } from "../types";
+import type { EBook } from "../../types";
 import EBookEnumProvider, { useEBookEnumContext } from "./ebook-enum-provider";
 import { EBookFilterForm } from "./ebook-filter-form";
 import { EBookModal, type EBookModalProps } from "./ebook-modal";

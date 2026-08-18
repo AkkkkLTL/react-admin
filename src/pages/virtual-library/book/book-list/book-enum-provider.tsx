@@ -7,7 +7,7 @@ import {
 	apiLibraryBookPublisherList,
 	apiLibraryBookSourceList,
 } from "@/api/services/library-book.service";
-import type { BookCategory, BookPublisher, BookSource } from "../../ebook/types";
+import type { BookCategory, BookPublisher, BookSource } from "../../types";
 
 interface BookEnumContext {
 	publisher: BookPublisher[];

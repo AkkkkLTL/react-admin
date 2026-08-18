@@ -21,7 +21,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
-import type { Book, BookCategory, BookPublisher, BookSource } from "../../ebook/types";
+import type { Book, BookCategory, BookPublisher, BookSource } from "../../types";
 import { useBookEnumContext } from "./book-enum-provider";
 
 export interface BookModalProps {

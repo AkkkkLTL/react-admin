@@ -1,4 +1,4 @@
-import type { EBook, EBookCategory, EBookPublishPlatform } from "@/pages/virtual-library/ebook/types";
+import type { EBook, EBookCategory, EBookPublishPlatform } from "@/pages/virtual-library/types";
 import apiClient from "../apiClient";
 
 export type LibraryEBookSaveReq = EBook & {

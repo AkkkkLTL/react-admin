@@ -10,7 +10,7 @@ import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
-import type { EBookPublishPlatform } from "../types";
+import type { EBookPublishPlatform } from "../../types";
 
 interface DataType extends EBookPublishPlatform {
 	key: string;

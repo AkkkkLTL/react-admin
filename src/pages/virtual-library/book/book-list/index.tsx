@@ -6,7 +6,7 @@ import { ReadStatus } from "@/types/enum";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
 import { toURLSearchParams } from "@/utils";
-import type { Book, BookFilterParams } from "../../ebook/types";
+import type { Book, BookFilterParams } from "../../types";
 import BookEnumProvider, { useBookEnumContext } from "./book-enum-provider";
 import { BookFilterForm } from "./book-filter-form";
 import { BookModal, type BookModalProps } from "./book-modal";

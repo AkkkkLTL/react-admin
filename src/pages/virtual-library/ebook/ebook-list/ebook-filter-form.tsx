@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
 import { Input } from "@/ui/input";
-import type { EBookFilterParams } from "../types";
+import type { EBookFilterParams } from "../../types";
 import { useEBookEnumContext } from "./ebook-enum-provider";
 
 export interface EBookFilterFormProps {

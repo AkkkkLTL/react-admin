@@ -16,7 +16,7 @@ import { Button } from "@/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
-import type { EBook, EBookCategory, EBookPublishPlatform } from "../types";
+import type { EBook, EBookCategory, EBookPublishPlatform } from "../../types";
 import { useEBookEnumContext } from "./ebook-enum-provider";
 
 export interface EBookModalProps {
