@@ -29,7 +29,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"#/*": ["./src/types/*"],
-			"~/*": ["./src/*"]
+			"~/*": ["./*"]
 		}
 	},
 	"include": ["src", "src/locales/lang/**/*.json", "mock", "vite.config.ts", "tailwind.config.ts", "tests"],
