@@ -36,11 +36,11 @@ const READ_STATUS = [
 
 const TYPE_LIST = [
 	{
-		value: 1,
+		value: 0,
 		label: "小说",
 	},
 	{
-		value: 2,
+		value: 1,
 		label: "漫画",
 	},
 ];
