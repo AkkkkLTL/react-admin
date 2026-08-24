@@ -71,7 +71,6 @@ export default function BookPublisherListPage() {
 			show: true,
 			title: "Create New",
 			formValue: {
-				...prev.formValue,
 				...DEFAULT_PUBLHER_VALUE,
 			},
 		}));
