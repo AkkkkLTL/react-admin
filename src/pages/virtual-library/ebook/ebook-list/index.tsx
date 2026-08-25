@@ -147,7 +147,6 @@ export default function EBookListPage() {
 			show: true,
 			title: "Create New",
 			formValue: {
-				...prev.formValue,
 				...DEFAULT_EBOOK_VALUE,
 			},
 		}));

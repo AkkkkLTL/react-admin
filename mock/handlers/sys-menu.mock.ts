@@ -638,6 +638,52 @@ var dataSysNavList_demo: MenuInfo[] = [
 		path: "/library/ebook/publish-platform",
 		component: "/pages/virtual-library/ebook/ebook-publish-platform",
 	},
+	{
+		id: "library_movie",
+		parentId: "group_library",
+		name: "影视剧管理",
+		type: CATALOGUE,
+		path: "/library/movie",
+	},
+	{
+		id: "library_movie_list",
+		parentId: "library_movie",
+		name: "影视剧列表",
+		type: MENU,
+		path: "/library/movie/list",
+		component: "/pages/virtual-library/movie/movie-list",
+	},
+	{
+		id: "library_movie_category",
+		parentId: "library_movie",
+		name: "影视剧分类列表",
+		type: MENU,
+		path: "/library/movie/category",
+		component: "/pages/virtual-library/movie/movie-category-list",
+	},
+	{
+		id: "library_common",
+		parentId: "group_library",
+		name: "通用配置管理",
+		type: CATALOGUE,
+		path: "/library/common",
+	},
+	{
+		id: "library_common_language",
+		parentId: "library_common",
+		name: "语言列表",
+		type: MENU,
+		path: "/library/common/language",
+		component: "/pages/virtual-library/common/language-list",
+	},
+	{
+		id: "library_common_region",
+		parentId: "library_common",
+		name: "区域列表",
+		type: MENU,
+		path: "/library/common/region",
+		component: "/pages/virtual-library/common/region-list",
+	},
 
 	// group_dashboard
 	{

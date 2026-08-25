@@ -1,49 +1,66 @@
-import Table, { type ColumnsType } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
+import Table from "antd/es/table";
 import { useEffect, useState } from "react";
-import { apiLibraryBookPublisherList, type LibraryBookPublisherSaveReq } from "@/api/services/library-book.service";
+import { apiLibraryCommonLanguageList } from "@/api/services/library-common.service";
 import { Icon } from "@/components/icon";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
-import { PublisherModal, type PublisherModalProps } from "./publisher-modal";
+import type { CommonLanguage } from "../../types";
+import { LanguageModal, type LanguageModalProps } from "./language-modal";
 
-const DEFAULT_PUBLHER_VALUE: LibraryBookPublisherSaveReq = {
+const DEFAULT_LANGUAGE_VALUE: CommonLanguage = {
 	id: undefined,
+	code: "",
 	name: "",
 };
 
-export default function BookPublisherListPage() {
-	const [bookPublishList, setBookPublishList] = useState<LibraryBookPublisherSaveReq[]>([]);
+export default function LanguageListPage() {
+	const [languageList, setLanguageList] = useState<CommonLanguage[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [refresh, setRefresh] = useState(0);
-	const [bookPublisherModalProps, setBookPublisherModalProps] = useState<PublisherModalProps>({
-		formValue: { ...DEFAULT_PUBLHER_VALUE },
+	const [languageModalProps, setLanguageModalProps] = useState<LanguageModalProps>({
+		formValue: { ...DEFAULT_LANGUAGE_VALUE },
 		title: "New",
 		show: false,
 		onOk: () => {
-			setBookPublisherModalProps((prev) => ({ ...prev, show: false }));
+			setLanguageModalProps((prev) => ({
+				...prev,
+				show: false,
+			}));
 			setRefresh(Date.now());
 		},
 		onCancel: () => {
-			setBookPublisherModalProps((prev) => ({ ...prev, show: false }));
+			setLanguageModalProps((prev) => ({
+				...prev,
+				show: false,
+			}));
 		},
 	});
 
 	useEffect(() => {
-		getBookPublisherList();
+		setLoading(true);
+		getLanguageList();
 	}, [refresh]);
 
-	const getBookPublisherList = async () => {
-		const dataList = (await apiLibraryBookPublisherList()).page.list || [];
-		setBookPublishList(dataList);
+	const getLanguageList = async () => {
+		const dataList = (await apiLibraryCommonLanguageList()).page.list || [];
+		setLanguageList(dataList);
+		setLoading(false);
 	};
 
-	const columns: ColumnsType<LibraryBookPublisherSaveReq> = [
+	const columns: ColumnsType<CommonLanguage> = [
 		{
 			title: "No",
 			render: (_, record, index) => index + 1,
 			width: 50,
 		},
 		{
-			title: "Publisher Name",
+			title: "Code",
+			dataIndex: "code",
+			width: 200,
+		},
+		{
+			title: "Name",
 			dataIndex: "name",
 			width: 200,
 		},
@@ -66,18 +83,18 @@ export default function BookPublisherListPage() {
 	];
 
 	const onCreate = () => {
-		setBookPublisherModalProps((prev) => ({
+		setLanguageModalProps((prev) => ({
 			...prev,
 			show: true,
 			title: "Create New",
 			formValue: {
-				...DEFAULT_PUBLHER_VALUE,
+				...DEFAULT_LANGUAGE_VALUE,
 			},
 		}));
 	};
 
-	const onEdit = (formValue: LibraryBookPublisherSaveReq) => {
-		setBookPublisherModalProps((prev) => ({
+	const onEdit = (formValue: CommonLanguage) => {
+		setLanguageModalProps((prev) => ({
 			...prev,
 			show: true,
 			title: "Edit",
@@ -89,21 +106,22 @@ export default function BookPublisherListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Publisher List</div>
+					<div>Language List</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
 			<CardContent>
 				<Table
+					loading={loading}
 					rowKey={"id"}
 					size="small"
 					scroll={{ x: "max-content" }}
 					pagination={false}
 					columns={columns}
-					dataSource={bookPublishList}
+					dataSource={languageList}
 				/>
 			</CardContent>
-			<PublisherModal {...bookPublisherModalProps} />
+			<LanguageModal {...languageModalProps} />
 		</Card>
 	);
 }
