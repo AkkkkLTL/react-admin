@@ -4,7 +4,9 @@ import { mockTokenExpired } from "./handlers/demo";
 import * as libraryBookMock from "./handlers/library-book.mock";
 import * as libraryCommonMock from "./handlers/library-common.mock";
 import * as libraryEBookMock from "./handlers/library-ebook.mock";
+import * as libraryLessonMock from "./handlers/library-lesson.mock";
 import * as libraryMovieMock from "./handlers/library-movie.mock";
+
 // System 项目
 import * as sysLoginMock from "./handlers/sys-login.mock";
 import * as sysMenuMock from "./handlers/sys-menu.mock";
@@ -21,5 +23,6 @@ const handlers = [
 	...Object.values(libraryEBookMock),
 	...Object.values(libraryMovieMock),
 	...Object.values(libraryCommonMock),
+	...Object.values(libraryLessonMock),
 ];
 export const worker = setupWorker(...handlers);

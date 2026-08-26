@@ -190,6 +190,45 @@ export interface MovieCategory {
 	name: string;
 }
 
+//#region 课程信息
+export interface LessonFilterParams {
+	page: number;
+	limit: number;
+	status?: ReadStatus;
+	search?: string;
+}
+
+export interface Lesson {
+	id?: number;
+	// 课程名称
+	title: string;
+	// 课程封面
+	cover?: string;
+	// 课程链接
+	url?: string;
+	// 主讲老师
+	teacher?: {
+		id: string;
+		name: string;
+	}[];
+	sourceId?: Required<LessonSource>["id"][];
+	// 课程状态
+	status?: ReadStatus;
+	// 课程评分
+	rating?: number;
+	// 课程笔记
+	noteBookId?: string;
+	// 课程标签
+	tagId?: string;
+}
+
+// 听课来源
+export interface LessonSource {
+	id?: number;
+	name: string;
+}
+//#endregion 课程信息
+
 // 通用配置
 export interface CommonLanguage {
 	id?: number;
