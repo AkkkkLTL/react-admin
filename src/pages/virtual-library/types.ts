@@ -229,6 +229,66 @@ export interface LessonSource {
 }
 //#endregion 课程信息
 
+//#region 音乐信息
+export interface MusicFilterParams {
+	page: number;
+	limit: number;
+	search?: string;
+}
+
+export interface Music {
+	id?: number;
+	// 音乐名称
+	title: string;
+	// 表演者
+	performer?: {
+		id: string;
+		name: string;
+	}[];
+	// 作词人
+	lyricist?: {
+		id: string;
+		name: string;
+	}[];
+	// 作曲人
+	composer?: {
+		id: string;
+		name: string;
+	}[];
+	// 编曲人
+	arranger?: {
+		id: string;
+		name: string;
+	}[];
+	// 语言
+	language?: CommonLanguage["code"][];
+	// 音乐来源
+	styleId?: Required<MusicStyle>["id"][];
+	// 音乐专辑
+	albumId?: Required<MusicAlbum>["id"][];
+	// 发行日期
+	releaseDate?: string;
+	// 音乐笔记
+	noteBookId?: string;
+	// 音乐标签
+	tagId?: string;
+}
+
+// 音乐风格
+export interface MusicStyle {
+	id?: number;
+	name: string;
+}
+
+// 音乐专辑
+export interface MusicAlbum {
+	id?: number;
+	name: string;
+	content?: string;
+}
+
+//#endregion 音乐信息
+
 // 通用配置
 export interface CommonLanguage {
 	id?: number;
