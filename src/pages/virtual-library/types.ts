@@ -289,6 +289,33 @@ export interface MusicAlbum {
 
 //#endregion 音乐信息
 
+//#region 笔记信息
+export interface NoteFilterParams {
+	page: number;
+	limit: number;
+	search?: string;
+}
+export interface Note {
+	id?: number;
+	title: string;
+	type: NoteType;
+	platformId?: Required<NotePlatform>["id"][];
+	location?: string;
+}
+
+export enum NoteType {
+	// 电子笔记
+	ELECTRONIC = 0,
+	// 实体笔记
+	PHYSICAL_NOTE = 1,
+}
+
+export interface NotePlatform {
+	id?: number;
+	name: string;
+}
+//#endregion 笔记信息
+
 // 通用配置
 export interface CommonLanguage {
 	id?: number;
