@@ -316,6 +316,22 @@ export interface NotePlatform {
 }
 //#endregion 笔记信息
 
+//#region 人物信息
+export interface CharacterFilterParams {
+	page: number;
+	limit: number;
+	search?: string;
+}
+
+export interface Character {
+	id?: number;
+	name: string;
+	isVirtual?: boolean;
+	noteBookId?: string;
+	tagId?: string;
+}
+//#endregion 人物信息
+
 // 通用配置
 export interface CommonLanguage {
 	id?: number;

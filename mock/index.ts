@@ -2,6 +2,7 @@ import { setupWorker } from "msw/browser";
 import { mockTokenExpired } from "./handlers/demo";
 // Library 项目
 import * as libraryBookMock from "./handlers/library-book.mock";
+import * as libraryCharacterMock from "./handlers/library-character.mock";
 import * as libraryCommonMock from "./handlers/library-common.mock";
 import * as libraryEBookMock from "./handlers/library-ebook.mock";
 import * as libraryLessonMock from "./handlers/library-lesson.mock";
@@ -28,5 +29,6 @@ const handlers = [
 	...Object.values(libraryLessonMock),
 	...Object.values(libraryMusicMock),
 	...Object.values(libraryNoteMock),
+	...Object.values(libraryCharacterMock),
 ];
 export const worker = setupWorker(...handlers);

@@ -739,6 +739,21 @@ var dataSysNavList_demo: MenuInfo[] = [
 		component: "/pages/virtual-library/note/note-platform-list",
 	},
 	{
+		id: "library_character",
+		parentId: "group_library",
+		name: "人物管理",
+		type: CATALOGUE,
+		path: "/library/character",
+	},
+	{
+		id: "library_character_list",
+		parentId: "library_character",
+		name: "人物列表",
+		type: MENU,
+		path: "/library/character/list",
+		component: "/pages/virtual-library/character/character-list",
+	},
+	{
 		id: "library_common",
 		parentId: "group_library",
 		name: "通用配置管理",
