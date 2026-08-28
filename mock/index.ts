@@ -5,6 +5,7 @@ import * as libraryBookMock from "./handlers/library-book.mock";
 import * as libraryCharacterMock from "./handlers/library-character.mock";
 import * as libraryCommonMock from "./handlers/library-common.mock";
 import * as libraryEBookMock from "./handlers/library-ebook.mock";
+import * as libraryGameMock from "./handlers/library-game.mock";
 import * as libraryLessonMock from "./handlers/library-lesson.mock";
 import * as libraryMovieMock from "./handlers/library-movie.mock";
 import * as libraryMusicMock from "./handlers/library-music.mock";
@@ -30,5 +31,6 @@ const handlers = [
 	...Object.values(libraryMusicMock),
 	...Object.values(libraryNoteMock),
 	...Object.values(libraryCharacterMock),
+	...Object.values(libraryGameMock),
 ];
 export const worker = setupWorker(...handlers);
