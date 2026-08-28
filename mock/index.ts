@@ -7,6 +7,7 @@ import * as libraryEBookMock from "./handlers/library-ebook.mock";
 import * as libraryLessonMock from "./handlers/library-lesson.mock";
 import * as libraryMovieMock from "./handlers/library-movie.mock";
 import * as libraryMusicMock from "./handlers/library-music.mock";
+import * as libraryNoteMock from "./handlers/library-note.mock";
 
 // System 项目
 import * as sysLoginMock from "./handlers/sys-login.mock";
@@ -26,5 +27,6 @@ const handlers = [
 	...Object.values(libraryCommonMock),
 	...Object.values(libraryLessonMock),
 	...Object.values(libraryMusicMock),
+	...Object.values(libraryNoteMock),
 ];
 export const worker = setupWorker(...handlers);
