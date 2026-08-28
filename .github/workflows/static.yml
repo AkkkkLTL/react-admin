@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  VITE_APP_PUBLIC_PATH: './'
+  VITE_APP_PUBLIC_PATH: '/react-admin/'
 
 jobs:
   # 单次部署的工作描述
