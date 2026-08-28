@@ -140,7 +140,6 @@ export default function BookListPage() {
 			show: true,
 			title: "Create New",
 			formValue: {
-				...prev.formValue,
 				...DEFAULT_BOOK_VALUE,
 			},
 		}));

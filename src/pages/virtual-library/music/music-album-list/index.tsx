@@ -1,49 +1,57 @@
 import Table, { type ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
-import { apiLibraryBookPublisherList, type LibraryBookPublisherSaveReq } from "@/api/services/library-book.service";
+import { apiLibraryMusicAlbumList } from "@/api/services/library-music.service";
 import { Icon } from "@/components/icon";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
-import { PublisherModal, type PublisherModalProps } from "./publisher-modal";
+import type { MusicAlbum } from "../../types";
+import { MusicAlbumModal, type MusicAlbumModalProps } from "./music-album-modal";
 
-const DEFAULT_PUBLHER_VALUE: LibraryBookPublisherSaveReq = {
+const DEFAULT_ALBUM_VALUE: MusicAlbum = {
 	id: undefined,
 	name: "",
+	content: "",
 };
 
-export default function BookPublisherListPage() {
-	const [bookPublishList, setBookPublishList] = useState<LibraryBookPublisherSaveReq[]>([]);
+export default function MusicAlbumListPage() {
+	const [musicAlbumList, setMusicAlbumList] = useState<MusicAlbum[]>([]);
 	const [refresh, setRefresh] = useState(0);
-	const [bookPublisherModalProps, setBookPublisherModalProps] = useState<PublisherModalProps>({
-		formValue: { ...DEFAULT_PUBLHER_VALUE },
+	const [musicAlbumModalProps, setMusicAlbumModalProps] = useState<MusicAlbumModalProps>({
+		formValue: { ...DEFAULT_ALBUM_VALUE },
 		title: "New",
 		show: false,
 		onOk: () => {
-			setBookPublisherModalProps((prev) => ({ ...prev, show: false }));
+			setMusicAlbumModalProps((prev) => ({
+				...prev,
+				show: false,
+			}));
 			setRefresh(Date.now());
 		},
 		onCancel: () => {
-			setBookPublisherModalProps((prev) => ({ ...prev, show: false }));
+			setMusicAlbumModalProps((prev) => ({
+				...prev,
+				show: false,
+			}));
 		},
 	});
 
 	useEffect(() => {
-		getBookPublisherList();
+		getMusicAlbumList();
 	}, [refresh]);
 
-	const getBookPublisherList = async () => {
-		const dataList = (await apiLibraryBookPublisherList()).page.list || [];
-		setBookPublishList(dataList);
+	const getMusicAlbumList = async () => {
+		const dataList = (await apiLibraryMusicAlbumList()).page.list || [];
+		setMusicAlbumList(dataList);
 	};
 
-	const columns: ColumnsType<LibraryBookPublisherSaveReq> = [
+	const columns: ColumnsType<MusicAlbum> = [
 		{
 			title: "No",
 			render: (_, record, index) => index + 1,
 			width: 50,
 		},
 		{
-			title: "Publisher Name",
+			title: "Album Name",
 			dataIndex: "name",
 			width: 200,
 		},
@@ -66,18 +74,18 @@ export default function BookPublisherListPage() {
 	];
 
 	const onCreate = () => {
-		setBookPublisherModalProps((prev) => ({
+		setMusicAlbumModalProps((prev) => ({
 			...prev,
 			show: true,
 			title: "Create New",
 			formValue: {
-				...DEFAULT_PUBLHER_VALUE,
+				...DEFAULT_ALBUM_VALUE,
 			},
 		}));
 	};
 
-	const onEdit = (formValue: LibraryBookPublisherSaveReq) => {
-		setBookPublisherModalProps((prev) => ({
+	const onEdit = (formValue: MusicAlbum) => {
+		setMusicAlbumModalProps((prev) => ({
 			...prev,
 			show: true,
 			title: "Edit",
@@ -89,7 +97,7 @@ export default function BookPublisherListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Publisher List</div>
+					<div>Music Album List</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -100,10 +108,10 @@ export default function BookPublisherListPage() {
 					scroll={{ x: "max-content" }}
 					pagination={false}
 					columns={columns}
-					dataSource={bookPublishList}
+					dataSource={musicAlbumList}
 				/>
 			</CardContent>
-			<PublisherModal {...bookPublisherModalProps} />
+			<MusicAlbumModal {...musicAlbumModalProps} />
 		</Card>
 	);
 }
