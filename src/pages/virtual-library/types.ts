@@ -286,8 +286,52 @@ export interface MusicAlbum {
 	name: string;
 	content?: string;
 }
-
 //#endregion 音乐信息
+
+//#region 游戏信息
+export interface GameFilterParams {
+	page: number;
+	limit: number;
+	seriesId?: number;
+	search?: string;
+}
+
+export interface Game {
+	id?: number;
+	title: string;
+	oriTitle?: string;
+	platformId?: Required<GamePlatform>["id"][];
+	categoryId?: Required<GameCategory>["id"][];
+	developer?: {
+		id: string;
+		name: string;
+	}[];
+	publisher?: {
+		id: string;
+		name: string;
+	}[];
+	releaseDate?: string;
+	seriesId?: Required<GameSeries>["id"][];
+	rating?: number;
+	noteBookId?: string;
+	tagId?: string;
+}
+
+export interface GameCategory {
+	id?: number;
+	name: string;
+}
+
+export interface GamePlatform {
+	id?: number;
+	name: string;
+}
+
+export interface GameSeries {
+	id?: number;
+	name: string;
+}
+//#endregion 游戏信息
 
 //#region 笔记信息
 export interface NoteFilterParams {
