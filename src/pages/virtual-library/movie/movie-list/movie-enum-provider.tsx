@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import { apiLibraryCommonLanguageList, apiLibraryCommonRegionList } from "@/api/services/library-common.service";
-import { apiLibraryMovieCategoryList, LibraryMovieCategoryListRes } from "@/api/services/library-movie.service";
+import { apiLibraryMovieCategoryList } from "@/api/services/library-movie.service";
 import { ReadStatus } from "@/types/enum";
 import { type CommonLanguage, type CommonRegion, type MovieCategory, MovieType } from "../../types";
 
@@ -49,12 +49,20 @@ const TYPE_LIST = [
 		label: "电视剧",
 	},
 	{
+		value: MovieType.MOVIE,
+		label: "电影",
+	},
+	{
 		value: MovieType.PROGRAM,
 		label: "综艺",
 	},
 	{
 		value: MovieType.SHORT,
 		label: "短剧",
+	},
+	{
+		value: MovieType.SHORT_FILM,
+		label: "短片",
 	},
 ];
 

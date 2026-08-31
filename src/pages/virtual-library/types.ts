@@ -106,20 +106,22 @@ export interface EBookPublishPlatform {
 }
 
 export enum MovieType {
-	// 漫剧
+	/** 漫剧 */
 	MANGA = 0,
-	// 纪录片
+	/** 纪录片 */
 	DOCUMENTARY = 1,
-	// 动漫
+	/** 动漫 */
 	ANIMATION = 2,
-	// 电视剧
+	/** 电视剧 */
 	TV_SERIES = 3,
-	// 电影
+	/** 电影 */
 	MOVIE = 4,
-	// 综艺
+	/** 综艺 */
 	PROGRAM = 5,
-	// 短剧
+	/** 短剧 */
 	SHORT = 6,
+	/** 短片 */
+	SHORT_FILM = 7,
 }
 
 export interface MovieFilterParams {
