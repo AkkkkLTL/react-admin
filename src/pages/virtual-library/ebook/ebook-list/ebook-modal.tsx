@@ -117,6 +117,13 @@ export function EBookModal({ formValue, title, show, onOk, onCancel }: EBookModa
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	// 关闭弹窗时，清空作者字段
+	useEffect(() => {
+		if (show === false) {
+			authorField.remove();
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">

@@ -100,6 +100,15 @@ export function MovieModal({ formValue, title, show, onCancel, onOk }: MovieModa
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	// 关闭弹窗时，清空导演、编辑器和演员字段
+	useEffect(() => {
+		if (show === false) {
+			directorField.remove();
+			editorField.remove();
+			actorField.remove();
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">

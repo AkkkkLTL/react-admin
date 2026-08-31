@@ -107,6 +107,16 @@ export function MusicModal({ formValue, title, show, onCancel, onOk }: MusicModa
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	// 关闭弹窗时，清空.performer、lyricist、composer和arranger字段
+	useEffect(() => {
+		if (show === false) {
+			performerField.remove();
+			lyricistField.remove();
+			composerField.remove();
+			arrangerField.remove();
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">
