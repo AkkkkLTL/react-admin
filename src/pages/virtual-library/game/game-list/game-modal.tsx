@@ -135,6 +135,14 @@ export function GameModal({ formValue, title, show, onOk, onCancel }: GameModalP
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	// 关闭弹窗时，清空开发者和开发商字段
+	useEffect(() => {
+		if (show === false) {
+			developerField.remove();
+			publisherField.remove();
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">
