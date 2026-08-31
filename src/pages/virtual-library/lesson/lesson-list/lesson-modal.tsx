@@ -82,6 +82,13 @@ export function LessonModal({ formValue, title, show, onCancel, onOk }: LessonMo
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	// 关闭弹窗时，清空教师字段
+	useEffect(() => {
+		if (show === false) {
+			teacherField.remove();
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">
