@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import useLocale from "@/locales/use-locale";
@@ -27,6 +28,7 @@ export default function AccountDropdown() {
 		try {
 			// 清除用户信息和token
 			dispatch(clearUserInfoAndToken());
+			Cookies.remove("token");
 			backToLogin();
 		} catch (error) {
 			// 清除用户信息和token失败时的处理

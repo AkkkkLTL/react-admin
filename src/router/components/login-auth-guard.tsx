@@ -1,4 +1,6 @@
 // quote from https://github.com/d3george/slash-admin/tree/main
+
+import Cookies from "js-cookie";
 import { type ReactNode, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUserToken } from "@/store/modules/userSlice";
@@ -14,7 +16,7 @@ interface LoginAuthGuardProps {
  */
 export default function LoginAuthGuard({ children }: LoginAuthGuardProps) {
 	const router = useRouter();
-	const { token } = useSelector(selectUserToken);
+	const token = Cookies.get("token");
 
 	const check = useCallback(() => {
 		// 若未登录，则重定向到登录页

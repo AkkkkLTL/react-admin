@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import PlaceholderImg from "@/assets/images/background/placeholder.svg";
@@ -15,7 +16,7 @@ import ResetForm from "./reset-form";
 
 export default function LoginPage() {
 	// 获取用户权限令牌
-	const { token } = useSelector(selectUserToken);
+	const token = Cookies.get("token");
 	// 检查是否需要重定向到登录页（todo：将storage的字段信息存为常量）
 	const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
 

@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction, type Reducer } from "@reduxjs/toolkit";
 import { useMutation } from "@tanstack/react-query";
 import { produce } from "immer";
+import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import type { MenuInfo, UserInfo, UserToken } from "#/entity";
@@ -81,7 +82,8 @@ export const useSignIn = () => {
 		try {
 			const res = await signInMutation.mutateAsync(data);
 			const { expire, token } = res;
-			dispatch(setUserToken({ expire, token }));
+			Cookies.set("token", token, { expires: expire });
+			// dispatch(setUserToken({ expire, token }));
 		} catch (error) {
 			toast.error(error.message, {
 				position: "top-center",

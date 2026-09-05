@@ -1,7 +1,14 @@
 import { lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useDispatch } from "react-redux";
-import { createBrowserRouter, Navigate, Outlet, type RouteObject, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	createHashRouter,
+	Navigate,
+	Outlet,
+	type RouteObject,
+	RouterProvider,
+} from "react-router-dom";
 import { apiSysMenuNav } from "@/api/services/sys-menu.service";
 import { LineLoading } from "@/components/loading";
 import { GLOBAL_CONFIG } from "@/global-config";
@@ -97,7 +104,7 @@ export default function AppRoutes() {
 	}, [initializeRouter]);
 
 	const router = useMemo(() => {
-		const newRouter = createBrowserRouter(
+		const newRouter = createHashRouter(
 			[
 				{
 					element: (
