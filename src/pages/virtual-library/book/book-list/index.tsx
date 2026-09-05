@@ -45,15 +45,16 @@ export default function BookListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(Date.now());
 	const [bookModalProps, setBookModalProps] = useState<BookModalProps>({
-		formValue: { ...DEFAULT_BOOK_VALUE },
+		formValue: structuredClone(DEFAULT_BOOK_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
-			setBookModalProps((prev) => ({ ...prev, show: false }));
+			// 关闭弹窗时，清空表单数据(使用structuredClone深拷贝默认值)
+			setBookModalProps((prev) => ({ ...prev, formValue: structuredClone(DEFAULT_BOOK_VALUE), show: false }));
 			setRefresh(Date.now());
 		},
 		onCancel: () => {
-			setBookModalProps((prev) => ({ ...prev, show: false }));
+			setBookModalProps((prev) => ({ ...prev, formValue: structuredClone(DEFAULT_BOOK_VALUE), show: false }));
 		},
 	});
 
@@ -139,9 +140,7 @@ export default function BookListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_BOOK_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_BOOK_VALUE),
 		}));
 	};
 
