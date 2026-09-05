@@ -35,12 +35,13 @@ export default function MusicListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(Date.now());
 	const [musicModalProps, setMusicModalProps] = useState<MusicModalProps>({
-		formValue: { ...DEFAULT_MUSIC_VALUE },
+		formValue: structuredClone(DEFAULT_MUSIC_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
 			setMusicModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_MUSIC_VALUE),
 				show: false,
 			}));
 			setRefresh(Date.now());
@@ -48,6 +49,7 @@ export default function MusicListPage() {
 		onCancel: () => {
 			setMusicModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_MUSIC_VALUE),
 				show: false,
 			}));
 		},
@@ -112,9 +114,7 @@ export default function MusicListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_MUSIC_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_MUSIC_VALUE),
 		}));
 	};
 

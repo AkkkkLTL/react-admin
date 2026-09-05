@@ -47,12 +47,13 @@ export default function MovieListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(Date.now());
 	const [movieModalProps, setMovieModalProps] = useState<MovieModalProps>({
-		formValue: { ...DEFAULT_MOVIE_VALUE },
+		formValue: structuredClone(DEFAULT_MOVIE_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
 			setMovieModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_MOVIE_VALUE),
 				show: false,
 			}));
 			setRefresh(Date.now());
@@ -60,6 +61,7 @@ export default function MovieListPage() {
 		onCancel: () => {
 			setMovieModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_MOVIE_VALUE),
 				show: false,
 			}));
 		},
@@ -184,9 +186,7 @@ export default function MovieListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_MOVIE_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_MOVIE_VALUE),
 		}));
 	};
 

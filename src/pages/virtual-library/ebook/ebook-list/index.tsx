@@ -48,12 +48,13 @@ export default function EBookListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(0);
 	const [ebookModalProps, setEBookModalProps] = useState<EBookModalProps>({
-		formValue: { ...DEFAULT_EBOOK_VALUE },
+		formValue: structuredClone(DEFAULT_EBOOK_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
 			setEBookModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_EBOOK_VALUE),
 				show: false,
 			}));
 			setRefresh(Date.now());
@@ -61,6 +62,7 @@ export default function EBookListPage() {
 		onCancel: () => {
 			setEBookModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_EBOOK_VALUE),
 				show: false,
 			}));
 		},
@@ -146,9 +148,7 @@ export default function EBookListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_EBOOK_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_EBOOK_VALUE),
 		}));
 	};
 
