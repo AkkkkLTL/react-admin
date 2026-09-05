@@ -37,15 +37,15 @@ export default function GameListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(Date.now());
 	const [gameModalProps, setGameModalProps] = useState<GameModalProps>({
-		formValue: { ...DEFAULT_GAME_VALUE },
+		formValue: structuredClone(DEFAULT_GAME_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
-			setGameModalProps((prev) => ({ ...prev, show: false }));
+			setGameModalProps((prev) => ({ ...prev, formValue: structuredClone(DEFAULT_GAME_VALUE), show: false }));
 			setRefresh(Date.now());
 		},
 		onCancel: () => {
-			setGameModalProps((prev) => ({ ...prev, show: false }));
+			setGameModalProps((prev) => ({ ...prev, formValue: structuredClone(DEFAULT_GAME_VALUE), show: false }));
 		},
 	});
 
@@ -151,9 +151,7 @@ export default function GameListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_GAME_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_GAME_VALUE),
 		}));
 	};
 

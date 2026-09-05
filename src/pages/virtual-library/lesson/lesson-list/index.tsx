@@ -34,12 +34,13 @@ export default function LessonListPage() {
 	const [loading, setLoading] = useState(false);
 	const [refresh, setRefresh] = useState(Date.now());
 	const [lessonModalProps, setLessonModalProps] = useState<LessonModalProps>({
-		formValue: { ...DEFAULT_LESSON_VALUE },
+		formValue: structuredClone(DEFAULT_LESSON_VALUE),
 		title: "New",
 		show: false,
 		onOk: () => {
 			setLessonModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_LESSON_VALUE),
 				show: false,
 			}));
 			setRefresh(Date.now());
@@ -47,6 +48,7 @@ export default function LessonListPage() {
 		onCancel: () => {
 			setLessonModalProps((prev) => ({
 				...prev,
+				formValue: structuredClone(DEFAULT_LESSON_VALUE),
 				show: false,
 			}));
 		},
@@ -130,9 +132,7 @@ export default function LessonListPage() {
 			...prev,
 			show: true,
 			title: "Create New",
-			formValue: {
-				...DEFAULT_LESSON_VALUE,
-			},
+			formValue: structuredClone(DEFAULT_LESSON_VALUE),
 		}));
 	};
 

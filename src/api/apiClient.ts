@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { store } from "@/store";
 import { clearUserInfoAndToken } from "@/store/modules/userSlice";
 import "nprogress/nprogress.css";
+import Cookies from "js-cookie";
 import { GLOBAL_CONFIG } from "@/global-config";
 import { ResultEnum } from "@/types/enum";
 
@@ -41,7 +42,8 @@ axiosInstance.interceptors.request.use(
 	(config) => {
 		// 请求时开启进度条
 		nProgress.start();
-		config.headers.Authorization = "Bearer Token";
+		const token = Cookies.get("token") || "";
+		config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
 	(error) => {

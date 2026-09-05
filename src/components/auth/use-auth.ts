@@ -1,8 +1,9 @@
+import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { selectUserPermissions, selectUserRoles, selectUserToken } from "@/store/modules/userSlice";
 
 export const useAuthCheck = (baseOn: "role" | "permission" = "permission") => {
-	const { token } = useSelector(selectUserToken);
+	const token = Cookies.get("token");
 	const permissions = useSelector(selectUserPermissions);
 	const roles = useSelector(selectUserRoles) || [];
 

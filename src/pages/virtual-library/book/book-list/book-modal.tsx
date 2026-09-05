@@ -227,14 +227,6 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		form.reset(formValue);
 	}, [formValue, form]);
 
-	// 关闭弹窗时，清空作者和翻译者字段
-	useEffect(() => {
-		if (show === false) {
-			authorField.remove();
-			translatorField.remove();
-		}
-	}, [show]);
-
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
 			<DialogContent className="h-[90%]">
