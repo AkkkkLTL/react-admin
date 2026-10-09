@@ -97,7 +97,7 @@ export default function MusicAlbumListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Music Album List</div>
+					<div>音乐专辑列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>

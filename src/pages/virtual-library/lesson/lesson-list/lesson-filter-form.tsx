@@ -1,9 +1,10 @@
 import { Select } from "antd";
+import { CircleXIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
-import { Input } from "@/ui/input";
+import { InputGroup, InputGroupInput, InputGroupAddon } from "@/ui/input-group";
 import type { LessonFilterParams } from "../../types";
 import { useLessonEnumContext } from "./lesson-enum-provider";
 
@@ -24,11 +25,22 @@ export function LessonFilterForm({ formValue, setTableParams, onSearch }: Lesson
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	const handleClearInput = () => {
+		form.setValue("search", "");
+	};
+
 	const onSubmit = (values: LessonFilterParams) => {
 		setTableParams({
 			...values,
 			page: 1,
 		});
+		onSearch();
+	};
+
+	const onReset = () => {
+		const resetValues = { page: 1, limit: formValue.limit } as LessonFilterParams;
+		form.reset(resetValues);
+		setTableParams(resetValues);
 		onSearch();
 	};
 
@@ -48,7 +60,7 @@ export function LessonFilterForm({ formValue, setTableParams, onSearch }: Lesson
 							<FormItem>
 								<FormLabel>Status</FormLabel>
 								<FormControl>
-									<Select {...field} placeholder="Select Status" options={STATUS} />
+									<Select {...field} allowClear placeholder="Select Status" options={STATUS} />
 								</FormControl>
 							</FormItem>
 						)}
@@ -61,13 +73,33 @@ export function LessonFilterForm({ formValue, setTableParams, onSearch }: Lesson
 							<FormItem>
 								<FormLabel>Title</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<InputGroup>
+										<InputGroupInput {...field} />
+										{field.value && (
+											<InputGroupAddon align={"inline-end"}>
+												<Button
+													variant={"ghost"}
+													size={"icon"}
+													onClick={handleClearInput}
+													className="text-muted-foreground hover:bg-transparent"
+												>
+													<CircleXIcon />
+													<span className="sr-only">Clear input</span>
+												</Button>
+											</InputGroupAddon>
+										)}
+									</InputGroup>
 								</FormControl>
 							</FormItem>
 						)}
 					/>
 				</div>
-				<Button type="submit">Search</Button>
+				<div className="flex gap-2">
+					<Button type="submit">Search</Button>
+					<Button type="button" variant="outline" onClick={onReset}>
+						Reset
+					</Button>
+				</div>
 			</form>
 		</Form>
 	);

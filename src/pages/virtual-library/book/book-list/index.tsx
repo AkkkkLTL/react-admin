@@ -37,6 +37,7 @@ const DEFAULT_BOOK_VALUE: Book = {
 
 export default function BookListPage() {
 	const [bookList, setBookList] = useState<Book[]>([]);
+	const [totalCount, setTotalCount] = useState(0);
 	const [tableParams, setTableParams] = useState<BookFilterParams>({
 		page: 1,
 		limit: 10,
@@ -64,7 +65,9 @@ export default function BookListPage() {
 	}, [refresh]);
 
 	const getBookList = async () => {
-		const dataList = (await apiLibraryBookList(toURLSearchParams(tableParams))).page.list || [];
+		const res = await apiLibraryBookList(toURLSearchParams(tableParams));
+		const dataList = res.page.list || [];
+		setTotalCount(res.page.totalCount);
 		setBookList(
 			dataList.map((item) => {
 				const { authorId, authorName, translatorId, translatorName } = item;
@@ -92,7 +95,7 @@ export default function BookListPage() {
 	const columns: ColumnsType<Book> = [
 		{
 			title: "No",
-			render: (_, record, index) => index + 1,
+			render: (_, __, index) => (tableParams.page - 1) * tableParams.limit + index + 1,
 			width: 50,
 		},
 		{
@@ -158,7 +161,7 @@ export default function BookListPage() {
 			<BookEnumProvider>
 				<CardHeader>
 					<div className="flex items-center justify-between">
-						<div>Book List</div>
+						<div>图书列表</div>
 						<Button onClick={onCreate}>New</Button>
 					</div>
 					<BookFilterForm
@@ -173,7 +176,18 @@ export default function BookListPage() {
 						rowKey={"id"}
 						size="small"
 						scroll={{ x: "max-content" }}
-						pagination={false}
+						pagination={{
+							current: tableParams.page,
+							pageSize: tableParams.limit,
+							total: totalCount,
+							showTotal: (total) => `Total ${total} items`,
+							showSizeChanger: true,
+							pageSizeOptions: [10, 20, 50, 100],
+							onChange: (page, pageSize) => {
+								setTableParams({ ...tableParams, page, limit: pageSize });
+								setRefresh(Date.now());
+							},
+						}}
 						columns={columns}
 						dataSource={bookList}
 					/>

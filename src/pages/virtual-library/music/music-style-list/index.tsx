@@ -204,7 +204,7 @@ export default function MusicStyleListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Music Style List</div>
+					<div>音乐风格列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -212,6 +212,7 @@ export default function MusicStyleListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={styleList}
 						columns={mergedColumns}

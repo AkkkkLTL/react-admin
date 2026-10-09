@@ -201,7 +201,7 @@ export default function BookSourceListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Source List</div>
+					<div>图书阅读来源列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -209,6 +209,7 @@ export default function BookSourceListPage() {
 				<Form {...form}>
 					<Table
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={sourceList}
 						columns={mergedColumns}
