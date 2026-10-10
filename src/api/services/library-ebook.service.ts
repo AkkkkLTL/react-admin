@@ -26,6 +26,11 @@ export interface LibraryEBookListRes {
 	};
 }
 
+export interface LibraryEBookEnumInfoRes {
+	publishPlatformList: EBookPublishPlatform[];
+	categoryList: EBookCategory[];
+}
+
 export interface LibraryEBookPublishplatformListRes {
 	page: {
 		totalCount: number;
@@ -47,6 +52,8 @@ export interface LibraryEBookCategoryListRes {
 }
 
 export enum LibraryEBookApi {
+	// 获取枚举信息列表
+	EBookEnumInfo = "/library/ebook/enuminfo",
 	// 获取电子读物（未出版）列表
 	EBookList = "/library/ebook/list",
 	// 创建电子读物（未出版）
@@ -66,6 +73,11 @@ export enum LibraryEBookApi {
 	// 更新电子读物（未出版）分类
 	EBookCategoryUpdate = "/library/ebookcategory/update",
 }
+
+const apiLibraryEBookEnumInfo = () =>
+	apiClient.get<LibraryEBookEnumInfoRes>({
+		url: LibraryEBookApi.EBookEnumInfo,
+	});
 
 const apiLibraryEBookList = (params: URLSearchParams) =>
 	apiClient.get<LibraryEBookListRes>({
@@ -120,6 +132,7 @@ const apiLibraryEBookCategoryUpdate = (data: LibraryEBookCategorySaveReq) =>
 	});
 
 export {
+	apiLibraryEBookEnumInfo,
 	apiLibraryEBookList,
 	apiLibraryEBookSave,
 	apiLibraryEBookUpdate,

@@ -20,6 +20,10 @@ export type LibraryNoteListRes = {
 	};
 };
 
+export interface LibraryNoteEnumInfoRes {
+	platformList: NotePlatform[];
+}
+
 export type LibraryNotePlatformListRes = {
 	page: {
 		totalCount: number;
@@ -32,6 +36,8 @@ export type LibraryNotePlatformListRes = {
 //#endregion 响应类型
 
 export enum LibraryNoteApi {
+	// 获取枚举信息列表
+	NoteEnumInfo = "/library/note/enuminfo",
 	// 获取笔记列表
 	NoteList = "/library/note/list",
 	// 创建笔记信息
@@ -45,6 +51,11 @@ export enum LibraryNoteApi {
 	// 更新笔记平台信息
 	NotePlatformUpdate = "/library/noteplatform/update",
 }
+
+const apiLibraryNoteEnumInfo = () =>
+	apiClient.get<LibraryNoteEnumInfoRes>({
+		url: LibraryNoteApi.NoteEnumInfo,
+	});
 
 const apiLibraryNoteList = (params: URLSearchParams) =>
 	apiClient.get<LibraryNoteListRes>({
@@ -82,6 +93,7 @@ const apiLibraryNotePlatformUpdate = (data: LibraryNotePlatformSaveReq) =>
 	});
 
 export {
+	apiLibraryNoteEnumInfo,
 	apiLibraryNoteList,
 	apiLibraryNoteSave,
 	apiLibraryNoteUpdate,

@@ -1,7 +1,7 @@
 import { openDB } from "idb";
 
 // 打开或创建数据库
-export const openDatabase = async (databaseName: string, storeName: Record<string, string>, version: number = 1) => {
+const openDatabase = async (databaseName: string, storeName: Record<string, string>, version: number = 1) => {
 	return openDB(databaseName, version, {
 		upgrade(db, oldVersion) {
 			console.log(`数据库从版本 v${oldVersion} 升级到版本 v${version}`);
@@ -28,3 +28,30 @@ export const openDatabase = async (databaseName: string, storeName: Record<strin
 		},
 	});
 };
+
+export const libraryStore = {
+	CommonLanguage: "common-language-mock",
+	CommonRegion: "common-region-mock",
+	Book: "book-mock",
+	BookPublisher: "book-publisher-mock",
+	BookCategory: "book-category-mock",
+	BookSource: "book-source-mock",
+	EBook: "ebook-mock",
+	EBookPublisher: "ebook-publisher-mock",
+	EBookCategory: "ebook-category-mock",
+	Lesson: "lesson-mock",
+	LessonSource: "lesson-source-mock",
+	Movie: "movie-mock",
+	MovieCategory: "movie-category-mock",
+	Music: "music-mock",
+	MusicStyle: "music-style-mock",
+	MusicAlbum: "music-album-mock",
+	Game: "game-mock",
+	GameCategory: "game-category-mock",
+	GamePlatform: "game-platform-mock",
+	GameSeries: "game-series-mock",
+	Note: "note-mock",
+	NotePlatform: "note-platform-mock",
+	Character: "character-mock",
+};
+export const libraryDatabase = await openDatabase("Library-Mock", libraryStore, 1);

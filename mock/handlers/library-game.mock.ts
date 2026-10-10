@@ -4,6 +4,7 @@ import {
 	LibraryGameApi,
 	type LibraryGameCategoryListRes,
 	type LibraryGameCategorySaveReq,
+	type LibraryGameEnumInfoRes,
 	type LibraryGameListRes,
 	type LibraryGamePlatformListRes,
 	type LibraryGamePlatformSaveReq,
@@ -12,22 +13,12 @@ import {
 	type LibraryGameSeriesSaveReq,
 } from "@/api/services/library-game.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
-
-//#region 游戏数据库
-const store = {
-	Game: "game-test",
-	Category: "game-category-test",
-	Platform: "game-platform-test",
-	Series: "game-series-test",
-};
-const db = await openDatabase("library-game-test", store, 1);
-//#endregion 游戏数据库
 
 //#region 接口模拟
 const mockLibraryGameList = http.get(`${apiPrefix}${LibraryGameApi.GameList}`, async () => {
-	const games = (await db.getAll(store.Game)) as LibraryGameSaveReq[];
+	const games = (await libraryDatabase.getAll(libraryStore.Game)) as LibraryGameSaveReq[];
 	return HttpResponse.json<Result & LibraryGameListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -47,7 +38,7 @@ const mockLibraryGameList = http.get(`${apiPrefix}${LibraryGameApi.GameList}`, a
 });
 
 const mockLibraryGameSave = http.post(`${apiPrefix}${LibraryGameApi.GameSave}`, async ({ request }) => {
-	await db.add(store.Game, await request.json());
+	await libraryDatabase.add(libraryStore.Game, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -60,7 +51,7 @@ const mockLibraryGameSave = http.post(`${apiPrefix}${LibraryGameApi.GameSave}`, 
 });
 
 const mockLibraryGameUpdate = http.put(`${apiPrefix}${LibraryGameApi.GameUpdate}`, async ({ request }) => {
-	await db.put(store.Game, await request.json());
+	await libraryDatabase.put(libraryStore.Game, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -72,8 +63,27 @@ const mockLibraryGameUpdate = http.put(`${apiPrefix}${LibraryGameApi.GameUpdate}
 	);
 });
 
+/** 模拟获取游戏枚举信息 */
+const mockLibraryGameEnumInfo = http.get(`${apiPrefix}${LibraryGameApi.GameEnumInfo}`, async () => {
+	const platforms = (await libraryDatabase.getAll(libraryStore.GamePlatform)) as LibraryGamePlatformSaveReq[];
+	const categories = (await libraryDatabase.getAll(libraryStore.GameCategory)) as LibraryGameCategorySaveReq[];
+	const series = (await libraryDatabase.getAll(libraryStore.GameSeries)) as LibraryGameSeriesSaveReq[];
+	return HttpResponse.json<Result & LibraryGameEnumInfoRes>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			platformList: platforms || [],
+			categoryList: categories || [],
+			seriesList: series || [],
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
 const mockLibraryGameCategoryList = http.get(`${apiPrefix}${LibraryGameApi.GameCategoryList}`, async () => {
-	const categories = (await db.getAll(store.Category)) as LibraryGameCategorySaveReq[];
+	const categories = (await libraryDatabase.getAll(libraryStore.GameCategory)) as LibraryGameCategorySaveReq[];
 	return HttpResponse.json<Result & LibraryGameCategoryListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -93,7 +103,7 @@ const mockLibraryGameCategoryList = http.get(`${apiPrefix}${LibraryGameApi.GameC
 });
 
 const mockLibraryGameCategorySave = http.post(`${apiPrefix}${LibraryGameApi.GameCategorySave}`, async ({ request }) => {
-	await db.add(store.Category, await request.json());
+	await libraryDatabase.add(libraryStore.GameCategory, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -108,7 +118,7 @@ const mockLibraryGameCategorySave = http.post(`${apiPrefix}${LibraryGameApi.Game
 const mockLibraryGameCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryGameApi.GameCategoryUpdate}`,
 	async ({ request }) => {
-		await db.put(store.Category, await request.json());
+		await libraryDatabase.put(libraryStore.GameCategory, await request.json());
 		return HttpResponse.json<Result>(
 			{
 				code: ResultEnum.SUCCESS,
@@ -122,7 +132,7 @@ const mockLibraryGameCategoryUpdate = http.put(
 );
 
 const mockLibraryGamePlatformList = http.get(`${apiPrefix}${LibraryGameApi.GamePlatformList}`, async () => {
-	const platforms = (await db.getAll(store.Platform)) as LibraryGamePlatformSaveReq[];
+	const platforms = (await libraryDatabase.getAll(libraryStore.GamePlatform)) as LibraryGamePlatformSaveReq[];
 	return HttpResponse.json<Result & LibraryGamePlatformListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -142,7 +152,7 @@ const mockLibraryGamePlatformList = http.get(`${apiPrefix}${LibraryGameApi.GameP
 });
 
 const mockLibraryGamePlatformSave = http.post(`${apiPrefix}${LibraryGameApi.GamePlatformSave}`, async ({ request }) => {
-	await db.add(store.Platform, await request.json());
+	await libraryDatabase.add(libraryStore.GamePlatform, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -157,7 +167,7 @@ const mockLibraryGamePlatformSave = http.post(`${apiPrefix}${LibraryGameApi.Game
 const mockLibraryGamePlatformUpdate = http.put(
 	`${apiPrefix}${LibraryGameApi.GamePlatformUpdate}`,
 	async ({ request }) => {
-		await db.put(store.Platform, await request.json());
+		await libraryDatabase.put(libraryStore.GamePlatform, await request.json());
 		return HttpResponse.json<Result>(
 			{
 				code: ResultEnum.SUCCESS,
@@ -171,7 +181,7 @@ const mockLibraryGamePlatformUpdate = http.put(
 );
 
 const mockLibraryGameSeriesList = http.get(`${apiPrefix}${LibraryGameApi.GameSeriesList}`, async () => {
-	const seriesList = (await db.getAll(store.Series)) as LibraryGameSeriesSaveReq[];
+	const seriesList = (await libraryDatabase.getAll(libraryStore.GameSeries)) as LibraryGameSeriesSaveReq[];
 	return HttpResponse.json<Result & LibraryGameSeriesListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -191,7 +201,7 @@ const mockLibraryGameSeriesList = http.get(`${apiPrefix}${LibraryGameApi.GameSer
 });
 
 const mockLibraryGameSeriesSave = http.post(`${apiPrefix}${LibraryGameApi.GameSeriesSave}`, async ({ request }) => {
-	await db.add(store.Series, await request.json());
+	await libraryDatabase.add(libraryStore.GameSeries, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -204,7 +214,7 @@ const mockLibraryGameSeriesSave = http.post(`${apiPrefix}${LibraryGameApi.GameSe
 });
 
 const mockLibraryGameSeriesUpdate = http.put(`${apiPrefix}${LibraryGameApi.GameSeriesUpdate}`, async ({ request }) => {
-	await db.put(store.Series, await request.json());
+	await libraryDatabase.put(libraryStore.GameSeries, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -221,6 +231,7 @@ export {
 	mockLibraryGameList,
 	mockLibraryGameSave,
 	mockLibraryGameUpdate,
+	mockLibraryGameEnumInfo,
 	mockLibraryGameCategoryList,
 	mockLibraryGameCategorySave,
 	mockLibraryGameCategoryUpdate,

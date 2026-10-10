@@ -12,6 +12,10 @@ export type LibraryLessonSourceSaveReq = LessonSource;
 //#endregion 请求类型
 
 //#region 响应类型
+export interface LibraryLessonEnumInfoRes {
+	sourceList: LessonSource[];
+}
+
 export type LibraryLessonListRes = {
 	page: {
 		totalCount: number;
@@ -34,6 +38,8 @@ export type LibraryLessonSourceListRes = {
 //#endregion 响应类型
 
 export enum LibraryLessonApi {
+	// 获取枚举信息列表
+	LessonEnumInfo = "/library/lesson/enuminfo",
 	// 获取课程列表
 	LessonList = "/library/lesson/list",
 	// 创建课程
@@ -47,6 +53,11 @@ export enum LibraryLessonApi {
 	// 更新课程来源
 	LessonSourceUpdate = "/library/lessonsource/update",
 }
+
+const apiLibraryLessonEnumInfo = () =>
+	apiClient.get<LibraryLessonEnumInfoRes>({
+		url: LibraryLessonApi.LessonEnumInfo,
+	});
 
 const apiLibraryLessonList = (params: URLSearchParams) =>
 	apiClient.get<LibraryLessonListRes>({
@@ -84,6 +95,7 @@ const apiLibraryLessonSourceUpdate = (data: LibraryLessonSourceSaveReq) =>
 	});
 
 export {
+	apiLibraryLessonEnumInfo,
 	apiLibraryLessonList,
 	apiLibraryLessonSave,
 	apiLibraryLessonUpdate,

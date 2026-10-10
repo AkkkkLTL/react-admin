@@ -2,11 +2,7 @@
  * 筛选数据配置上下文提供器
  */
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import {
-	apiLibraryBookCategoryList,
-	apiLibraryBookPublisherList,
-	apiLibraryBookSourceList,
-} from "@/api/services/library-book.service";
+import { apiLibraryBookEnumInfo } from "@/api/services/library-book.service";
 import type { BookCategory, BookPublisher, BookSource } from "../../types";
 
 interface BookEnumContext {
@@ -42,9 +38,10 @@ export default function BookEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const publisherList = (await apiLibraryBookPublisherList()).page.list || [];
-		const categoryList = (await apiLibraryBookCategoryList()).page.list || [];
-		const sourceList = (await apiLibraryBookSourceList()).page.list || [];
+		const res = await apiLibraryBookEnumInfo();
+		const publisherList = res.publisherList || [];
+		const categoryList = res.categoryList || [];
+		const sourceList = res.sourceList || [];
 		setPublisher(publisherList);
 		setCategory(categoryList);
 		setSource(sourceList);
