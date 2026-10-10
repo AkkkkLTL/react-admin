@@ -2,26 +2,19 @@ import { HttpResponse, http } from "msw";
 import type { Result } from "@/api/apiClient";
 import {
 	LibraryNoteApi,
+	type LibraryNoteEnumInfoRes,
 	type LibraryNoteListRes,
 	type LibraryNotePlatformListRes,
 	type LibraryNotePlatformSaveReq,
 	type LibraryNoteSaveReq,
 } from "@/api/services/library-note.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
-
-//#region 笔记数据库
-const store = {
-	Note: "note-test",
-	NotePlatform: "note-platform-test",
-};
-const db = await openDatabase("library-note-test", store, 1);
-//#endregion 笔记数据库
 
 //#region 接口模拟
 const mockLibraryNoteList = http.get(`${apiPrefix}${LibraryNoteApi.NoteList}`, async () => {
-	const notes = (await db.getAll(store.Note)) as LibraryNoteSaveReq[];
+	const notes = (await libraryDatabase.getAll(libraryStore.Note)) as LibraryNoteSaveReq[];
 	return HttpResponse.json<Result & LibraryNoteListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -42,7 +35,7 @@ const mockLibraryNoteList = http.get(`${apiPrefix}${LibraryNoteApi.NoteList}`, a
 
 const mockLibraryNoteSave = http.post(`${apiPrefix}${LibraryNoteApi.NoteSave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.Note, await request.json());
+	await libraryDatabase.add(libraryStore.Note, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -57,7 +50,7 @@ const mockLibraryNoteSave = http.post(`${apiPrefix}${LibraryNoteApi.NoteSave}`, 
 
 const mockLibraryNoteUpdate = http.put(`${apiPrefix}${LibraryNoteApi.NoteUpdate}`, async ({ request }) => {
 	// 更新数据
-	await db.put(store.Note, await request.json());
+	await libraryDatabase.put(libraryStore.Note, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -70,8 +63,23 @@ const mockLibraryNoteUpdate = http.put(`${apiPrefix}${LibraryNoteApi.NoteUpdate}
 	);
 });
 
+/** 模拟获取笔记枚举信息 */
+const mockLibraryNoteEnumInfo = http.get(`${apiPrefix}${LibraryNoteApi.NoteEnumInfo}`, async () => {
+	const platforms = (await libraryDatabase.getAll(libraryStore.NotePlatform)) as LibraryNotePlatformSaveReq[];
+	return HttpResponse.json<Result & LibraryNoteEnumInfoRes>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			platformList: platforms || [],
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
 const mockLibraryNotePlatformList = http.get(`${apiPrefix}${LibraryNoteApi.NotePlatformList}`, async () => {
-	const notePlatforms = (await db.getAll(store.NotePlatform)) as LibraryNotePlatformSaveReq[];
+	const notePlatforms = (await libraryDatabase.getAll(libraryStore.NotePlatform)) as LibraryNotePlatformSaveReq[];
 	return HttpResponse.json<Result & LibraryNotePlatformListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -92,7 +100,7 @@ const mockLibraryNotePlatformList = http.get(`${apiPrefix}${LibraryNoteApi.NoteP
 
 const mockLibraryNotePlatformSave = http.post(`${apiPrefix}${LibraryNoteApi.NotePlatformSave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.NotePlatform, await request.json());
+	await libraryDatabase.add(libraryStore.NotePlatform, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -109,7 +117,7 @@ const mockLibraryNotePlatformUpdate = http.put(
 	`${apiPrefix}${LibraryNoteApi.NotePlatformUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await db.put(store.NotePlatform, await request.json());
+		await libraryDatabase.put(libraryStore.NotePlatform, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -128,6 +136,7 @@ export {
 	mockLibraryNoteList,
 	mockLibraryNoteSave,
 	mockLibraryNoteUpdate,
+	mockLibraryNoteEnumInfo,
 	mockLibraryNotePlatformList,
 	mockLibraryNotePlatformSave,
 	mockLibraryNotePlatformUpdate,

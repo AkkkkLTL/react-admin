@@ -30,6 +30,12 @@ export interface LibraryGameListRes {
 	};
 }
 
+export interface LibraryGameEnumInfoRes {
+	categoryList: GameCategory[];
+	platformList: GamePlatform[];
+	seriesList: GameSeries[];
+}
+
 export interface LibraryGameCategoryListRes {
 	page: {
 		totalCount: number;
@@ -62,6 +68,7 @@ export interface LibraryGameSeriesListRes {
 //#endregion 响应类型
 
 export enum LibraryGameApi {
+	GameEnumInfo = "/library/game/enuminfo",
 	GameList = "/library/game/list",
 	GameSave = "/library/game/save",
 	GameUpdate = "/library/game/update",
@@ -75,6 +82,11 @@ export enum LibraryGameApi {
 	GameSeriesSave = "/library/gameseries/save",
 	GameSeriesUpdate = "/library/gameseries/update",
 }
+
+const apiLibraryGameEnumInfo = () =>
+	apiClient.get<LibraryGameEnumInfoRes>({
+		url: LibraryGameApi.GameEnumInfo,
+	});
 
 const apiLibraryGameList = (params: URLSearchParams) =>
 	apiClient.get<LibraryGameListRes>({
@@ -146,6 +158,7 @@ const apiLibraryGameSeriesUpdate = (data: LibraryGameSeriesSaveReq) =>
 	});
 
 export {
+	apiLibraryGameEnumInfo,
 	apiLibraryGameList,
 	apiLibraryGameSave,
 	apiLibraryGameUpdate,

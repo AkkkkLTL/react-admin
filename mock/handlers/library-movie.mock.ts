@@ -1,24 +1,20 @@
 import { HttpResponse, http } from "msw";
 import type { Result } from "@/api/apiClient";
+import type { LibraryCommonLanguageSaveReq, LibraryCommonRegionSaveReq } from "@/api/services/library-common.service";
 import {
 	LibraryMovieApi,
 	type LibraryMovieCategoryListRes,
 	type LibraryMovieCategorySaveReq,
+	type LibraryMovieEnumInfoRes,
 	type LibraryMovieListRes,
 	type LibraryMovieSaveReq,
 } from "@/api/services/library-movie.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
 
-const store = {
-	Moive: "movie-test",
-	Category: "category-test",
-};
-const db = await openDatabase("library-movie-test", store, 1);
-
 const mockLibraryMovieList = http.get(`${apiPrefix}${LibraryMovieApi.MovieList}`, async () => {
-	const movies = (await db.getAll(store.Moive)) as LibraryMovieSaveReq[];
+	const movies = (await libraryDatabase.getAll(libraryStore.Movie)) as LibraryMovieSaveReq[];
 	return HttpResponse.json<Result & LibraryMovieListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -38,7 +34,7 @@ const mockLibraryMovieList = http.get(`${apiPrefix}${LibraryMovieApi.MovieList}`
 });
 
 const mockLibraryMovieSave = http.post(`${apiPrefix}${LibraryMovieApi.MovieSave}`, async ({ request }) => {
-	await db.add(store.Moive, await request.json());
+	await libraryDatabase.add(libraryStore.Movie, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -51,7 +47,7 @@ const mockLibraryMovieSave = http.post(`${apiPrefix}${LibraryMovieApi.MovieSave}
 });
 
 const mockLibraryMovieUpdate = http.put(`${apiPrefix}${LibraryMovieApi.MovieUpdate}`, async ({ request }) => {
-	await db.put(store.Moive, await request.json());
+	await libraryDatabase.put(libraryStore.Movie, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -63,8 +59,27 @@ const mockLibraryMovieUpdate = http.put(`${apiPrefix}${LibraryMovieApi.MovieUpda
 	);
 });
 
+/** 模拟获取电影枚举信息 */
+const mockLibraryMovieEnumInfo = http.get(`${apiPrefix}${LibraryMovieApi.MovieEnumInfo}`, async () => {
+	const categories = (await libraryDatabase.getAll(libraryStore.MovieCategory)) as LibraryMovieCategorySaveReq[];
+	const languages = (await libraryDatabase.getAll(libraryStore.CommonLanguage)) as LibraryCommonLanguageSaveReq[];
+	const regions = (await libraryDatabase.getAll(libraryStore.CommonRegion)) as LibraryCommonRegionSaveReq[];
+	return HttpResponse.json<Result & LibraryMovieEnumInfoRes>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			categoryList: categories || [],
+			languageList: languages || [],
+			regionList: regions || [],
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
 const mockLibraryMovieCategoryList = http.get(`${apiPrefix}${LibraryMovieApi.MovieCategoryList}`, async () => {
-	const categories = (await db.getAll(store.Category)) as LibraryMovieCategorySaveReq[];
+	const categories = (await libraryDatabase.getAll(libraryStore.MovieCategory)) as LibraryMovieCategorySaveReq[];
 	return HttpResponse.json<Result & LibraryMovieCategoryListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -86,7 +101,7 @@ const mockLibraryMovieCategoryList = http.get(`${apiPrefix}${LibraryMovieApi.Mov
 const mockLibraryMovieCategorySave = http.post(
 	`${apiPrefix}${LibraryMovieApi.MovieCategorySave}`,
 	async ({ request }) => {
-		await db.add(store.Category, await request.json());
+		await libraryDatabase.add(libraryStore.MovieCategory, await request.json());
 		return HttpResponse.json<Result>(
 			{
 				code: ResultEnum.SUCCESS,
@@ -102,7 +117,7 @@ const mockLibraryMovieCategorySave = http.post(
 const mockLibraryMovieCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryMovieApi.MovieCategoryUpdate}`,
 	async ({ request }) => {
-		await db.put(store.Category, await request.json());
+		await libraryDatabase.put(libraryStore.MovieCategory, await request.json());
 		return HttpResponse.json<Result>(
 			{
 				code: ResultEnum.SUCCESS,
@@ -119,6 +134,7 @@ export {
 	mockLibraryMovieList,
 	mockLibraryMovieSave,
 	mockLibraryMovieUpdate,
+	mockLibraryMovieEnumInfo,
 	mockLibraryMovieCategoryList,
 	mockLibraryMovieCategorySave,
 	mockLibraryMovieCategoryUpdate,

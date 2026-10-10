@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { apiLibraryLessonSourceList } from "@/api/services/library-lesson.service";
+import { apiLibraryLessonEnumInfo } from "@/api/services/library-lesson.service";
 import { ReadStatus } from "@/types/enum";
 import type { LessonSource } from "../../types";
 
@@ -55,8 +55,8 @@ export default function LessonEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const sourceList = (await apiLibraryLessonSourceList()).page.list || [];
-		setSource(sourceList);
+		const res = await apiLibraryLessonEnumInfo();
+		setSource(res.sourceList || []);
 	};
 
 	const value: LessonEnumContext = useMemo(

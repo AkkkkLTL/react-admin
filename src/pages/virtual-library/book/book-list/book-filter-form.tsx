@@ -1,10 +1,11 @@
 import { Rate, Select } from "antd";
+import { CircleXIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ReadStatus } from "@/types/enum";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
-import { Input } from "@/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
 import type { BookFilterParams } from "../../types";
 import { useBookEnumContext } from "./book-enum-provider";
 
@@ -51,11 +52,22 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	const handleClearInput = () => {
+		form.setValue("search", "");
+	};
+
 	const onSubmit = (values: BookFilterParams) => {
 		setTableParams({
 			...values,
 			page: 1,
 		});
+		onSearch();
+	};
+
+	const onReset = () => {
+		const resetValues = { page: 1, limit: formValue.limit } as BookFilterParams;
+		form.reset(resetValues);
+		setTableParams(resetValues);
 		onSearch();
 	};
 
@@ -77,6 +89,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 								<FormControl>
 									<Select
 										{...field}
+										allowClear
 										showSearch={{ optionFilterProp: "label" }}
 										placeholder="Select Publisher"
 										options={publisher.map((item) => ({ label: item.name, value: item.id }))}
@@ -95,6 +108,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 								<FormControl>
 									<Select
 										{...field}
+										allowClear
 										showSearch={{ optionFilterProp: "label" }}
 										placeholder="Select Category"
 										options={category.map((item) => ({ label: item.name, value: item.id }))}
@@ -113,6 +127,7 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 								<FormControl>
 									<Select
 										{...field}
+										allowClear
 										showSearch={{ optionFilterProp: "label" }}
 										placeholder="Select Read Status"
 										options={BOOK_STATUS}
@@ -142,15 +157,33 @@ export function BookFilterForm({ formValue, setTableParams, onSearch }: BookFilt
 							<FormItem>
 								<FormLabel>ISBN & Title</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<InputGroup>
+										<InputGroupInput {...field} />
+										{field.value && (
+											<InputGroupAddon align={"inline-end"}>
+												<Button
+													variant={"ghost"}
+													size={"icon"}
+													onClick={handleClearInput}
+													className="text-muted-foreground hover:bg-transparent"
+												>
+													<CircleXIcon />
+													<span className="sr-only">Clear input</span>
+												</Button>
+											</InputGroupAddon>
+										)}
+									</InputGroup>
 								</FormControl>
 							</FormItem>
 						)}
 					/>
 				</div>
-				<Button type="submit" className="self-end">
-					Search
-				</Button>
+				<div className="flex self-end gap-2">
+					<Button type="submit">Search</Button>
+					<Button type="button" variant="outline" onClick={onReset}>
+						Reset
+					</Button>
+				</div>
 			</form>
 		</Form>
 	);

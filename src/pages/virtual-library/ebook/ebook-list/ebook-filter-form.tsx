@@ -1,9 +1,10 @@
 import { Select } from "antd";
+import { CircleXIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/ui/form";
-import { Input } from "@/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
 import type { EBookFilterParams } from "../../types";
 import { useEBookEnumContext } from "./ebook-enum-provider";
 
@@ -24,11 +25,22 @@ export function EBookFilterForm({ formValue, setTableParams, onSearch }: EBookFi
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	const handleClearInput = () => {
+		form.setValue("search", "");
+	};
+
 	const onSubmit = (values: EBookFilterParams) => {
 		setTableParams({
 			...values,
 			page: 1,
 		});
+		onSearch();
+	};
+
+	const onReset = () => {
+		const resetValues = { page: 1, limit: formValue.limit } as EBookFilterParams;
+		form.reset(resetValues);
+		setTableParams(resetValues);
 		onSearch();
 	};
 
@@ -48,7 +60,7 @@ export function EBookFilterForm({ formValue, setTableParams, onSearch }: EBookFi
 							<FormItem>
 								<FormLabel>Type</FormLabel>
 								<FormControl>
-									<Select {...field} placeholder="Select Type" options={TYPE_LIST} />
+									<Select {...field} allowClear placeholder="Select Type" options={TYPE_LIST} />
 								</FormControl>
 							</FormItem>
 						)}
@@ -61,7 +73,7 @@ export function EBookFilterForm({ formValue, setTableParams, onSearch }: EBookFi
 							<FormItem>
 								<FormLabel>Read Status</FormLabel>
 								<FormControl>
-									<Select {...field} placeholder="Select Read Status" options={READ_STATUS} />
+									<Select {...field} allowClear placeholder="Select Read Status" options={READ_STATUS} />
 								</FormControl>
 							</FormItem>
 						)}
@@ -74,15 +86,33 @@ export function EBookFilterForm({ formValue, setTableParams, onSearch }: EBookFi
 							<FormItem>
 								<FormLabel>Title</FormLabel>
 								<FormControl>
-									<Input {...field} />
+									<InputGroup>
+										<InputGroupInput {...field} />
+										{field.value && (
+											<InputGroupAddon align={"inline-end"}>
+												<Button
+													variant={"ghost"}
+													size={"icon"}
+													onClick={handleClearInput}
+													className="text-muted-foreground hover:bg-transparent"
+												>
+													<CircleXIcon />
+													<span className="sr-only">Clear input</span>
+												</Button>
+											</InputGroupAddon>
+										)}
+									</InputGroup>
 								</FormControl>
 							</FormItem>
 						)}
 					/>
 				</div>
-				<Button type="submit" className="self-end">
-					Search
-				</Button>
+				<div className="flex self-end gap-2">
+					<Button type="submit">Search</Button>
+					<Button type="button" variant="outline" onClick={onReset}>
+						Reset
+					</Button>
+				</div>
 			</form>
 		</Form>
 	);

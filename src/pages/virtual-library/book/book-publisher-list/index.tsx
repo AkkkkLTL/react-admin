@@ -89,7 +89,7 @@ export default function BookPublisherListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Publisher List</div>
+					<div>图书出版社列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>

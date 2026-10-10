@@ -1,4 +1,4 @@
-import type { Music, MusicAlbum, MusicStyle } from "@/pages/virtual-library/types";
+import type { CommonLanguage, Music, MusicAlbum, MusicStyle } from "@/pages/virtual-library/types";
 import apiClient from "../apiClient";
 
 //#region 请求类型
@@ -32,6 +32,12 @@ export type LibraryMusicListRes = {
 	};
 };
 
+export interface LibraryMusicEnumInfoRes {
+	styleList: MusicStyle[];
+	albumList: MusicAlbum[];
+	languageList: CommonLanguage[];
+}
+
 export type LibraryMusicStyleListRes = {
 	page: {
 		totalCount: number;
@@ -54,6 +60,8 @@ export type LibraryMusicAlbumListRes = {
 //#endregion 响应类型
 
 export enum LibraryMusicApi {
+	// 获取枚举信息列表
+	MusicEnumInfo = "/library/music/enuminfo",
 	// 获取音乐列表
 	MusicList = "/library/music/list",
 	// 创建音乐
@@ -73,6 +81,11 @@ export enum LibraryMusicApi {
 	// 更新音乐专辑
 	MusicAlbumUpdate = "/library/musicalbum/update",
 }
+
+const apiLibraryMusicEnumInfo = () =>
+	apiClient.get<LibraryMusicEnumInfoRes>({
+		url: LibraryMusicApi.MusicEnumInfo,
+	});
 
 const apiLibraryMusicList = (params: URLSearchParams) =>
 	apiClient.get<LibraryMusicListRes>({
@@ -127,6 +140,7 @@ const apiLibraryMusicAlbumUpdate = (data: LibraryMusicAlbumSaveReq) =>
 	});
 
 export {
+	apiLibraryMusicEnumInfo,
 	apiLibraryMusicList,
 	apiLibraryMusicSave,
 	apiLibraryMusicUpdate,

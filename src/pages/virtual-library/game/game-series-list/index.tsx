@@ -199,7 +199,7 @@ export default function GameSeriesListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Game Series List</div>
+					<div>游戏系列列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -207,6 +207,7 @@ export default function GameSeriesListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={seriesList}
 						columns={mergedColumns}

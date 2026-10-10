@@ -2,26 +2,19 @@ import { HttpResponse, http } from "msw";
 import type { Result } from "@/api/apiClient";
 import {
 	LibraryLessonApi,
+	type LibraryLessonEnumInfoRes,
 	type LibraryLessonListRes,
 	type LibraryLessonSaveReq,
 	type LibraryLessonSourceListRes,
 	type LibraryLessonSourceSaveReq,
 } from "@/api/services/library-lesson.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
-
-//#region 数据模拟
-const store = {
-	Lesson: "lesson-test",
-	LessonSource: "lesson-source-test",
-};
-const db = await openDatabase("library-lesson-test", store, 1);
-//#endregion
 
 //#region 接口模拟
 const mockLibraryLessonList = http.get(`${apiPrefix}${LibraryLessonApi.LessonList}`, async () => {
-	const lessons = (await db.getAll(store.Lesson)) as LibraryLessonSaveReq[];
+	const lessons = (await libraryDatabase.getAll(libraryStore.Lesson)) as LibraryLessonSaveReq[];
 	return HttpResponse.json<Result & LibraryLessonListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -42,7 +35,7 @@ const mockLibraryLessonList = http.get(`${apiPrefix}${LibraryLessonApi.LessonLis
 
 const mockLibraryLessonSave = http.post(`${apiPrefix}${LibraryLessonApi.LessonSave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.Lesson, await request.json());
+	await libraryDatabase.add(libraryStore.Lesson, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -57,7 +50,7 @@ const mockLibraryLessonSave = http.post(`${apiPrefix}${LibraryLessonApi.LessonSa
 
 const mockLibraryLessonUpdate = http.put(`${apiPrefix}${LibraryLessonApi.LessonUpdate}`, async ({ request }) => {
 	// 更新数据
-	await db.put(store.Lesson, await request.json());
+	await libraryDatabase.put(libraryStore.Lesson, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -70,8 +63,23 @@ const mockLibraryLessonUpdate = http.put(`${apiPrefix}${LibraryLessonApi.LessonU
 	);
 });
 
+/** 模拟获取课程枚举信息 */
+const mockLibraryLessonEnumInfo = http.get(`${apiPrefix}${LibraryLessonApi.LessonEnumInfo}`, async () => {
+	const sources = (await libraryDatabase.getAll(libraryStore.LessonSource)) as LibraryLessonSourceSaveReq[];
+	return HttpResponse.json<Result & LibraryLessonEnumInfoRes>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			sourceList: sources || [],
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
 const mockLibraryLessonSourceList = http.get(`${apiPrefix}${LibraryLessonApi.LessonSourceList}`, async () => {
-	const lessonSources = (await db.getAll(store.LessonSource)) as LibraryLessonSourceSaveReq[];
+	const lessonSources = (await libraryDatabase.getAll(libraryStore.LessonSource)) as LibraryLessonSourceSaveReq[];
 	return HttpResponse.json<Result & LibraryLessonSourceListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -94,7 +102,7 @@ const mockLibraryLessonSourceSave = http.post(
 	`${apiPrefix}${LibraryLessonApi.LessonSourceSave}`,
 	async ({ request }) => {
 		// 添加数据
-		await db.add(store.LessonSource, await request.json());
+		await libraryDatabase.add(libraryStore.LessonSource, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -112,7 +120,7 @@ const mockLibraryLessonSourceUpdate = http.put(
 	`${apiPrefix}${LibraryLessonApi.LessonSourceUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await db.put(store.LessonSource, await request.json());
+		await libraryDatabase.put(libraryStore.LessonSource, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -131,6 +139,7 @@ export {
 	mockLibraryLessonList,
 	mockLibraryLessonSave,
 	mockLibraryLessonUpdate,
+	mockLibraryLessonEnumInfo,
 	mockLibraryLessonSourceList,
 	mockLibraryLessonSourceSave,
 	mockLibraryLessonSourceUpdate,

@@ -5,7 +5,6 @@ import {
 	apiLibraryMovieCategoryList,
 	apiLibraryMovieCategorySave,
 	apiLibraryMovieCategoryUpdate,
-	apiLibraryMovieUpdate,
 } from "@/api/services/library-movie.service";
 import { Button } from "@/ui/button";
 import { Card, CardContent, CardHeader } from "@/ui/card";
@@ -205,7 +204,7 @@ export default function MovieCategoryListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Category List</div>
+					<div>影视分类列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -213,6 +212,7 @@ export default function MovieCategoryListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={categoryList}
 						columns={mergedColumns}

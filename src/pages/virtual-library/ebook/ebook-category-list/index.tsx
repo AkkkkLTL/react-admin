@@ -204,7 +204,7 @@ export default function EBookCategoryListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Category List</div>
+					<div>电子书分类列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -212,6 +212,7 @@ export default function EBookCategoryListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={categoryList}
 						columns={mergedColumns}

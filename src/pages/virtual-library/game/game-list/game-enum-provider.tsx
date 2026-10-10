@@ -1,9 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import {
-	apiLibraryGameCategoryList,
-	apiLibraryGamePlatformList,
-	apiLibraryGameSeriesList,
-} from "@/api/services/library-game.service";
+import { apiLibraryGameEnumInfo } from "@/api/services/library-game.service";
 import type { GameCategory, GamePlatform, GameSeries } from "../../types";
 
 interface GameEnumContext {
@@ -39,12 +35,10 @@ export default function GameEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const categoryList = (await apiLibraryGameCategoryList()).page.list || [];
-		const platformList = (await apiLibraryGamePlatformList()).page.list || [];
-		const seriesList = (await apiLibraryGameSeriesList()).page.list || [];
-		setCategory(categoryList);
-		setPlatform(platformList);
-		setSeries(seriesList);
+		const res = await apiLibraryGameEnumInfo();
+		setCategory(res.categoryList || []);
+		setPlatform(res.platformList || []);
+		setSeries(res.seriesList || []);
 	};
 
 	const value: GameEnumContext = useMemo(

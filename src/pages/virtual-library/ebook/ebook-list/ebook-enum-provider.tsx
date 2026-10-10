@@ -1,9 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 import {
-	apiLibraryEBookCategoryList,
-	apiLibraryEBookPublishPlatformList,
-	type LibraryEBookCategoryListRes,
-	type LibraryEBookPublishplatformListRes,
+	apiLibraryEBookEnumInfo,
+	type LibraryEBookEnumInfoRes,
 } from "@/api/services/library-ebook.service";
 import { ReadStatus } from "@/types/enum";
 
@@ -48,10 +46,10 @@ const TYPE_LIST = [
 interface EBookEnumContext {
 	TYPE_LIST: typeof TYPE_LIST;
 	READ_STATUS: typeof READ_STATUS;
-	publishPlatform: LibraryEBookPublishplatformListRes["page"]["list"];
-	category: LibraryEBookCategoryListRes["page"]["list"];
-	setPublishPlatform: (publishPlatform: LibraryEBookPublishplatformListRes["page"]["list"]) => void;
-	setCategory: (category: LibraryEBookCategoryListRes["page"]["list"]) => void;
+	publishPlatform: LibraryEBookEnumInfoRes["publishPlatformList"];
+	category: LibraryEBookEnumInfoRes["categoryList"];
+	setPublishPlatform: (publishPlatform: LibraryEBookEnumInfoRes["publishPlatformList"]) => void;
+	setCategory: (category: LibraryEBookEnumInfoRes["categoryList"]) => void;
 }
 
 const EBookEnumContext = createContext<EBookEnumContext>({
@@ -69,18 +67,17 @@ export function useEBookEnumContext() {
 }
 
 export default function EBookEnumProvider({ children }: PropsWithChildren) {
-	const [publishPlatform, setPublishPlatform] = useState<LibraryEBookPublishplatformListRes["page"]["list"]>([]);
-	const [category, setCategory] = useState<LibraryEBookCategoryListRes["page"]["list"]>([]);
+	const [publishPlatform, setPublishPlatform] = useState<LibraryEBookEnumInfoRes["publishPlatformList"]>([]);
+	const [category, setCategory] = useState<LibraryEBookEnumInfoRes["categoryList"]>([]);
 
 	useEffect(() => {
 		getEnumInfo();
 	}, []);
 
 	const getEnumInfo = async () => {
-		const publishPlatformList = (await apiLibraryEBookPublishPlatformList()).page.list || [];
-		const categoryList = (await apiLibraryEBookCategoryList()).page.list || [];
-		setPublishPlatform(publishPlatformList);
-		setCategory(categoryList);
+		const res = await apiLibraryEBookEnumInfo();
+		setPublishPlatform(res.publishPlatformList || []);
+		setCategory(res.categoryList || []);
 	};
 
 	const value: EBookEnumContext = useMemo(

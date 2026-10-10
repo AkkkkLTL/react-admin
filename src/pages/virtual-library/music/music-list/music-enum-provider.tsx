@@ -1,6 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { apiLibraryCommonLanguageList } from "@/api/services/library-common.service";
-import { apiLibraryMusicAlbumList, apiLibraryMusicStyleList } from "@/api/services/library-music.service";
+import { apiLibraryMusicEnumInfo } from "@/api/services/library-music.service";
 import type { CommonLanguage, MusicAlbum, MusicStyle } from "../../types";
 
 interface MusicEnumContext {
@@ -36,12 +35,10 @@ export default function MusicEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const styleList = (await apiLibraryMusicStyleList()).page.list || [];
-		const albumList = (await apiLibraryMusicAlbumList()).page.list || [];
-		const languageList = (await apiLibraryCommonLanguageList()).page.list || [];
-		setStyle(styleList);
-		setAlbum(albumList);
-		setLanguage(languageList);
+		const res = await apiLibraryMusicEnumInfo();
+		setStyle(res.styleList || []);
+		setAlbum(res.albumList || []);
+		setLanguage(res.languageList || []);
 	};
 
 	const value: MusicEnumContext = useMemo(

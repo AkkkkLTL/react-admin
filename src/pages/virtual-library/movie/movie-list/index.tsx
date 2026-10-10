@@ -39,6 +39,7 @@ const DEFAULT_MOVIE_VALUE: Movie = {
 
 export default function MovieListPage() {
 	const [movieList, setMovieList] = useState<Movie[]>([]);
+	const [totalCount, setTotalCount] = useState(0);
 	const [tableParams, setTableParams] = useState<MovieFilterParams>({
 		page: 1,
 		limit: 10,
@@ -73,7 +74,9 @@ export default function MovieListPage() {
 	}, [refresh]);
 
 	const getMovieList = async () => {
-		const dataList = (await apiLibraryMovieList(toURLSearchParams(tableParams))).page.list || [];
+		const res = await apiLibraryMovieList(toURLSearchParams(tableParams));
+		const dataList = res.page.list || [];
+		setTotalCount(res.page.totalCount);
 		setMovieList(
 			dataList.map((item) => {
 				const { directorId, directorName, editorId, editorName, actorId, actorName } = item;
@@ -109,7 +112,7 @@ export default function MovieListPage() {
 	const columns: ColumnsType<Movie> = [
 		{
 			title: "No",
-			render: (_, record, index) => index + 1,
+			render: (_, __, index) => (tableParams.page - 1) * tableParams.limit + index + 1,
 			width: 50,
 		},
 		{
@@ -204,7 +207,7 @@ export default function MovieListPage() {
 			<MovieEnumProvider>
 				<CardHeader>
 					<div className="flex items-center justify-between">
-						<div>EBook List</div>
+						<div>影视列表</div>
 						<Button onClick={onCreate}>New</Button>
 					</div>
 					<MovieFilterForm
@@ -219,7 +222,18 @@ export default function MovieListPage() {
 						rowKey={"id"}
 						size="small"
 						scroll={{ x: "max-content" }}
-						pagination={false}
+						pagination={{
+							current: tableParams.page,
+							pageSize: tableParams.limit,
+							total: totalCount,
+							showTotal: (total) => `Total ${total} items`,
+							showSizeChanger: true,
+							pageSizeOptions: [10, 20, 50, 100],
+							onChange: (page, pageSize) => {
+								setTableParams({ ...tableParams, page, limit: pageSize });
+								setRefresh(Date.now());
+							},
+						}}
 						columns={columns}
 						dataSource={movieList}
 					/>
