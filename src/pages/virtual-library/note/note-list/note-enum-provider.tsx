@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { apiLibraryNotePlatformList } from "@/api/services/library-note.service";
+import { apiLibraryNoteEnumInfo } from "@/api/services/library-note.service";
 import { type NotePlatform, NoteType } from "../../types";
 
 const NOTE_TYPE = [
@@ -38,8 +38,8 @@ export default function NoteEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const platformList = (await apiLibraryNotePlatformList()).page.list || [];
-		setPlatform(platformList);
+		const res = await apiLibraryNoteEnumInfo();
+		setPlatform(res.platformList || []);
 	};
 
 	const value: NoteEnumContext = useMemo(

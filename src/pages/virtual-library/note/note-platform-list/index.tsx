@@ -202,7 +202,7 @@ export default function NotePlatformListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Note Platform List</div>
+					<div>笔记平台列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -210,6 +210,7 @@ export default function NotePlatformListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={platformList}
 						columns={mergedColumns}

@@ -1,6 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
-import { apiLibraryCommonLanguageList, apiLibraryCommonRegionList } from "@/api/services/library-common.service";
-import { apiLibraryMovieCategoryList } from "@/api/services/library-movie.service";
+import { apiLibraryMovieEnumInfo } from "@/api/services/library-movie.service";
 import { ReadStatus } from "@/types/enum";
 import { type CommonLanguage, type CommonRegion, type MovieCategory, MovieType } from "../../types";
 
@@ -103,12 +102,10 @@ export default function MovieEnumProvider({ children }: PropsWithChildren) {
 	}, []);
 
 	const getEnumInfo = async () => {
-		const categoryList = (await apiLibraryMovieCategoryList()).page.list || [];
-		const languageList = (await apiLibraryCommonLanguageList()).page.list || [];
-		const regionList = (await apiLibraryCommonRegionList()).page.list || [];
-		setCategory(categoryList);
-		setLanguage(languageList);
-		setRegion(regionList);
+		const res = await apiLibraryMovieEnumInfo();
+		setCategory(res.categoryList || []);
+		setLanguage(res.languageList || []);
+		setRegion(res.regionList || []);
 	};
 
 	const value: MovieEnumContext = useMemo(

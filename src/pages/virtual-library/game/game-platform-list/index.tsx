@@ -199,7 +199,7 @@ export default function GamePlatformListPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Game Platform List</div>
+					<div>游戏平台列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -207,6 +207,7 @@ export default function GamePlatformListPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={platformList}
 						columns={mergedColumns}

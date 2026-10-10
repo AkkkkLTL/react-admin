@@ -4,6 +4,7 @@ import {
 	LibraryBookApi,
 	type LibraryBookCategoryListRes,
 	type LibraryBookCategorySaveReq,
+	type LibraryBookEnumInfoRes,
 	type LibraryBookListRes,
 	type LibraryBookPublisherListRes,
 	type LibraryBookPublisherSaveReq,
@@ -12,20 +13,11 @@ import {
 	type LibraryBookSourceSaveReq,
 } from "@/api/services/library-book.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
 
-// ------------------ 数据模拟 ------------------
-const store = {
-	Book: "book-test",
-	Publisher: "book-publisher-test",
-	Category: "category-test",
-	Source: "source-test",
-};
-const db = await openDatabase("library-test", store, 1);
-
 const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async () => {
-	const books = (await db.getAll(store.Book)) as LibraryBookSaveReq[];
+	const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
 	return HttpResponse.json<Result & LibraryBookListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -47,7 +39,7 @@ const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, a
 /** 模拟保存图书 */
 const mockLibraryBookSave = http.post(`${apiPrefix}${LibraryBookApi.BookSave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.Book, await request.json());
+	await libraryDatabase.add(libraryStore.Book, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -63,7 +55,7 @@ const mockLibraryBookSave = http.post(`${apiPrefix}${LibraryBookApi.BookSave}`, 
 /** 模拟更新图书 */
 const mockLibraryBookUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookUpdate}`, async ({ request }) => {
 	// 更新数据
-	await db.put(store.Book, await request.json());
+	await libraryDatabase.put(libraryStore.Book, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -76,9 +68,28 @@ const mockLibraryBookUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookUpdate}
 	);
 });
 
+/** 模拟获取枚举信息列表 */
+const mockLibraryBookEnumInfo = http.get(`${apiPrefix}${LibraryBookApi.BookEnumInfo}`, async () => {
+	const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
+	const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
+	const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
+	return HttpResponse.json<Result & LibraryBookEnumInfoRes>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			publisherList: publishers || [],
+			categoryList: categories || [],
+			sourceList: sources || [],
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
 /** 模拟获取出版社列表 */
 const mockLibraryBookPublisherList = http.get(`${apiPrefix}${LibraryBookApi.BookPublisherList}`, async () => {
-	const publishers = (await db.getAll(store.Publisher)) as LibraryBookPublisherSaveReq[];
+	const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
 	return HttpResponse.json<Result & LibraryBookPublisherListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -102,7 +113,7 @@ const mockLibraryBookPublisherSave = http.post(
 	`${apiPrefix}${LibraryBookApi.BookPublisherSave}`,
 	async ({ request }) => {
 		// 添加数据
-		await db.add(store.Publisher, await request.json());
+		await libraryDatabase.add(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -121,7 +132,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookPublisherUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await db.put(store.Publisher, await request.json());
+		await libraryDatabase.put(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -137,7 +148,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 
 /** 模拟获取分类列表 */
 const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookCategoryList}`, async () => {
-	const categories = (await db.getAll(store.Category)) as LibraryBookCategorySaveReq[];
+	const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
 	return HttpResponse.json<Result & LibraryBookCategoryListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -159,7 +170,7 @@ const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookC
 /** 模拟保存分类 */
 const mockLibraryBookCategorySave = http.post(`${apiPrefix}${LibraryBookApi.BookCategorySave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.Category, await request.json());
+	await libraryDatabase.add(libraryStore.BookCategory, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -177,7 +188,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookCategoryUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await db.put(store.Category, await request.json());
+		await libraryDatabase.put(libraryStore.BookCategory, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -193,7 +204,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 
 /** 模拟获取阅读来源列表 */
 const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSourceList}`, async () => {
-	const sources = (await db.getAll(store.Source)) as LibraryBookSourceSaveReq[];
+	const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
 	return HttpResponse.json<Result & LibraryBookSourceListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -215,7 +226,7 @@ const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSou
 /** 模拟保存阅读来源 */
 const mockLibraryBookSourceSave = http.post(`${apiPrefix}${LibraryBookApi.BookSourceSave}`, async ({ request }) => {
 	// 添加数据
-	await db.add(store.Source, await request.json());
+	await libraryDatabase.add(libraryStore.BookSource, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -231,7 +242,7 @@ const mockLibraryBookSourceSave = http.post(`${apiPrefix}${LibraryBookApi.BookSo
 /** 模拟更新阅读来源 */
 const mockLibraryBookSourceUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookSourceUpdate}`, async ({ request }) => {
 	// 更新数据
-	await db.put(store.Source, await request.json());
+	await libraryDatabase.put(libraryStore.BookSource, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -248,6 +259,7 @@ export {
 	mockLibraryBookList,
 	mockLibraryBookSave,
 	mockLibraryBookUpdate,
+	mockLibraryBookEnumInfo,
 	mockLibraryBookPublisherList,
 	mockLibraryBookPublisherSave,
 	mockLibraryBookPublisherUpdate,

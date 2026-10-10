@@ -68,7 +68,7 @@ export default function EBookPublishPlatformPage() {
 	const columns = [
 		{
 			title: "No",
-			render: (_: string, record: DataType, index: number) => index + 1,
+			render: (_: string, __: DataType, index: number) => index + 1,
 			width: 50,
 		},
 		{
@@ -204,7 +204,7 @@ export default function EBookPublishPlatformPage() {
 		<Card>
 			<CardHeader>
 				<div className="flex items-center justify-between">
-					<div>Book Category List</div>
+					<div>电子书阅读来源列表</div>
 					<Button onClick={onCreate}>New</Button>
 				</div>
 			</CardHeader>
@@ -212,6 +212,7 @@ export default function EBookPublishPlatformPage() {
 				<Form {...form}>
 					<Table<DataType>
 						bordered
+						pagination={false}
 						components={{ body: { cell: EditableCellRender } }}
 						dataSource={publishPlatformList}
 						columns={mergedColumns}

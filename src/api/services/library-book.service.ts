@@ -25,6 +25,12 @@ export interface LibraryBookListRes {
 	};
 }
 
+export interface LibraryBookEnumInfoRes {
+	publisherList: BookPublisher[];
+	categoryList: BookCategory[];
+	sourceList: BookSource[];
+}
+
 export interface LibraryBookPublisherListRes {
 	page: {
 		totalCount: number;
@@ -64,6 +70,8 @@ export enum LibraryBookApi {
 	BookSave = "/library/book/save",
 	// 更新书籍
 	BookUpdate = "/library/book/update",
+	// 获取枚举信息列表
+	BookEnumInfo = "/library/book/enuminfo",
 	// 获取出版社列表
 	BookPublisherList = "/library/bookpublisher/list",
 	// 创建出版社
@@ -100,6 +108,11 @@ const apiLibraryBookUpdate = (data: LibraryBookSaveReq) =>
 	apiClient.put<void>({
 		url: LibraryBookApi.BookUpdate,
 		data,
+	});
+
+const apiLibraryBookEnumInfo = () =>
+	apiClient.get<LibraryBookEnumInfoRes>({
+		url: LibraryBookApi.BookEnumInfo,
 	});
 
 const apiLibraryBookPublisherList = () =>
@@ -157,6 +170,7 @@ export {
 	apiLibraryBookList,
 	apiLibraryBookSave,
 	apiLibraryBookUpdate,
+	apiLibraryBookEnumInfo,
 	apiLibraryBookPublisherList,
 	apiLibraryBookPublisherSave,
 	apiLibraryBookPublisherUpdate,

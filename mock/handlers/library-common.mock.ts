@@ -6,17 +6,11 @@ import {
 	type LibraryCommonLanguageSaveReq,
 } from "@/api/services/library-common.service";
 import { ResultEnum } from "@/types/enum";
-import { openDatabase } from "../database-service";
+import { libraryDatabase, libraryStore } from "../database-service";
 import { apiPrefix } from "../type";
 
-const store = {
-	Language: "common-language-test",
-	Region: "common-region-test",
-};
-const db = await openDatabase("library-common-test", store, 1);
-
 const mockLibraryCommonLanguageList = http.get(`${apiPrefix}${LibraryCommonApi.LanguageList}`, async () => {
-	const languages = (await db.getAll(store.Language)) as LibraryCommonLanguageSaveReq[];
+	const languages = (await libraryDatabase.getAll(libraryStore.CommonLanguage)) as LibraryCommonLanguageSaveReq[];
 	return HttpResponse.json<Result & LibraryCommonLanguageListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -36,7 +30,7 @@ const mockLibraryCommonLanguageList = http.get(`${apiPrefix}${LibraryCommonApi.L
 });
 
 const mockLibraryCommonLanguageSave = http.post(`${apiPrefix}${LibraryCommonApi.LanguageSave}`, async ({ request }) => {
-	await db.add(store.Language, await request.json());
+	await libraryDatabase.add(libraryStore.CommonLanguage, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -51,7 +45,7 @@ const mockLibraryCommonLanguageSave = http.post(`${apiPrefix}${LibraryCommonApi.
 const mockLibraryCommonLanguageUpdate = http.put(
 	`${apiPrefix}${LibraryCommonApi.LanguageUpdate}`,
 	async ({ request }) => {
-		await db.put(store.Language, await request.json());
+		await libraryDatabase.put(libraryStore.CommonLanguage, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -66,7 +60,7 @@ const mockLibraryCommonLanguageUpdate = http.put(
 );
 
 const mockLibraryCommonRegionList = http.get(`${apiPrefix}${LibraryCommonApi.RegionList}`, async () => {
-	const regions = (await db.getAll(store.Region)) as LibraryCommonLanguageSaveReq[];
+	const regions = (await libraryDatabase.getAll(libraryStore.CommonRegion)) as LibraryCommonLanguageSaveReq[];
 	return HttpResponse.json<Result & LibraryCommonLanguageListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -86,7 +80,7 @@ const mockLibraryCommonRegionList = http.get(`${apiPrefix}${LibraryCommonApi.Reg
 });
 
 const mockLibraryCommonRegionSave = http.post(`${apiPrefix}${LibraryCommonApi.RegionSave}`, async ({ request }) => {
-	await db.add(store.Region, await request.json());
+	await libraryDatabase.add(libraryStore.CommonRegion, await request.json());
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -99,7 +93,7 @@ const mockLibraryCommonRegionSave = http.post(`${apiPrefix}${LibraryCommonApi.Re
 });
 
 const mockLibraryCommonRegionUpdate = http.put(`${apiPrefix}${LibraryCommonApi.RegionUpdate}`, async ({ request }) => {
-	await db.put(store.Region, await request.json());
+	await libraryDatabase.put(libraryStore.CommonRegion, await request.json());
 
 	return HttpResponse.json<Result>(
 		{

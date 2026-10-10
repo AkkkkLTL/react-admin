@@ -1,4 +1,4 @@
-import type { Movie, MovieCategory } from "@/pages/virtual-library/types";
+import type { CommonLanguage, CommonRegion, Movie, MovieCategory } from "@/pages/virtual-library/types";
 import apiClient from "../apiClient";
 
 export type LibraryMovieSaveReq = Movie & {
@@ -25,6 +25,12 @@ export type LibraryMovieListRes = {
 	};
 };
 
+export interface LibraryMovieEnumInfoRes {
+	categoryList: MovieCategory[];
+	languageList: CommonLanguage[];
+	regionList: CommonRegion[];
+}
+
 export type LibraryMovieCategoryListRes = {
 	page: {
 		totalCount: number;
@@ -36,6 +42,7 @@ export type LibraryMovieCategoryListRes = {
 };
 
 export enum LibraryMovieApi {
+	MovieEnumInfo = "/library/movie/enuminfo",
 	MovieList = "/library/movie/list",
 	MovieSave = "/library/movie/save",
 	MovieUpdate = "/library/movie/update",
@@ -43,6 +50,11 @@ export enum LibraryMovieApi {
 	MovieCategorySave = "/library/moviecategory/save",
 	MovieCategoryUpdate = "/library/moviecategory/update",
 }
+
+const apiLibraryMovieEnumInfo = () =>
+	apiClient.get<LibraryMovieEnumInfoRes>({
+		url: LibraryMovieApi.MovieEnumInfo,
+	});
 
 const apiLibraryMovieList = (params: URLSearchParams) =>
 	apiClient.get<LibraryMovieListRes>({
@@ -80,6 +92,7 @@ const apiLibraryMovieCategoryUpdate = (data: LibraryMovieCategorySaveReq) =>
 	});
 
 export {
+	apiLibraryMovieEnumInfo,
 	apiLibraryMovieList,
 	apiLibraryMovieSave,
 	apiLibraryMovieUpdate,
