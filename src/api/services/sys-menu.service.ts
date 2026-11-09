@@ -1,21 +1,21 @@
-import type { MenuInfo } from "@/types/entity";
+import type { Menu, MenuInfo } from "@/types/entity";
 import apiClient from "../apiClient";
 
 export interface SysMenuNavRes {
-	menuList: MenuInfo[];
+	menuList: Menu[];
 	permissions: string[];
 }
 
 export interface SysMenuListRes {
-	menuList: MenuInfo[];
+	menuList: Menu[];
 }
 
 export interface SysMenuSelectRes {
-	menuList: MenuInfo[];
+	menuList: Menu[];
 }
 
 export interface SysMenuInfoRes {
-	menu: MenuInfo;
+	menu: Menu;
 }
 /**
  * * @description 菜单服务

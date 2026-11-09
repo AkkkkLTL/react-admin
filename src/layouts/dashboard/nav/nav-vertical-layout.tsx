@@ -36,7 +36,7 @@ export function NavVerticalLayout({ data, className }: Props) {
 		<nav
 			data-slot="layout-nav"
 			className={cn(
-				"fixed inset-y-0 left-0 flex-col h-full bg-background border-r border-dashed z-nav transition-[width] duration-300 ease-in-out",
+				"flex fixed inset-y-0 left-0 flex-col h-full bg-sidebar border-r border-dashed z-nav transition-[width] duration-300 ease-in-out gap-4",
 				className,
 			)}
 			style={{
@@ -48,10 +48,10 @@ export function NavVerticalLayout({ data, className }: Props) {
 					"justify-center": themeLayout === ThemeLayout.MINI,
 				})}
 			>
-				<div className="flex items-center justify-center">
-					<Logo />
+				<div className="flex items-center justify-center px-6">
+					<Logo size={36} />
 					<span
-						className="text-xl font-bold transition-all duration-300 ease-in-out"
+						className="text-3xl text-primary font-bold transition-all duration-300 ease-in-out"
 						style={{
 							opacity: themeLayout === ThemeLayout.MINI ? 0 : 1,
 							maxWidth: themeLayout === ThemeLayout.MINI ? 0 : "auto",
@@ -63,6 +63,7 @@ export function NavVerticalLayout({ data, className }: Props) {
 					</span>
 				</div>
 
+				{/* 导航收缩按钮 */}
 				<Button
 					variant={"outline"}
 					size={"icon"}
@@ -77,9 +78,23 @@ export function NavVerticalLayout({ data, className }: Props) {
 				</Button>
 			</div>
 
-			<ScrollArea className={cn("h-[calc(100vh-var(--layout-header-height))] px-2 bg-background")}>
+			{/* 主导航 */}
+			<ScrollArea className={cn("h-[calc(70vh-var(--layout-header-height))] px-2 bg-sidebar")} hidden={true}>
 				{themeLayout === ThemeLayout.MINI ? <NavMini data={data} /> : <NavVertical data={data} />}
 			</ScrollArea>
+
+			{/* 书房理念 */}
+			{themeLayout === ThemeLayout.VERTICAL && (
+				<div className="flex flex-col gap-4 px-4">
+					<div className="border-0 border-t-2 border-t-[#E3E5DC] display-block" />
+					<span className="flex flex-col gap-1 text-[#7A8178] text-sm display-block">
+						<p>把时间，留给好内容。</p>
+						<p>让每一次打开都有收获。</p>
+					</span>
+				</div>
+			)}
+
+			{/* todo：用户区域 */}
 		</nav>
 	);
 }

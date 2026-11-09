@@ -80,10 +80,8 @@ export interface Permission extends CommonOption {
  * @interface MenuMetaInfo
  */
 export type MenuMetaInfo = Partial<
-	Pick<NavItemDataProps, "path" | "caption" | "info" | "disabled" | "auth" | "hidden">
+	Pick<NavItemDataProps, "path" | "icon" | "caption" | "info" | "disabled" | "auth" | "hidden">
 > & {
-	/** 图标 */
-	icon?: string;
 	/** 外链 */
 	externalLink?: URL;
 	/** 组件 */
@@ -96,9 +94,11 @@ export type MenuMetaInfo = Partial<
  */
 export interface Menu extends CommonOption, MenuMetaInfo {
 	/** 菜单 id */
-	id: string; // uuid
+	id: string | number; // uuid
 	/** 父级菜单 id */
-	parentId: string | null;
+	parentId: string | number | null;
+	/** 父级菜单名称 */
+	parentName?: string;
 	/** 菜单名称 */
 	name: string;
 	code?: string;

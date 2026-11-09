@@ -27,6 +27,7 @@ export default function Header({ leftSlot }: HeaderProps) {
 				"flex items-center justify-between px-2 grow-0 shrink-0",
 				"bg-background/60 backdrop-blur-xl",
 				"h-[var(--layout-header-height)]",
+				"border-b-2 border-border/60",
 			)}
 		>
 			<div className="flex items-center">

@@ -76,6 +76,8 @@ export const themeTokens = {
 			},
 			/** 灰色 */
 			gray: {
+				/** 灰色-50 */
+				"50": null,
 				/** 灰色-100 */
 				"100": null,
 				/** 灰色-200 */

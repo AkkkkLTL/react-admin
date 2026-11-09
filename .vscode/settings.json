@@ -56,7 +56,12 @@
     "ion",
     "uil",
     "ant-design",
-    "eva"
+    "eva",
+    "mynaui",
+    "akar-icons",
+    "tabler",
+    "hugeicons",
+    "famicons",
   ],
   "iconify.cdnEntry": "https://icones.js.org/collections",
 }

@@ -75,10 +75,19 @@ export const convertToRoute = (items: MenuTree[], parent?: MenuTree): RouteObjec
 		if (item.type === PermissionType.MENU) {
 			const props = generateProps(item);
 
-			routes.push({
-				path: getRoutePath(item.path, parent?.path),
-				element: Component(item.component, props),
-			});
+			if (item.children && item.children.length > 0) {
+				const children = item.children;
+				routes.push({
+					path: getRoutePath(item.path, parent?.path),
+					element: Component(item.component, props),
+					children: [...convertToRoute(children, item)],
+				});
+			} else {
+				routes.push({
+					path: getRoutePath(item.path, parent?.path),
+					element: Component(item.component, props),
+				});
+			}
 		}
 	};
 
