@@ -991,7 +991,7 @@ const dataSysNavList_library: Menu[] = [
 		icon: "material-symbols:dashboard-outline",
 		type: MENU,
 		path: "/workbench",
-		component: "/pages/dashboard/workbench",
+		component: "/pages/virtual-library/workbench",
 	},
 	{
 		id: "library_book",

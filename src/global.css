@@ -61,7 +61,7 @@
   /* 页面背景色 */
   --background: var(--colors-palette-gray-50);
   /* 页面文字色 */
-  --foreground: var(--colors-common-black);
+  --foreground: var(--colors-palette-gray-950);
   /* 卡片背景色 */
   --card: var(--colors-common-white);
   /* 卡片文字色 */

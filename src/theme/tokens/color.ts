@@ -99,6 +99,7 @@ export const paletteColors: Exclude<ThemeTokens["colors"], undefined>["palette"]
 		"700": "#454F5B",
 		"800": "#1C252E",
 		"900": "#141A21",
+		"950": "#283D36",
 	},
 };
 

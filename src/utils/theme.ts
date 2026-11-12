@@ -2,7 +2,7 @@ import Color from "color";
 import { type AddChannelToLeaf, themeTokens } from "../theme/type";
 /**
  * rgbAlpha("#000000", 0.24) => "rgba(0, 0, 0, 0.24)"
- * rgbAlpha("var(--colors-palette-primary-main)", 0.24) => "rgba(var(--colors-palette-primary-main) / 0.24)"
+ * rgbAlpha("var(--colors-palette-primary-defaultChannel)", 0.24) => "rgba(var(--colors-palette-primary-defaultChannel) / 0.24)"
  *
  * @param colorVal
  * @param alpha
@@ -17,7 +17,7 @@ export function rgbAlpha(colorVal: string | string[] | number[], alpha: number):
 			return `rgba(${colorVal} / ${safeAlpha})`;
 		}
 		if (colorVal.startsWith("--")) {
-			return `rgba(var(${colorVal}) / ${safeAlpha})`;
+			return `rgba(var(${colorVal}Channel) / ${safeAlpha})`;
 		}
 		// 处理 "200, 250, 214" 或 "200 250 215" d的格式
 		if (colorVal.includes(",") || colorVal.includes(" ")) {
