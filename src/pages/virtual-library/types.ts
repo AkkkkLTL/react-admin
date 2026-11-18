@@ -1,43 +1,41 @@
 import type { ReadStatus } from "@/types/enum";
 
-export interface BookFilterParams {
-	page: number;
-	limit: number;
-	publisherId?: number;
-	categoryId?: number;
-	status?: ReadStatus;
-	rating?: number;
-	search?: string;
-}
-
+/**
+ * 纸质书
+ */
 export interface Book {
 	id?: number;
 	isbn: string;
 	title: string;
-	oriTitle?: string;
+	subtitle?: string;
+	originalTitle?: string;
 	cover?: string;
-	author?: {
-		id: string;
-		name: string;
-	}[];
-	translator?: {
-		id: string;
-		name: string;
-	}[];
-	publisherId?: Required<BookPublisher>["id"];
+	publisherName?: string;
+	publisherId?: number;
 	publishDate?: string;
-	content?: string;
 	edition?: number;
 	binding?: number;
 	pages?: number;
 	currency?: string;
 	price?: number;
-	categoryId?: Required<BookCategory>["id"];
-	sourceId?: Required<BookSource>["id"][];
-	status?: ReadStatus;
+	categoryName?: string;
+	categoryId?: number;
+	readStatus?: ReadStatus;
 	rating?: number;
-	noteBookId?: string;
-	tagId?: string;
+	overview?: string;
+	authors?: BookCharacter[];
+	translators?: BookCharacter[];
+	sourceNames?: string[];
+	sourceIds?: number[];
+	toc?: string;
+	reviews?: string;
+}
+
+export interface BookCharacter {
+	id?: number;
+	bookId?: number;
+	characterId?: number;
+	name: string;
 }
 
 export interface BookCategory {

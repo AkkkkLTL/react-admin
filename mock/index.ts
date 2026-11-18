@@ -1,6 +1,5 @@
 import { setupWorker } from "msw/browser";
 import { mockTokenExpired } from "./handlers/demo";
-import * as libraryBookMock from "./handlers/library-book.mock";
 import * as libraryCharacterMock from "./handlers/library-character.mock";
 import * as libraryCommonMock from "./handlers/library-common.mock";
 import * as libraryEBookMock from "./handlers/library-ebook.mock";
@@ -15,6 +14,7 @@ import * as sysMenuMock from "./handlers/sys-menu.mock";
 import * as sysUserMock from "./handlers/sys-user.mock";
 // Library 项目
 import * as libraryDashboardMock from "./handlers/virtual-library/dashboard.mock";
+import * as libraryBookMock from "./handlers/virtual-library/library-book.mock";
 
 const handlers = [
 	mockTokenExpired,

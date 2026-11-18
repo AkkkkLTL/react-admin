@@ -1,35 +1,68 @@
 import type { Book, BookCategory, BookPublisher, BookSource } from "@/pages/virtual-library/types";
-import apiClient from "../apiClient";
+import type { ReadStatus } from "@/types/enum";
+import apiClient from "../../apiClient";
 
-export type LibraryBookSaveReq = Book & {
-	authorId?: string;
-	authorName?: string;
-	translatorId?: string;
-	translatorName?: string;
-	sourceId?: string;
-};
+//#region 请求参数类型
+export interface BookListQuery {
+	page: number;
+	limit: number;
+	/**
+	 * 关键字
+	 */
+	keyword?: string;
+	/**
+	 * 阅读状态
+	 */
+	readStatus?: ReadStatus | "";
+	/**
+	 * 分类ID
+	 */
+	categoryId?: number | "";
+	/**
+	 * 出版社id
+	 */
+	publisherId?: number | "";
+	/**
+	 * 排序字段
+	 */
+	sortField?: "read_status" | "rating" | "publish_date";
+	/**
+	 * 是否升序
+	 */
+	asc?: boolean;
+}
+
+export type LibraryBookSaveReq = Book;
 
 export type LibraryBookPublisherSaveReq = BookPublisher;
 
 export type LibraryBookCategorySaveReq = BookCategory;
 
 export type LibraryBookSourceSaveReq = BookSource;
+//#endregion
 
+//#region 响应参数类型
+/**
+ * 书籍列表响应参数类型
+ */
 export interface LibraryBookListRes {
 	page: {
 		totalCount: number;
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookSaveReq[];
+		list: Omit<Book, "toc" | "reviews">[];
 	};
 }
 
-export interface LibraryBookEnumInfoRes {
-	publisherList: BookPublisher[];
-	categoryList: BookCategory[];
-	sourceList: BookSource[];
-}
+export type LibraryBookEnumInfoRes = {
+	data: {
+		[key in "readStatusList" | "bindingTypeList" | "ratingList" | "categoryList" | "sourceList" | "publisherList"]: {
+			value: number;
+			label: string;
+		}[];
+	};
+};
 
 export interface LibraryBookPublisherListRes {
 	page: {
@@ -60,6 +93,7 @@ export interface LibraryBookSourceListRes {
 		list: LibraryBookSourceSaveReq[];
 	};
 }
+//#endregion
 
 export enum LibraryBookApi {
 	// 获取书籍列表
@@ -71,7 +105,7 @@ export enum LibraryBookApi {
 	// 更新书籍
 	BookUpdate = "/library/book/update",
 	// 获取枚举信息列表
-	BookEnumInfo = "/library/book/enuminfo",
+	BookEnumInfo = "/library/book/enum",
 	// 获取出版社列表
 	BookPublisherList = "/library/bookpublisher/list",
 	// 创建出版社

@@ -8,26 +8,173 @@ import {
 	type LibraryBookListRes,
 	type LibraryBookPublisherListRes,
 	type LibraryBookPublisherSaveReq,
-	type LibraryBookSaveReq,
+	LibraryBookSaveReq,
 	type LibraryBookSourceListRes,
 	type LibraryBookSourceSaveReq,
-} from "@/api/services/library-book.service";
+} from "@/api/services/virtual-library/library-book.service";
 import { ResultEnum } from "@/types/enum";
-import { libraryDatabase, libraryStore } from "../database-service";
-import { apiPrefix } from "../type";
+import { libraryDatabase, libraryStore } from "../../database-service";
+import { apiPrefix } from "../../type";
 
-const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async () => {
-	const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
+var mockBookList: LibraryBookListRes["page"]["list"] = Array.from({ length: 10 }).map((_, i) => ({
+	id: i,
+	isbn: "9787121316388",
+	title: "计算机网络释疑与习题解答（第7版）",
+	categoryId: 1,
+	categoryName: "计算机",
+	publisherName: "电子工业出版社",
+	publisherId: 8,
+	publishDate: "2023-01-01",
+	edition: 1,
+	binding: 1,
+	pages: 0,
+	price: 39.8,
+	currency: "CNY",
+	readStatus: 1,
+	rating: 3,
+	authors: [
+		{
+			id: 232,
+			bookId: 232,
+			name: "上野千鹤子",
+		},
+		{
+			id: 233,
+			bookId: 232,
+			name: "铃木凉美",
+		},
+	],
+	translators: [
+		{
+			id: 232,
+			bookId: 232,
+			name: "威廉·萨默塞特·毛姆",
+		},
+	],
+}));
+
+var mockBookEnum: LibraryBookEnumInfoRes["data"] = {
+	readStatusList: [
+		{
+			value: 0,
+			label: "想读",
+		},
+		{
+			value: 1,
+			label: "未读",
+		},
+		{
+			value: 2,
+			label: "暂停",
+		},
+		{
+			value: 3,
+			label: "在读",
+		},
+		{
+			value: 4,
+			label: "放弃",
+		},
+		{
+			value: 5,
+			label: "已读",
+		},
+	],
+	bindingTypeList: [
+		{
+			value: 0,
+			label: "平装",
+		},
+		{
+			value: 1,
+			label: "精装",
+		},
+		{
+			value: 2,
+			label: "锁线胶订",
+		},
+	],
+	ratingList: [
+		{
+			value: 1,
+			label: "很差",
+		},
+		{
+			value: 2,
+			label: "较差",
+		},
+		{
+			value: 3,
+			label: "还行",
+		},
+		{
+			value: 4,
+			label: "推荐",
+		},
+		{
+			value: 5,
+			label: "力荐",
+		},
+	],
+	categoryList: [
+		{
+			value: 15,
+			label: "其他",
+		},
+		{
+			value: 10,
+			label: "图形学",
+		},
+		{
+			value: 8,
+			label: "学习",
+		},
+	],
+	sourceList: [
+		{
+			value: 3,
+			label: "zlibrary",
+		},
+		{
+			value: 1,
+			label: "个人藏书",
+		},
+		{
+			value: 4,
+			label: "微信公众号",
+		},
+	],
+	publisherList: [
+		{
+			value: 12,
+			label: "上海交通大学出版社",
+		},
+		{
+			value: 3,
+			label: "上海文艺出版社",
+		},
+		{
+			value: 53,
+			label: "上海译文出版社",
+		},
+	],
+};
+
+const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async ({ request }) => {
+	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
+	const url = new URL(request.url);
+	const limit = url.searchParams.get("limit");
+	const page = url.searchParams.get("page");
 	return HttpResponse.json<Result & LibraryBookListRes>(
 		{
 			code: ResultEnum.SUCCESS,
 			msg: "success",
 			page: {
-				totalCount: 0,
-				pageSize: 20,
-				totalPage: 0,
-				currPage: 1,
-				list: books || [],
+				totalCount: 230,
+				pageSize: Number(limit) || 10,
+				totalPage: Math.ceil(230 / Number(limit) || 10),
+				currPage: Number(page) || 1,
+				list: mockBookList || [],
 			},
 		},
 		{
@@ -39,7 +186,7 @@ const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, a
 /** 模拟保存图书 */
 const mockLibraryBookSave = http.post(`${apiPrefix}${LibraryBookApi.BookSave}`, async ({ request }) => {
 	// 添加数据
-	await libraryDatabase.add(libraryStore.Book, await request.json());
+	// await libraryDatabase.add(libraryStore.Book, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -70,16 +217,14 @@ const mockLibraryBookUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookUpdate}
 
 /** 模拟获取枚举信息列表 */
 const mockLibraryBookEnumInfo = http.get(`${apiPrefix}${LibraryBookApi.BookEnumInfo}`, async () => {
-	const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
-	const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
-	const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
+	// const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
+	// const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
+	// const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
 	return HttpResponse.json<Result & LibraryBookEnumInfoRes>(
 		{
 			code: ResultEnum.SUCCESS,
 			msg: "success",
-			publisherList: publishers || [],
-			categoryList: categories || [],
-			sourceList: sources || [],
+			data: mockBookEnum,
 		},
 		{
 			status: 200,

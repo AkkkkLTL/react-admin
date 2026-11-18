@@ -3,12 +3,12 @@ import type { Result } from "@/api/apiClient";
 import {
 	LibraryDashboardApi,
 	type LibraryDashboardInProgressListRes,
-	type LibraryDashboardRes,
+	type LibraryDashboardStatsRes,
 } from "@/api/services/virtual-library/dashboard.service";
 import { ResultEnum } from "@/types/enum";
 import { apiPrefix } from "../../type";
 
-var dashboardStats: LibraryDashboardRes["stats"] = {
+var dashboardStats: LibraryDashboardStatsRes["stats"] = {
 	bookStats: {
 		wantToRead: 12,
 		unread: 134,
@@ -47,7 +47,7 @@ var dashboardStats: LibraryDashboardRes["stats"] = {
 	},
 };
 
-var dashboardInProgressList: LibraryDashboardInProgressListRes["data"] = {
+var dashboardInProgressList: LibraryDashboardInProgressListRes["inProgressList"] = {
 	bookList: [
 		{
 			id: 230,
@@ -189,7 +189,7 @@ var dashboardInProgressList: LibraryDashboardInProgressListRes["data"] = {
 };
 
 const mockLibraryDashboardStats = http.get(`${apiPrefix}${LibraryDashboardApi.DashboardStats}`, async () => {
-	return HttpResponse.json<Result & LibraryDashboardRes>(
+	return HttpResponse.json<Result & LibraryDashboardStatsRes>(
 		{
 			code: ResultEnum.SUCCESS,
 			msg: "success",
@@ -208,7 +208,7 @@ const mockLibraryDashboardInProgressList = http.get(
 			{
 				code: ResultEnum.SUCCESS,
 				msg: "success",
-				data: dashboardInProgressList,
+				inProgressList: dashboardInProgressList,
 			},
 			{
 				status: 200,

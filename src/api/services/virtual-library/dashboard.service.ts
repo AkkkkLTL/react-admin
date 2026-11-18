@@ -1,6 +1,6 @@
 import apiClient from "../../apiClient";
 
-export type LibraryDashboardRes = {
+export type LibraryDashboardStatsRes = {
 	stats: {
 		[key in "bookStats" | "ebookStats" | "movieStats" | "lessonStats"]: {
 			wantToRead: number;
@@ -15,7 +15,7 @@ export type LibraryDashboardRes = {
 };
 
 export type LibraryDashboardInProgressListRes = {
-	data: {
+	inProgressList: {
 		[key in "bookList" | "ebookList" | "movieList" | "lessonList"]: {
 			id: number;
 			cover: string | null;
@@ -36,9 +36,10 @@ export enum LibraryDashboardApi {
 	DashboardInProgressList = "/library/dashboard/in-progress",
 }
 
-const apiLibraryDashboardStats = () =>
-	apiClient.get<LibraryDashboardRes>({
+const apiLibraryDashboardStats = (params?: URLSearchParams) =>
+	apiClient.get<LibraryDashboardStatsRes>({
 		url: LibraryDashboardApi.DashboardStats,
+		params,
 	});
 
 const apiLibraryDashboardInProgressList = () =>

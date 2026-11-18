@@ -4,7 +4,7 @@ import {
 	apiLibraryDashboardInProgressList,
 	apiLibraryDashboardStats,
 	type LibraryDashboardInProgressListRes,
-	type LibraryDashboardRes,
+	type LibraryDashboardStatsRes,
 } from "@/api/services/virtual-library/dashboard.service";
 import defaultCover from "@/assets/images/placeholder-50x75.png";
 import { Chart, useChart } from "@/components/chart";
@@ -41,233 +41,8 @@ type InProgressCard = {
 	title: string;
 	label: string;
 	link: string;
-	list: LibraryDashboardInProgressListRes["data"]["bookList" | "ebookList" | "lessonList" | "movieList"];
+	list: LibraryDashboardInProgressListRes["inProgressList"]["bookList" | "ebookList" | "lessonList" | "movieList"];
 };
-
-// const quickState = [
-// 	{
-// 		icon: "material-symbols:book-ribbon-outline",
-// 		title: "纸质书",
-// 		subTitle: "BOOK",
-// 		series: [42, 2, 84],
-// 		labels: ["未读", "在读", "已读"],
-// 		percent: 66,
-// 		details: [
-// 			{ label: "未读", value: 42 },
-// 			{ label: "在读", value: 2 },
-// 			{ label: "已读", value: 84 },
-// 		],
-// 	},
-// 	{
-// 		icon: "material-symbols:globe-book",
-// 		title: "电子书",
-// 		subTitle: "EBOOK",
-// 		series: [30, 2, 54],
-// 		labels: ["未读", "在读", "已读"],
-// 		percent: 63,
-// 		details: [
-// 			{ label: "未读", value: 30 },
-// 			{ label: "在读", value: 2 },
-// 			{ label: "已读", value: 54 },
-// 		],
-// 	},
-// 	{
-// 		icon: "mynaui:graduation-cap",
-// 		title: "课程",
-// 		subTitle: "LESSON",
-// 		series: [8, 2, 14],
-// 		labels: ["未学", "学习中", "已完成"],
-// 		percent: 58,
-// 		details: [
-// 			{ label: "未学", value: 8 },
-// 			{ label: "学习中", value: 2 },
-// 			{ label: "已完成", value: 14 },
-// 		],
-// 	},
-// 	{
-// 		icon: "lucide:clapperboard",
-// 		title: "影视",
-// 		subTitle: "MOVIE",
-// 		series: [18, 2, 42],
-// 		labels: ["未看", "在看", "已看"],
-// 		percent: 68,
-// 		colors: ["#E8E7DD", "#347564", "#A2B5A2"],
-// 		details: [
-// 			{ label: "未看", value: 18 },
-// 			{ label: "在看", value: 2 },
-// 			{ label: "已看", value: 42 },
-// 		],
-// 	},
-// ];
-
-// const inprogressCard = [
-// 	{
-// 		contentType: "BOOK",
-// 		icon: "material-symbols:book-ribbon-outline",
-// 		title: "纸质书",
-// 		label: "在读",
-// 		link: "/library/book",
-// 		list: [
-// 			{
-// 				id: 230,
-// 				cover: null,
-// 				title: "把自己作为方法",
-// 				characterNames: ["项飙", "吴琦"],
-// 				categoryName: "人物访谈",
-// 				status: 3,
-// 				progress: 198,
-// 				total: 320,
-// 			},
-// 			{
-// 				id: 231,
-// 				cover: null,
-// 				title: "也许你该找个人聊聊",
-// 				characterNames: ["洛莉·戈特利布"],
-// 				categoryName: "心理学",
-// 				status: 3,
-// 				progress: 96,
-// 				total: 272,
-// 			},
-// 			{
-// 				id: 232,
-// 				cover: null,
-// 				title: "把自己作为方法",
-// 				characterNames: ["项飙", "吴琦"],
-// 				categoryName: "人物访谈",
-// 				status: 3,
-// 				progress: 198,
-// 				total: 320,
-// 			},
-// 			{
-// 				id: 233,
-// 				cover: null,
-// 				title: "也许你该找个人聊聊",
-// 				characterNames: ["洛莉·戈特利布"],
-// 				categoryName: "心理学",
-// 				status: "inprogress",
-// 				progress: 96,
-// 				total: 272,
-// 			},
-// 		],
-// 	},
-// 	{
-// 		contentType: "EBOOK",
-// 		icon: "material-symbols:globe-book",
-// 		title: "电子书",
-// 		label: "在读",
-// 		link: "/library/ebook",
-// 		list: [
-// 			{
-// 				id: 1,
-// 				cover: null,
-// 				title: "悉达多",
-// 				characterNames: ["赫尔曼·黑塞"],
-// 				categoryName: "文学",
-// 				status: 3,
-// 				progress: 43,
-// 				total: 100,
-// 			},
-// 			{
-// 				id: 2,
-// 				cover: null,
-// 				title: "认知觉醒",
-// 				characterNames: ["周岭"],
-// 				categoryName: "个人成长",
-// 				status: 3,
-// 				progress: 26,
-// 				total: 100,
-// 			},
-// 			{
-// 				id: 3,
-// 				cover: null,
-// 				title: "悉达多",
-// 				characterNames: ["赫尔曼·黑塞"],
-// 				categoryName: "文学",
-// 				status: 3,
-// 				progress: 43,
-// 				total: 100,
-// 			},
-// 		],
-// 	},
-// 	{
-// 		contentType: "LESSON",
-// 		icon: "mynaui:graduation-cap",
-// 		title: "课程",
-// 		label: "学习中",
-// 		link: "/library/lesson",
-// 		list: [
-// 			{
-// 				id: 1,
-// 				cover: null,
-// 				title: "用摄影，重新发现日常",
-// 				characterNames: ["陈旻"],
-// 				categoryName: "摄影与视觉",
-// 				status: 3,
-// 				progress: 8,
-// 				total: 20,
-// 			},
-// 			{
-// 				id: 2,
-// 				cover: null,
-// 				title: "中国建筑史：从木构到园林",
-// 				characterNames: ["李明"],
-// 				categoryName: "人文与艺术",
-// 				status: 3,
-// 				progress: 4,
-// 				total: 18,
-// 			},
-// 			{
-// 				id: 3,
-// 				cover: null,
-// 				title: "用摄影，重新发现日常",
-// 				characterNames: ["陈旻"],
-// 				categoryName: "摄影与视觉",
-// 				status: 3,
-// 				progress: 8,
-// 				total: 20,
-// 			},
-// 		],
-// 	},
-// 	{
-// 		contentType: "MOVIE",
-// 		icon: "lucide:clapperboard",
-// 		title: "影视",
-// 		label: "在看",
-// 		link: "/library/movie",
-// 		list: [
-// 			{
-// 				id: 1,
-// 				cover: null,
-// 				title: "完美的日子",
-// 				characterNames: ["维姆·文德斯"],
-// 				categoryName: 2023,
-// 				status: 3,
-// 				progress: 48,
-// 				total: 124,
-// 			},
-// 			{
-// 				id: 2,
-// 				cover: null,
-// 				title: "海街日记",
-// 				characterNames: ["是枝裕和"],
-// 				categoryName: 2015,
-// 				status: 3,
-// 				progress: 67,
-// 				total: 127,
-// 			},
-// 			{
-// 				id: 3,
-// 				cover: null,
-// 				title: "完美的日子",
-// 				characterNames: ["维姆·文德斯"],
-// 				categoryName: 2023,
-// 				status: 3,
-// 				progress: 48,
-// 				total: 124,
-// 			},
-// 		],
-// 	},
-// ];
 
 export default function Workbench() {
 	const pieOptions = useChart({
@@ -306,8 +81,9 @@ export default function Workbench() {
 		},
 	});
 
-	const [dashboardStats, setDashboardStats] = useState<LibraryDashboardRes["stats"]>();
-	const [dashboardInProgressList, setDashboardInProgressList] = useState<LibraryDashboardInProgressListRes["data"]>();
+	const [dashboardStats, setDashboardStats] = useState<LibraryDashboardStatsRes["stats"]>();
+	const [dashboardInProgressList, setDashboardInProgressList] =
+		useState<LibraryDashboardInProgressListRes["inProgressList"]>();
 
 	const overviewTotal: OverviewTotal = useMemo(() => {
 		if (!dashboardStats) return { total: 0, progress: 0, finished: 0 };
@@ -449,7 +225,7 @@ export default function Workbench() {
 
 	useEffect(() => {
 		apiLibraryDashboardInProgressList().then((res) => {
-			setDashboardInProgressList(res.data);
+			setDashboardInProgressList(res.inProgressList);
 		});
 	}, []);
 

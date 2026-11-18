@@ -3,16 +3,14 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
-	apiLibraryBookCategoryList,
 	apiLibraryBookCategorySave,
-	apiLibraryBookPublisherList,
+	apiLibraryBookEnumInfo,
 	apiLibraryBookPublisherSave,
 	apiLibraryBookSave,
-	apiLibraryBookSourceList,
 	apiLibraryBookSourceSave,
 	apiLibraryBookUpdate,
 	type LibraryBookSaveReq,
-} from "@/api/services/library-book.service";
+} from "@/api/services/virtual-library/library-book.service";
 import { Icon } from "@/components/icon";
 import { ReadStatus } from "@/types/enum";
 import { Badge } from "@/ui/badge";
@@ -32,21 +30,6 @@ export interface BookModalProps {
 	onCancel: VoidFunction;
 }
 
-const BOOK_BINDING = [
-	{
-		value: 1,
-		label: "平装",
-	},
-	{
-		value: 2,
-		label: "精装",
-	},
-	{
-		value: 3,
-		label: "线胶装",
-	},
-];
-
 const CURRENY = [
 	{
 		value: "CNY",
@@ -55,33 +38,6 @@ const CURRENY = [
 	{
 		value: "USD",
 		label: "USD",
-	},
-];
-
-const BOOK_STATUS = [
-	{
-		value: ReadStatus.WANTTOREAD,
-		label: "想读",
-	},
-	{
-		value: ReadStatus.UNREAD,
-		label: "未读",
-	},
-	{
-		value: ReadStatus.STOPREAD,
-		label: "暂停",
-	},
-	{
-		value: ReadStatus.READING,
-		label: "在读",
-	},
-	{
-		value: ReadStatus.GIVEUPREAD,
-		label: "弃读",
-	},
-	{
-		value: ReadStatus.READED,
-		label: "已读",
 	},
 ];
 
@@ -113,60 +69,58 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 	// Source
 	const [sourceSearch, setSourceSearch] = useState("");
 	const {
-		publisher: publisherList,
-		category: categoryList,
-		source: sourceList,
-		setPublisher: setPublisherList,
-		setCategory: setCategoryList,
-		setSource: setSourceList,
+		readStatusList,
+		publisherList,
+		bindingTypeList,
+		categoryList,
+		sourceList,
+		setPublisherList,
+		setCategoryList,
+		setSourceList,
 	} = useBookEnumContext();
-	// Publish Date
-	// const [publishDatePanelOpen, setPublishDatePanelOpen] = useState(false);
-	// const [publishDate, setPublishDate] = useState<Date | undefined>(new Date(formValue.publishDate || "2025-06-01"));
-	// const [publishMonth, setPublishMonth] = useState<Date | undefined>(publishDate);
 
 	const form = useForm<Book>({
 		defaultValues: formValue,
 	});
 
-	const authorField = useFieldArray({
-		name: "author",
+	const authorsField = useFieldArray({
+		name: "authors",
 		control: form.control,
 	});
 
-	const translatorField = useFieldArray({
-		name: "translator",
+	const translatorsField = useFieldArray({
+		name: "translators",
 		control: form.control,
 	});
 
-	const getPublisherDataList = async () => {
-		const publisherDataList = (await apiLibraryBookPublisherList()).page.list;
-		setPublisherList(publisherDataList);
+	const getPublisherList = async () => {
+		const res = (await apiLibraryBookEnumInfo()).data.publisherList;
+		setPublisherList(res);
 	};
 
-	const getCategoryDataList = async () => {
-		const categoryDataList = (await apiLibraryBookCategoryList()).page.list;
-		setCategoryList(categoryDataList);
+	const getCategoryList = async () => {
+		const res = (await apiLibraryBookEnumInfo()).data.categoryList;
+		setCategoryList(res);
 	};
 
-	const getSourceDataList = async () => {
-		const sourceDataList = (await apiLibraryBookSourceList()).page.list;
-		setSourceList(sourceDataList);
+	const getSourceList = async () => {
+		const res = (await apiLibraryBookEnumInfo()).data.sourceList;
+		setSourceList(res);
 	};
 
 	const onSaveBookPublisher = async (values: BookPublisher) => {
 		await apiLibraryBookPublisherSave(values);
-		await getPublisherDataList();
+		await getPublisherList();
 	};
 
 	const onSaveBookCategory = async (values: BookCategory) => {
 		await apiLibraryBookCategorySave(values);
-		await getCategoryDataList();
+		await getCategoryList();
 	};
 
 	const onSaveBookSource = async (values: BookSource) => {
 		await apiLibraryBookSourceSave(values);
-		await getSourceDataList();
+		await getSourceList();
 	};
 
 	const onPublisherSearch = (value: string) => {
@@ -193,32 +147,21 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 	const onSourceChange = (value: number[]) => {
 		setSourceSearch("");
-		form.setValue("sourceId", value);
+		form.setValue("sourceIds", value);
 	};
 
 	const onSubmit = async (values: Book) => {
-		const { author, translator, ...rest } = values;
-
-		const newValues = {
-			...rest,
-			authorId: author?.map((item) => item.id).join(","),
-			authorName: author?.map((item) => item.name).join(","),
-			translatorId: translator?.map((item) => item.id).join(","),
-			translatorName: translator?.map((item) => item.name).join(","),
-			sourceId: (rest.sourceId as unknown as number[])?.join(","),
-		} as LibraryBookSaveReq;
-
 		// 处理空值
-		for (const [key, value] of Object.entries(newValues)) {
+		for (const [key, value] of Object.entries(values)) {
 			if (value === undefined || value === "") {
-				delete newValues[key as keyof LibraryBookSaveReq];
+				delete values[key as keyof LibraryBookSaveReq];
 			}
 		}
 
-		if (newValues.id) {
-			await apiLibraryBookUpdate(newValues);
+		if (values.id !== undefined) {
+			await apiLibraryBookUpdate(values);
 		} else {
-			await apiLibraryBookSave(newValues);
+			await apiLibraryBookSave(values);
 		}
 		onOk();
 	};
@@ -229,7 +172,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
-			<DialogContent className="h-[90%]">
+			<DialogContent className="h-[calc(100vh-2rem)] min-w-[calc(100vw-2rem)]">
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
@@ -272,7 +215,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 							<FormField
 								control={form.control}
-								name="oriTitle"
+								name="originalTitle"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Original Title</FormLabel>
@@ -298,11 +241,11 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 							<div className="space-y-2">
 								<p>Author</p>
-								{authorField.fields.map((field, index) => (
+								{authorsField.fields.map((field, index) => (
 									<FormField
 										key={field.id}
 										control={form.control}
-										name={`author.${index}.name`}
+										name={`authors.${index}.name`}
 										rules={{ required: "Author name is required" }}
 										render={({ field }) => (
 											<FormItem className="grid grid-cols-4 items-center gap-4">
@@ -310,7 +253,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 												<FormControl>
 													<div className="col-span-3 flex items-center gap-2">
 														<Input {...field} placeholder="Enter Author" />
-														<Button type="button" onClick={() => authorField.remove(index)}>
+														<Button type="button" onClick={() => authorsField.remove(index)}>
 															<Icon icon="material-symbols:remove-rounded" />
 														</Button>
 													</div>
@@ -320,22 +263,18 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 										)}
 									/>
 								))}
-								<Button
-									type="button"
-									style={{ width: "100%" }}
-									onClick={() => authorField.append({ id: "-1", name: "" })}
-								>
+								<Button type="button" style={{ width: "100%" }} onClick={() => authorsField.append({ name: "" })}>
 									Add Author
 								</Button>
 							</div>
 
 							<div className="space-y-2">
 								<p>Translator</p>
-								{translatorField.fields.map((field, index) => (
+								{translatorsField.fields.map((field, index) => (
 									<FormField
 										key={field.id}
 										control={form.control}
-										name={`translator.${index}.name`}
+										name={`translators.${index}.name`}
 										rules={{ required: "Translator name is required" }}
 										render={({ field }) => (
 											<FormItem className="grid grid-cols-4 items-center gap-4">
@@ -343,7 +282,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 												<FormControl>
 													<div className="col-span-3 flex items-center gap-2">
 														<Input {...field} placeholder="Enter Translator" />
-														<Button type="button" onClick={() => translatorField.remove(index)}>
+														<Button type="button" onClick={() => translatorsField.remove(index)}>
 															<Icon icon="material-symbols:remove-rounded" />
 														</Button>
 													</div>
@@ -353,11 +292,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 										)}
 									/>
 								))}
-								<Button
-									type="button"
-									style={{ width: "100%" }}
-									onClick={() => translatorField.append({ id: "-1", name: "" })}
-								>
+								<Button type="button" style={{ width: "100%" }} onClick={() => translatorsField.append({ name: "" })}>
 									Add Translator
 								</Button>
 							</div>
@@ -395,7 +330,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 														)}
 													</div>
 												}
-												options={publisherList.map((item) => ({ label: item.name, value: item.id }))}
+												options={publisherList}
 											/>
 										</FormControl>
 									</FormItem>
@@ -423,7 +358,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 							<FormField
 								control={form.control}
-								name="content"
+								name="overview"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Content</FormLabel>
@@ -464,7 +399,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 													},
 												}}
 												placeholder="Select Binding"
-												options={BOOK_BINDING}
+												options={bindingTypeList}
 											/>
 										</FormControl>
 									</FormItem>
@@ -554,7 +489,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 														)}
 													</div>
 												}
-												options={categoryList.map((item) => ({ label: item.name, value: item.id }))}
+												options={categoryList}
 											/>
 										</FormControl>
 									</FormItem>
@@ -563,7 +498,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 							<FormField
 								control={form.control}
-								name="sourceId"
+								name="sourceIds"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Sources</FormLabel>
@@ -596,7 +531,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 														)}
 													</div>
 												}
-												options={sourceList.map((item) => ({ label: item.name, value: item.id }))}
+												options={sourceList}
 											/>
 										</FormControl>
 									</FormItem>
@@ -605,7 +540,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 
 							<FormField
 								control={form.control}
-								name="status"
+								name="readStatus"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Status</FormLabel>
@@ -620,7 +555,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 													},
 												}}
 												placeholder="Select Status"
-												options={BOOK_STATUS}
+												options={readStatusList}
 											/>
 										</FormControl>
 									</FormItem>
@@ -635,32 +570,6 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 										<FormLabel>Rating</FormLabel>
 										<FormControl>
 											<Rate {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							{/* todo:待定-后期添加 */}
-							<FormField
-								control={form.control}
-								name="noteBookId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Note Book ID</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							{/* todo:待定-后期添加 */}
-							<FormField
-								control={form.control}
-								name="tagId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Tag ID</FormLabel>
-										<FormControl>
-											<Input {...field} />
 										</FormControl>
 									</FormItem>
 								)}
