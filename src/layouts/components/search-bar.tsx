@@ -89,9 +89,15 @@ export default function SearchBar() {
 
 	return (
 		<>
-			<Button variant="ghost" className="bg-secondary px-2 rounded-lg" size={"sm"} onClick={() => setOpen(true)}>
+			<Button
+				variant="ghost"
+				className="bg-common-white hover:bg-common-white px-2 rounded-lg"
+				size={"sm"}
+				onClick={() => setOpen(true)}
+			>
 				<div className="flex items-center justify-center gap-4">
-					<Icon icon="mdi:magnify" size={20} />
+					<Icon icon="local:ic-search" size={20} className="mr-1" />
+					<div className="text-accent-foreground mr-4">搜索书籍、课程、影视</div>
 					<kbd className="flex items-center justify-center rounded-md bg-primary/80 text-common-white px-1.5 py-0.5 text-sm font-semibold">
 						<Icon icon="qlementine-icons:key-cmd-16" />
 						<span>K</span>

@@ -1,3 +1,5 @@
+@layer theme, base, antd, components, utilities;
+
 /* 导入 tailwind */
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -59,9 +61,9 @@
 :root {
   --radius: 0.5rem;
   /* 页面背景色 */
-  --background: var(--colors-common-white);
+  --background: var(--colors-palette-gray-50);
   /* 页面文字色 */
-  --foreground: var(--colors-common-black);
+  --foreground: var(--colors-palette-gray-950);
   /* 卡片背景色 */
   --card: var(--colors-common-white);
   /* 卡片文字色 */
@@ -103,7 +105,7 @@
   --chart-5: oklch(0.769 0.188 70.08);
 
   /* 侧边栏背景色 */
-  --sidebar: var(--colors-palette-gray-200);
+  --sidebar: var(--colors-background-neutral);
   /* 侧边栏文字色 */
   --sidebar-foreground: var(--colors-palette-gray-800);
   /* 侧边栏主色 */
@@ -158,9 +160,9 @@
 
 /* 层级样式 */
 :root {
-  --layout-nav-width: 260px;
+  --layout-nav-width: 208px;
   --layout-nav-width-mini: 88px;
   --layout-nav-height-horizontal: 48px;
-  --layout-header-height: 64px;
+  --layout-header-height: 72px;
   --layout-multi-tabs-height: 48px;
 }

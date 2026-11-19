@@ -22,7 +22,7 @@ export default function Logo({ size = 50, className }: IProps) {
 
 	return (
 		<NavLink to="/" className={cn(className)}>
-			<Icon icon="solar:code-square-bold" color={themeTokens.color.palette.primary.default} size={size} />
+			<Icon icon="local:ic-logo" color={themeTokens.color.palette.primary.default} size={size} />
 		</NavLink>
 	);
 }

@@ -76,6 +76,8 @@ export const themeTokens = {
 			},
 			/** 灰色 */
 			gray: {
+				/** 灰色-50 */
+				"50": null,
 				/** 灰色-100 */
 				"100": null,
 				/** 灰色-200 */
@@ -94,6 +96,8 @@ export const themeTokens = {
 				"800": null,
 				/** 灰色-900 */
 				"900": null,
+				/** 灰色-950 */
+				"950": null,
 			},
 		},
 		/** 主题颜色通用 */
@@ -181,6 +185,12 @@ export const themeTokens = {
 			 * themeVar:typography.fontSize.xl
 			 */
 			xl: null,
+			"2xl": null,
+			"3xl": null,
+			"4xl": null,
+			"5xl": null,
+			"6xl": null,
+			"7xl": null,
 		},
 		fontWeight: {
 			light: null,

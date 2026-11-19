@@ -23,7 +23,7 @@ export function NavRootItem(item: NavItemProps) {
 			)}
 
 			{/* icon */}
-			<span style={navItemStyles.icon}>
+			<span style={navItemStyles.icon} className="size-[22px]!">
 				{item.icon && typeof item.icon === "string" ? <Icon icon={item.icon} /> : item.icon}
 			</span>
 
@@ -33,16 +33,16 @@ export function NavRootItem(item: NavItemProps) {
 			)}
 
 			{/* title */}
-			<span style={navItemStyles.title} className="text-center! text-xs! mt-1">
+			{/* <span style={navItemStyles.title} className="text-center! text-xs! mt-1">
 				{t(item.title)}
-			</span>
+			</span> */}
 		</>
 	);
 
 	const itemClassName = cn(
 		navItemClasses.base,
 		navItemClasses.hover,
-		"relative flex-col min-h-12 px-1 pt-2 pb-1.5",
+		"relative flex-col min-h-12 px-1 justify-center",
 		item.active && item.depth === 1 && navItemClasses.active,
 		item.active && item.depth !== 1 && "bg-action-hover!",
 		item.disabled && navItemClasses.disabled,

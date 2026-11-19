@@ -59,7 +59,7 @@ function PcVerticalLayout() {
 
 	return (
 		<>
-			{/* 导航栏 */}
+			{/* 侧边导航 */}
 			<NavVerticalLayout data={navData} />
 
 			{/* 内容区域 */}

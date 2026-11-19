@@ -8,14 +8,14 @@ import {
 	type SysMenuNavRes,
 	type SysMenuSelectRes,
 } from "@/api/services/sys-menu.service";
-import type { MenuInfo, Permission } from "@/types/entity";
+import type { Menu, MenuInfo } from "@/types/entity";
 import { apiPrefix, TOKEN } from "../type";
 
 const { GROUP, CATALOGUE, MENU } = PermissionType;
 
 // ---------------- 数据区 --------------
 /* 商城系统菜单列表 */
-var dataSysMenuList_mall: MenuInfo[] = [
+var dataSysMenuList_mall: Menu[] = [
 	{
 		id: 1,
 		parentId: 0,
@@ -23,7 +23,7 @@ var dataSysMenuList_mall: MenuInfo[] = [
 		path: "/sys",
 		type: PermissionType.CATALOGUE,
 		icon: "system",
-		orderNum: 0,
+		order: 0,
 	},
 	{
 		id: 2,
@@ -33,7 +33,7 @@ var dataSysMenuList_mall: MenuInfo[] = [
 		path: "/sys/user",
 		type: 1,
 		icon: "admin",
-		orderNum: 1,
+		order: 1,
 	},
 	{
 		id: 3,
@@ -43,7 +43,7 @@ var dataSysMenuList_mall: MenuInfo[] = [
 		path: "/sys/role",
 		type: 1,
 		icon: "role",
-		orderNum: 2,
+		order: 2,
 	},
 	{
 		id: 4,
@@ -53,7 +53,7 @@ var dataSysMenuList_mall: MenuInfo[] = [
 		path: "/sys/menu",
 		type: 1,
 		icon: "menu",
-		orderNum: 3,
+		order: 3,
 	},
 	// {
 	// 	menuId: 5,
@@ -530,7 +530,7 @@ var dataSysNavList_mall: MenuInfo[] = [
 ];
 
 /* 演示系统导航菜单列表 */
-var dataSysNavList_demo: MenuInfo[] = [
+var dataSysNavList_demo: Menu[] = [
 	// group
 	{
 		id: "group_dashboard",
@@ -973,46 +973,31 @@ var dataSysPermList_demo: string[] = [
 	"permission:update",
 ];
 
-const dataSysNavList_library: MenuInfo[] = [
+const dataSysNavList_library: Menu[] = [
 	// group
 	{
-		id: "group_dashboard",
+		id: "group_library",
 		parentId: null,
-		name: "sys.nav.dashboard",
+		name: "我的书房 / MY SPACE",
 		// perms: "dashboard",
 		type: GROUP,
 	},
 	// group_dashboard
 	{
 		id: "workbench",
-		parentId: "group_dashboard",
+		parentId: "group_library",
 		name: "sys.nav.workbench",
 		// perms: "workbench",
-		icon: "local:ic-workbench",
+		icon: "material-symbols:dashboard-outline",
 		type: MENU,
 		path: "/workbench",
-		component: "/pages/dashboard/workbench",
-	},
-	{
-		id: "analysis",
-		parentId: "group_dashboard",
-		name: "sys.nav.analysis",
-		// perms: "analysis",
-		icon: "local:ic-analysis",
-		type: MENU,
-		path: "/analysis",
-		component: "/pages/dashboard/analysis",
-	},
-	{
-		id: "group_library",
-		parentId: null,
-		name: "阅读与笔记管理",
-		type: GROUP,
+		component: "/pages/virtual-library/workbench",
 	},
 	{
 		id: "library_book",
 		parentId: "group_library",
-		name: "图书管理",
+		name: "纸质书",
+		icon: "material-symbols:book-ribbon-outline",
 		type: CATALOGUE,
 		path: "/library/book",
 	},
@@ -1022,6 +1007,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "图书列表",
 		type: MENU,
 		path: "/library/book/list",
+		hidden: true,
 		component: "/pages/virtual-library/book/book-list",
 	},
 	{
@@ -1030,6 +1016,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "图书分类",
 		type: MENU,
 		path: "/library/book/category",
+		hidden: true,
 		component: "/pages/virtual-library/book/book-category-list",
 	},
 	{
@@ -1038,6 +1025,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "图书出版社",
 		type: MENU,
 		path: "/library/book/publisher",
+		hidden: true,
 		component: "/pages/virtual-library/book/book-publisher-list",
 	},
 	{
@@ -1046,12 +1034,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "图书阅读来源",
 		type: MENU,
 		path: "/library/book/source",
+		hidden: true,
 		component: "/pages/virtual-library/book/book-source-list",
 	},
 	{
 		id: "library_ebook",
 		parentId: "group_library",
-		name: "电子书管理",
+		icon: "material-symbols:globe-book",
+		name: "电子书",
 		type: CATALOGUE,
 		path: "/library/ebook",
 	},
@@ -1061,6 +1051,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "电子书列表",
 		type: MENU,
 		path: "/library/ebook/list",
+		hidden: true,
 		component: "/pages/virtual-library/ebook/ebook-list",
 	},
 	{
@@ -1069,6 +1060,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "电子书分类列表",
 		type: MENU,
 		path: "/library/ebook/category",
+		hidden: true,
 		component: "/pages/virtual-library/ebook/ebook-category-list",
 	},
 	{
@@ -1077,35 +1069,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "电子书发布平台列表",
 		type: MENU,
 		path: "/library/ebook/publish-platform",
+		hidden: true,
 		component: "/pages/virtual-library/ebook/ebook-publish-platform",
-	},
-	{
-		id: "library_lesson",
-		parentId: "group_library",
-		name: "课程管理",
-		type: CATALOGUE,
-		path: "/library/lesson",
-	},
-	{
-		id: "library_lesson_list",
-		parentId: "library_lesson",
-		name: "课程列表",
-		type: MENU,
-		path: "/library/lesson/list",
-		component: "/pages/virtual-library/lesson/lesson-list",
-	},
-	{
-		id: "library_lesson_source",
-		parentId: "library_lesson",
-		name: "课程来源",
-		type: MENU,
-		path: "/library/lesson/source",
-		component: "/pages/virtual-library/lesson/lesson-source-list",
 	},
 	{
 		id: "library_movie",
 		parentId: "group_library",
-		name: "影视剧管理",
+		icon: "lucide:clapperboard",
+		name: "影视",
 		type: CATALOGUE,
 		path: "/library/movie",
 	},
@@ -1115,6 +1086,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "影视剧列表",
 		type: MENU,
 		path: "/library/movie/list",
+		hidden: true,
 		component: "/pages/virtual-library/movie/movie-list",
 	},
 	{
@@ -1123,12 +1095,40 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "影视剧分类列表",
 		type: MENU,
 		path: "/library/movie/category",
+		hidden: true,
 		component: "/pages/virtual-library/movie/movie-category-list",
+	},
+	{
+		id: "library_lesson",
+		parentId: "group_library",
+		icon: "mynaui:graduation-cap",
+		name: "课程",
+		type: CATALOGUE,
+		path: "/library/lesson",
+	},
+	{
+		id: "library_lesson_list",
+		parentId: "library_lesson",
+		name: "课程列表",
+		type: MENU,
+		path: "/library/lesson/list",
+		hidden: true,
+		component: "/pages/virtual-library/lesson/lesson-list",
+	},
+	{
+		id: "library_lesson_source",
+		parentId: "library_lesson",
+		name: "课程来源",
+		type: MENU,
+		path: "/library/lesson/source",
+		hidden: true,
+		component: "/pages/virtual-library/lesson/lesson-source-list",
 	},
 	{
 		id: "library_music",
 		parentId: "group_library",
-		name: "音乐管理",
+		icon: "akar-icons:music",
+		name: "音乐",
 		type: CATALOGUE,
 		path: "/library/music",
 	},
@@ -1138,6 +1138,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "音乐列表",
 		type: MENU,
 		path: "/library/music/list",
+		hidden: true,
 		component: "/pages/virtual-library/music/music-list",
 	},
 	{
@@ -1146,6 +1147,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "音乐风格",
 		type: MENU,
 		path: "/library/music/style",
+		hidden: true,
 		component: "/pages/virtual-library/music/music-style-list",
 	},
 	{
@@ -1154,12 +1156,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "音乐专辑",
 		type: MENU,
 		path: "/library/music/album",
+		hidden: true,
 		component: "/pages/virtual-library/music/music-album-list",
 	},
 	{
 		id: "library_game",
 		parentId: "group_library",
-		name: "游戏管理",
+		icon: "famicons:game-controller-outline",
+		name: "游戏",
 		type: CATALOGUE,
 		path: "/library/game",
 	},
@@ -1169,6 +1173,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "游戏列表",
 		type: MENU,
 		path: "/library/game/list",
+		hidden: true,
 		component: "/pages/virtual-library/game/game-list",
 	},
 	{
@@ -1177,6 +1182,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "游戏平台",
 		type: MENU,
 		path: "/library/game/platform",
+		hidden: true,
 		component: "/pages/virtual-library/game/game-platform-list",
 	},
 	{
@@ -1185,6 +1191,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "游戏分类",
 		type: MENU,
 		path: "/library/game/category",
+		hidden: true,
 		component: "/pages/virtual-library/game/game-category-list",
 	},
 	{
@@ -1193,12 +1200,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "游戏系列",
 		type: MENU,
 		path: "/library/game/series",
+		hidden: true,
 		component: "/pages/virtual-library/game/game-series-list",
 	},
 	{
 		id: "library_note",
 		parentId: "group_library",
-		name: "笔记管理",
+		icon: "hugeicons:notebook-pen",
+		name: "笔记",
 		type: CATALOGUE,
 		path: "/library/note",
 	},
@@ -1208,6 +1217,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "笔记列表",
 		type: MENU,
 		path: "/library/note/list",
+		hidden: true,
 		component: "/pages/virtual-library/note/note-list",
 	},
 	{
@@ -1216,12 +1226,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "笔记平台",
 		type: MENU,
 		path: "/library/note/platform",
+		hidden: true,
 		component: "/pages/virtual-library/note/note-platform-list",
 	},
 	{
 		id: "library_character",
 		parentId: "group_library",
-		name: "人物管理",
+		icon: "tabler:meeple",
+		name: "人物",
 		type: CATALOGUE,
 		path: "/library/character",
 	},
@@ -1231,12 +1243,14 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "人物列表",
 		type: MENU,
 		path: "/library/character/list",
+		hidden: true,
 		component: "/pages/virtual-library/character/character-list",
 	},
 	{
 		id: "library_common",
 		parentId: "group_library",
-		name: "通用配置管理",
+		icon: "mynaui:config",
+		name: "配置管理",
 		type: CATALOGUE,
 		path: "/library/common",
 	},
@@ -1246,6 +1260,7 @@ const dataSysNavList_library: MenuInfo[] = [
 		name: "语言列表",
 		type: MENU,
 		path: "/library/common/language",
+		hidden: true,
 		component: "/pages/virtual-library/common/language-list",
 	},
 	{
@@ -1253,12 +1268,13 @@ const dataSysNavList_library: MenuInfo[] = [
 		parentId: "library_common",
 		name: "区域列表",
 		type: MENU,
-		path: "/library/common/region",
+		path: "/library/common/coutry",
+		hidden: true,
 		component: "/pages/virtual-library/common/region-list",
 	},
 ];
 
-const dataSysNavList: Record<TOKEN, MenuInfo[]> = {
+const dataSysNavList: Record<TOKEN, Menu[]> = {
 	[TOKEN.DEMO]: dataSysNavList_demo,
 	[TOKEN.LIBRARY]: dataSysNavList_library,
 	[TOKEN.MALL]: dataSysMenuList_mall,

@@ -7,11 +7,11 @@ import type { ThemeTokens } from "../type";
  */
 export const presetsColors = {
 	[ThemeColorPresets.DEFAULT]: {
-		lighter: "#C8FAD6",
-		light: "#5BE49B",
-		default: "#00A76F",
-		dark: "#007867",
-		darker: "#004B50",
+		lighter: "#DCF8E6",
+		light: "#8ED5B5",
+		default: "#347564",
+		dark: "#1A5450",
+		darker: "#093238",
 	},
 	[ThemeColorPresets.CYAN]: {
 		lighter: "#CCF4FE",
@@ -89,6 +89,7 @@ export const paletteColors: Exclude<ThemeTokens["colors"], undefined>["palette"]
 		darker: "#003768",
 	},
 	gray: {
+		"50": "#F5F4EF",
 		"100": "#F9FAFB",
 		"200": "#F4F6F8",
 		"300": "#DFE3E8",
@@ -98,6 +99,7 @@ export const paletteColors: Exclude<ThemeTokens["colors"], undefined>["palette"]
 		"700": "#454F5B",
 		"800": "#1C252E",
 		"900": "#141A21",
+		"950": "#283D36",
 	},
 };
 
@@ -126,7 +128,7 @@ export const lightColorTokens: Exclude<ThemeTokens["colors"], undefined> = {
 	background: {
 		default: commonColors.white,
 		paper: commonColors.white,
-		neutral: paletteColors.gray[200],
+		neutral: "#EEEEE6",
 	},
 };
 

@@ -14,6 +14,7 @@ import { LineLoading } from "@/components/loading";
 import { GLOBAL_CONFIG } from "@/global-config";
 import DashboardLayout from "@/layouts/dashboard";
 import { setPermissions } from "@/store/modules/userSlice.ts";
+import type { Menu } from "@/types/entity";
 import { convertFlatToToTree } from "@/utils/tree";
 import ErrorFallback from "./components/error-fallback";
 import LoginAuthGuard from "./components/login-auth-guard";
@@ -39,8 +40,8 @@ export default function AppRoutes() {
 	const initializeRouter = useCallback(() => {
 		try {
 			const menuListStr = sessionStorage.getItem("menuList");
-			const menuList = menuListStr ? JSON.parse(menuListStr) : [];
-			const dynamicRoutes = convertToRoute(menuList);
+			const menuList = menuListStr ? (JSON.parse(menuListStr) as Menu[]) : [];
+			const dynamicRoutes = convertToRoute(convertFlatToToTree(menuList));
 
 			// 检查是否需要跳转至登录页
 			const redirectToLogin = sessionStorage.getItem("redirectToLogin") === "true";
@@ -82,7 +83,7 @@ export default function AppRoutes() {
 
 			if (data) {
 				// 保存菜单列表和权限
-				sessionStorage.setItem("menuList", JSON.stringify(convertFlatToToTree(data.menuList) || "[]"));
+				sessionStorage.setItem("menuList", JSON.stringify(data.menuList || "[]"));
 				// 保存权限
 				sessionStorage.setItem("permissions", JSON.stringify(data.permissions || "[]"));
 				dispatch(setPermissions(data.permissions || []));

@@ -26,3 +26,8 @@ dist-ssr
 
 # vite build stats
 stats.html
+
+# Site
+*.qoder.site
+/.figma-sync
+/.qoder

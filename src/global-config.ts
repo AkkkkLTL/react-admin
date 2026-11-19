@@ -19,7 +19,7 @@ type GlobalConfig = {
 };
 
 export const GLOBAL_CONFIG: GlobalConfig = {
-	appName: "React Admin",
+	appName: "一隅",
 	appVersion: packageJson.version,
 	defaultRoute: import.meta.env.VITE_APP_DEFAULT_ROUTE || "/workbench",
 	publicPath: import.meta.env.VITE_APP_PUBLIC_PATH || "/",

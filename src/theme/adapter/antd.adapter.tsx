@@ -57,25 +57,28 @@ export const AntdAdapter: UILibraryAdapter = ({ mode, children }) => {
 		Layout: {
 			siderBg: darkColorTokens.background.default,
 		},
+		Select: {
+			borderRadius: removePx(baseThemeTokens.borderRadius.lg),
+		},
 	};
 
 	return (
-		<ConfigProvider
-			locale={language.antdLocal}
-			theme={{ algorithm, token, components }}
-			tag={{
-				style: {
-					borderRadius: removePx(baseThemeTokens.borderRadius.md),
-					fontWeight: 700,
-					padding: `0 ${baseThemeTokens.spacing[1]}`,
-					margin: `0 ${baseThemeTokens.spacing[1]}`,
-					borderWidth: 0,
-				},
-			}}
-		>
-			<StyleProvider hashPriority="high">
+		<StyleProvider layer>
+			<ConfigProvider
+				locale={language.antdLocal}
+				theme={{ algorithm, token, components }}
+				tag={{
+					style: {
+						borderRadius: removePx(baseThemeTokens.borderRadius.md),
+						fontWeight: 700,
+						padding: `0 ${baseThemeTokens.spacing[1]}`,
+						margin: `0 ${baseThemeTokens.spacing[1]}`,
+						borderWidth: 0,
+					},
+				}}
+			>
 				<App>{children}</App>
-			</StyleProvider>
-		</ConfigProvider>
+			</ConfigProvider>
+		</StyleProvider>
 	);
 };

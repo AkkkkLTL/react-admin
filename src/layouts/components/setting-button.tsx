@@ -85,7 +85,7 @@ export default function SettingButton() {
 		<Sheet modal={false}>
 			<SheetTrigger asChild>
 				<Button variant={"ghost"} size={"icon"} className="rounded-full animate-slow-spin">
-					<Icon icon="local:ic-setting" size={24} />
+					<Icon icon="material-symbols:settings-outline-rounded" size={24} />
 				</Button>
 			</SheetTrigger>
 			<SheetContent style={sheetContentBgStyle} className="gap-0" onOpenAutoFocus={(e) => e.preventDefault()}>
@@ -104,7 +104,7 @@ export default function SettingButton() {
 									className="flex flex-1 h-20 cursor-pointer items-center justify-center"
 								>
 									<Icon
-										icon="local:ic-settings-mode-sun"
+										icon="material-symbols:wb-sunny-rounded"
 										size={24}
 										color={themeMode === ThemeMode.LIGHT ? themeVars.colors.palette.primary.default : ""}
 									/>
@@ -114,7 +114,7 @@ export default function SettingButton() {
 									className="flex flex-1 h-20 cursor-pointer items-center justify-center"
 								>
 									<Icon
-										icon="local:ic-settings-mode-moon"
+										icon="material-symbols:moon-stars-rounded"
 										size={24}
 										color={themeMode === ThemeMode.DARK ? themeVars.colors.palette.primary.default : ""}
 									/>
@@ -327,15 +327,6 @@ export default function SettingButton() {
 								defaultValue={[fontSize]}
 								onValueChange={(value) => updateSettings({ fontSize: value[0] })}
 							/>
-						</div>
-
-						{/* 页面设置 */}
-						<div className="flex flex-col gap-2">
-							<Text variant="subTitle2">{t("sys.settings.page")}</Text>
-							<div className="flex items-center justify-between">
-								<Text variant="subTitle2">{t("sys.settings.breadcrumb")}</Text>
-								<Switch checked={breadCrumb} onCheckedChange={(checked) => updateSettings({ breadCrumb: checked })} />
-							</div>
 						</div>
 					</div>
 				</ScrollArea>
