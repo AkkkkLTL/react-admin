@@ -8,6 +8,7 @@ import {
 	apiLibraryBookList,
 	type BookListQuery,
 	type LibraryBookListRes,
+	type LibraryBookSaveReq,
 } from "@/api/services/virtual-library/library-book.service";
 import { Icon } from "@/components/icon";
 import { themeVars } from "@/theme/theme.css";
@@ -26,10 +27,11 @@ import { BookFilterForm } from "./book-filter-form";
 import { BookModal, type BookModalProps } from "./book-modal";
 import { BookTable } from "./book-table";
 
-const DEFAULT_BOOK_VALUE: Book = {
+const DEFAULT_BOOK_VALUE: LibraryBookSaveReq = {
 	id: undefined,
 	isbn: "",
 	title: "",
+	subtitle: "",
 	originalTitle: "",
 	cover: "",
 	authors: [],
@@ -46,6 +48,8 @@ const DEFAULT_BOOK_VALUE: Book = {
 	sourceIds: [],
 	readStatus: ReadStatus.UNREAD,
 	rating: 0,
+	deleteAuthorIds: [],
+	deleteTranslatorIds: [],
 };
 
 export default function BookListPage() {
@@ -72,7 +76,7 @@ export default function BookListPage() {
 	const [overviewRefresh, setOverviewRefresh] = useState(Date.now());
 	const [bookModalProps, setBookModalProps] = useState<BookModalProps>({
 		formValue: structuredClone(DEFAULT_BOOK_VALUE),
-		title: "New",
+		title: "新增纸质书",
 		show: false,
 		onOk: () => {
 			// 关闭弹窗时，清空表单数据(使用structuredClone深拷贝默认值)
@@ -193,16 +197,16 @@ export default function BookListPage() {
 		setBookModalProps((prev) => ({
 			...prev,
 			show: true,
-			title: "Create New",
+			title: "新增纸质书",
 			formValue: structuredClone(DEFAULT_BOOK_VALUE),
 		}));
 	};
 
-	const onEdit = (formValue: Book) => {
+	const onEdit = (formValue: LibraryBookSaveReq) => {
 		setBookModalProps((prev) => ({
 			...prev,
 			show: true,
-			title: "Edit",
+			title: "编辑纸质书",
 			formValue,
 		}));
 	};

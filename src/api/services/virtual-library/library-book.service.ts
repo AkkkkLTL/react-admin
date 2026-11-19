@@ -32,7 +32,18 @@ export interface BookListQuery {
 	asc?: boolean;
 }
 
-export type LibraryBookSaveReq = Book;
+export interface LibraryBookEnumQuery {
+	moduleType?: "publisher" | "source" | "category";
+}
+
+export interface LibraryBookSaveReq extends Book {
+	deleteAuthorIds?: number[];
+	deleteTranslatorIds?: number[];
+}
+
+export interface LibraryBookCheckQuery {
+	isbn: string;
+}
 
 export type LibraryBookPublisherSaveReq = BookPublisher;
 
@@ -63,6 +74,10 @@ export type LibraryBookEnumInfoRes = {
 		}[];
 	};
 };
+
+export interface LibraryBookCheckRes {
+	data: boolean;
+}
 
 export interface LibraryBookPublisherListRes {
 	page: {
@@ -96,16 +111,30 @@ export interface LibraryBookSourceListRes {
 //#endregion
 
 export enum LibraryBookApi {
-	// 获取书籍列表
+	/**
+	 * 分页查询列表
+	 */
 	BookList = "/library/book/list",
-	// 获取书籍详情
-	BookInfo = "/library/book/info",
-	// 创建书籍
-	BookSave = "/library/book/save",
-	// 更新书籍
-	BookUpdate = "/library/book/update",
-	// 获取枚举信息列表
+	/**
+	 * 获取书籍相关配置信息
+	 */
 	BookEnumInfo = "/library/book/enum",
+	/**
+	 * 获取书籍详情
+	 */
+	BookInfo = "/library/book/info",
+	/**
+	 * 创建书籍
+	 */
+	BookSave = "/library/book/save",
+	/**
+	 * 更新书籍
+	 */
+	BookUpdate = "/library/book/update",
+	/**
+	 * 检查 ISBN 重复
+	 */
+	BookCheckISBN = "/library/book/check-isbn",
 	// 获取出版社列表
 	BookPublisherList = "/library/bookpublisher/list",
 	// 创建出版社
@@ -144,9 +173,16 @@ const apiLibraryBookUpdate = (data: LibraryBookSaveReq) =>
 		data,
 	});
 
-const apiLibraryBookEnumInfo = () =>
+const apiLibraryBookEnumInfo = (params?: URLSearchParams) =>
 	apiClient.get<LibraryBookEnumInfoRes>({
 		url: LibraryBookApi.BookEnumInfo,
+		params,
+	});
+
+const apiLibraryBookCheck = (params: URLSearchParams) =>
+	apiClient.get<LibraryBookCheckRes>({
+		url: LibraryBookApi.BookCheckISBN,
+		params,
 	});
 
 const apiLibraryBookPublisherList = () =>
@@ -205,6 +241,7 @@ export {
 	apiLibraryBookSave,
 	apiLibraryBookUpdate,
 	apiLibraryBookEnumInfo,
+	apiLibraryBookCheck,
 	apiLibraryBookPublisherList,
 	apiLibraryBookPublisherSave,
 	apiLibraryBookPublisherUpdate,

@@ -1,29 +1,35 @@
-import { DatePicker, Rate, Select } from "antd";
+import { DatePicker, Rate, Select, Steps } from "antd";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
 	apiLibraryBookCategorySave,
+	apiLibraryBookCheck,
 	apiLibraryBookEnumInfo,
 	apiLibraryBookPublisherSave,
 	apiLibraryBookSave,
 	apiLibraryBookSourceSave,
 	apiLibraryBookUpdate,
+	type LibraryBookCheckQuery,
+	type LibraryBookEnumQuery,
 	type LibraryBookSaveReq,
 } from "@/api/services/virtual-library/library-book.service";
 import { Icon } from "@/components/icon";
-import { ReadStatus } from "@/types/enum";
+import NameListField from "@/components/name-list-field";
+import { themeVars } from "@/theme/theme.css";
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
-import type { Book, BookCategory, BookPublisher, BookSource } from "../../types";
+import { cn, toURLSearchParams } from "@/utils";
+import type { BookCategory, BookPublisher, BookSource } from "../../types";
 import { useBookEnumContext } from "./book-enum-provider";
 
 export interface BookModalProps {
-	formValue: Book;
+	formValue: LibraryBookSaveReq;
 	title: string;
 	show: boolean;
 	onOk: VoidFunction;
@@ -41,27 +47,10 @@ const CURRENY = [
 	},
 ];
 
-const formatDate = (date: Date | undefined) => {
-	if (!date) {
-		return "";
-	}
-	return date
-		.toLocaleDateString("zh-CN", {
-			day: "2-digit",
-			month: "2-digit",
-			year: "numeric",
-		})
-		.replace(/\//g, "-");
-};
-
-const isValidDate = (date: Date | undefined) => {
-	if (!date) {
-		return false;
-	}
-	return !Number.isNaN(date.getTime());
-};
-
 export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalProps) {
+	const [step, setStep] = useState<number>(0);
+	// 名单（作者/译者）行内编辑进行中标记，编辑时拦截 Esc 避免直接关闭弹窗丢失改动
+	const nameEditingRef = useRef(false);
 	// Publisher
 	const [publisherSearch, setPublisherSearch] = useState("");
 	// Category
@@ -79,7 +68,7 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		setSourceList,
 	} = useBookEnumContext();
 
-	const form = useForm<Book>({
+	const form = useForm<LibraryBookSaveReq>({
 		defaultValues: formValue,
 	});
 
@@ -94,17 +83,20 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 	});
 
 	const getPublisherList = async () => {
-		const res = (await apiLibraryBookEnumInfo()).data.publisherList;
+		const res = (await apiLibraryBookEnumInfo(toURLSearchParams<LibraryBookEnumQuery>({ moduleType: "publisher" })))
+			.data.publisherList;
 		setPublisherList(res);
 	};
 
 	const getCategoryList = async () => {
-		const res = (await apiLibraryBookEnumInfo()).data.categoryList;
+		const res = (await apiLibraryBookEnumInfo(toURLSearchParams<LibraryBookEnumQuery>({ moduleType: "category" }))).data
+			.categoryList;
 		setCategoryList(res);
 	};
 
 	const getSourceList = async () => {
-		const res = (await apiLibraryBookEnumInfo()).data.sourceList;
+		const res = (await apiLibraryBookEnumInfo(toURLSearchParams<LibraryBookEnumQuery>({ moduleType: "source" }))).data
+			.sourceList;
 		setSourceList(res);
 	};
 
@@ -150,7 +142,29 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		form.setValue("sourceIds", value);
 	};
 
-	const onSubmit = async (values: Book) => {
+	const onStepChange = (value: number) => {
+		setStep(value);
+	};
+
+	const handleAuthorFieldRemove = (index: number) => {
+		const authorId = form.getValues(`authors.${index}`)?.id;
+		const deleteAuthorIds = form.getValues("deleteAuthorIds") || [];
+		authorsField.remove(index);
+		if (authorId !== undefined) {
+			form.setValue("deleteAuthorIds", [...deleteAuthorIds, authorId]);
+		}
+	};
+
+	const handleTranslatorFieldRemove = (index: number) => {
+		const translatorId = form.getValues(`translators.${index}`)?.id;
+		const deleteTranslatorIds = form.getValues("deleteTranslatorIds") || [];
+		translatorsField.remove(index);
+		if (translatorId !== undefined) {
+			form.setValue("deleteTranslatorIds", [...deleteTranslatorIds, translatorId]);
+		}
+	};
+
+	const onSubmit = async (values: LibraryBookSaveReq) => {
 		// 处理空值
 		for (const [key, value] of Object.entries(values)) {
 			if (value === undefined || value === "") {
@@ -166,426 +180,524 @@ export function BookModal({ formValue, title, show, onOk, onCancel }: BookModalP
 		onOk();
 	};
 
+	const handleNextStep = async () => {
+		const isValid = await form.trigger("isbn");
+		if (isValid) {
+			// 验证ISBN是否重复
+			const isRepeat = (
+				await apiLibraryBookCheck(toURLSearchParams<LibraryBookCheckQuery>({ isbn: form.getValues("isbn") }))
+			).data;
+			if (isRepeat) {
+				form.setError("isbn", { message: "ISBN 已存在" });
+			} else {
+				setStep(1);
+			}
+		}
+	};
+
 	useEffect(() => {
 		form.reset(formValue);
 	}, [formValue, form]);
 
+	useEffect(() => {
+		if (show) {
+			nameEditingRef.current = false;
+			formValue.id !== undefined ? setStep(1) : setStep(0);
+		}
+	}, [show]);
+
 	return (
 		<Dialog open={show} onOpenChange={(open) => !open && onCancel()}>
-			<DialogContent className="h-[calc(100vh-2rem)] min-w-[calc(100vw-2rem)]">
-				<DialogHeader>
-					<DialogTitle>{title}</DialogTitle>
+			<DialogContent
+				onEscapeKeyDown={(e) => {
+					// 行内编辑名单时，Esc 仅取消该项编辑，不关闭整个弹窗
+					if (nameEditingRef.current) e.preventDefault();
+				}}
+				className={cn(
+					"gap-0 overflow-hidden p-0 transition-all duration-300 ease-in-out grid-rows-[auto_auto_1fr_auto] [&>:last-child]:hidden",
+					step === 0 ? "h-[480px] w-full max-w-2xl" : "h-[calc(100vh-5rem)] min-w-[calc(100vw-5rem)]",
+				)}
+			>
+				<DialogHeader className="space-y-0 flex-row items-start justify-between border-b border-primary/10 px-6 py-4">
+					<div className="flex flex-col gap-1.5">
+						<span className="text-sm font-semibold tracking-[0.2em] text-primary">
+							{formValue.id !== undefined ? "EDIT COLLECTION" : "NEW COLLECTION"}
+						</span>
+						<DialogTitle className="text-xl">{title}</DialogTitle>
+					</div>
 				</DialogHeader>
-				<div className="-mx-4 no-scrollbar max-h-[80vh] overflow-y-auto px-4">
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-							<FormField
-								control={form.control}
-								name="isbn"
-								rules={{
-									required: "ISBN is required",
-									validate: (value) =>
-										value.length === 13 || value.length === 10 || "ISBN must be 13 or 10 digits long",
-								}}
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>ISBN</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
 
-							<FormField
-								control={form.control}
-								name="title"
-								rules={{ required: "Title is required" }}
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Title</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="contents">
+						<Steps
+							current={step}
+							onChange={onStepChange}
+							classNames={{
+								itemTitle: "text-sm text-gray-500",
+							}}
+							className="w-full justify-self-center max-w-2xl py-2 [&_.ant-steps-item-process_.ant-steps-item-title]:text-primary!"
+							titlePlacement="vertical"
+							items={[
+								{
+									title: "验证 ISBN",
+									disabled: true,
+								},
+								{
+									title: "完善信息",
+									disabled: true,
+								},
+							]}
+						/>
+						{step === 0 && (
+							<div
+								key="step-isbn"
+								className="animate-in fade-in-0 slide-in-from-bottom-3 flex flex-col items-center justify-center gap-6 px-6 duration-300"
+							>
+								<div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+									<Icon
+										icon="material-symbols:book-2-outline-rounded"
+										size={35}
+										color={themeVars.colors.palette.primary.default}
+									/>
+								</div>
+								<div className="flex flex-col items-center gap-1.5">
+									<span className="text-lg font-medium">先从 ISBN 开始</span>
+									<span className="text-sm text-gray-500">输入书籍 ISBN，我们将帮你快速建立藏书信息。</span>
+								</div>
+								<FormField
+									control={form.control}
+									name="isbn"
+									rules={{
+										required: "请输入 ISBN",
+										validate: (value) => value.length === 13 || value.length === 10 || "ISBN 需为 10 或 13 位",
+									}}
+									render={({ field }) => (
+										<FormItem className="w-full max-w-sm">
+											<FormLabel className="text-xs text-gray-500">ISBN</FormLabel>
+											<FormControl>
+												<Input {...field} placeholder="请输入 10 或 13 位 ISBN" />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<Button type="button" onClick={handleNextStep} className="bg-primary text-white hover:bg-primary-dark">
+									下一步
+								</Button>
+							</div>
+						)}
 
-							<FormField
-								control={form.control}
-								name="originalTitle"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Original Title</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="cover"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Cover</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<div className="space-y-2">
-								<p>Author</p>
-								{authorsField.fields.map((field, index) => (
+						{step === 1 && (
+							<div
+								key="step-detail"
+								className="no-scrollbar animate-in fade-in-0 slide-in-from-bottom-3 overflow-y-auto px-6 py-5 duration-300"
+							>
+								<div className="grid grid-cols-2 gap-x-6 gap-y-4">
 									<FormField
-										key={field.id}
 										control={form.control}
-										name={`authors.${index}.name`}
-										rules={{ required: "Author name is required" }}
+										name="isbn"
 										render={({ field }) => (
-											<FormItem className="grid grid-cols-4 items-center gap-4">
-												<FormLabel className="text-right">Author {index + 1}</FormLabel>
+											<FormItem className="cursor-not-allowed" aria-disabled>
+												<FormLabel className="text-xs text-gray-500">ISBN</FormLabel>
 												<FormControl>
-													<div className="col-span-3 flex items-center gap-2">
-														<Input {...field} placeholder="Enter Author" />
-														<Button type="button" onClick={() => authorsField.remove(index)}>
-															<Icon icon="material-symbols:remove-rounded" />
-														</Button>
-													</div>
+													<Input {...field} disabled readOnly unselectable="on" />
 												</FormControl>
-												<FormMessage className="col-span-4" />
 											</FormItem>
 										)}
 									/>
-								))}
-								<Button type="button" style={{ width: "100%" }} onClick={() => authorsField.append({ name: "" })}>
-									Add Author
-								</Button>
-							</div>
 
-							<div className="space-y-2">
-								<p>Translator</p>
-								{translatorsField.fields.map((field, index) => (
 									<FormField
-										key={field.id}
 										control={form.control}
-										name={`translators.${index}.name`}
-										rules={{ required: "Translator name is required" }}
+										name="title"
+										rules={{ required: "请输入标题" }}
 										render={({ field }) => (
-											<FormItem className="grid grid-cols-4 items-center gap-4">
-												<FormLabel className="text-right">Translator {index + 1}</FormLabel>
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">
+													标题<span className="text-red-500">*</span>
+												</FormLabel>
 												<FormControl>
-													<div className="col-span-3 flex items-center gap-2">
-														<Input {...field} placeholder="Enter Translator" />
-														<Button type="button" onClick={() => translatorsField.remove(index)}>
-															<Icon icon="material-symbols:remove-rounded" />
-														</Button>
-													</div>
+													<Input
+														className="bg-white md:text-base hover:border-primary"
+														{...field}
+														placeholder="请输入纸质书标题"
+													/>
 												</FormControl>
-												<FormMessage className="col-span-4" />
+												<FormMessage />
 											</FormItem>
 										)}
 									/>
-								))}
-								<Button type="button" style={{ width: "100%" }} onClick={() => translatorsField.append({ name: "" })}>
-									Add Translator
-								</Button>
+
+									<FormField
+										control={form.control}
+										name="originalTitle"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">原标题</FormLabel>
+												<FormControl>
+													<Input className="bg-white" {...field} placeholder="选填" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="authors"
+										render={() => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">作者 / 创作者</FormLabel>
+												<FormControl>
+													<NameListField
+														names={authorsField.fields}
+														placeholder="输入后回车添加"
+														editingRef={nameEditingRef}
+														onAdd={(name) => authorsField.append({ name })}
+														onChange={(index, name) =>
+															authorsField.update(index, { ...form.getValues(`authors.${index}`), name })
+														}
+														onRemove={handleAuthorFieldRemove}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="categoryId"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">分类</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														showSearch={{ optionFilterProp: "label", onSearch: onCategorySearch }}
+														onChange={onCategoryChange}
+														placeholder="请选择分类"
+														notFoundContent={
+															<div className="space-y-2">
+																<p>选择或创建新分类</p>
+																{categorySearch && (
+																	<Button
+																		type="button"
+																		variant={"outline"}
+																		onClick={() => onSaveBookCategory({ name: categorySearch })}
+																	>
+																		创建 <Badge>{categorySearch}</Badge>
+																	</Button>
+																)}
+															</div>
+														}
+														options={categoryList}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="readStatus"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">阅读状态</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														placeholder="请选择阅读状态"
+														options={readStatusList}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="sourceIds"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">来源</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														mode="multiple"
+														allowClear
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														showSearch={{ optionFilterProp: "label", onSearch: onSourceSearch }}
+														onChange={onSourceChange}
+														placeholder="请选择来源"
+														notFoundContent={
+															<div className="space-y-2">
+																<p>选择或创建新来源</p>
+																{sourceSearch && (
+																	<Button
+																		type="button"
+																		variant={"outline"}
+																		onClick={() => onSaveBookSource({ name: sourceSearch })}
+																	>
+																		创建 <Badge>{sourceSearch}</Badge>
+																	</Button>
+																)}
+															</div>
+														}
+														options={sourceList}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="publisherId"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">出版社</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														showSearch={{ optionFilterProp: "label", onSearch: onPublisherSearch }}
+														onChange={onPublisherChange}
+														placeholder="请选择出版社"
+														notFoundContent={
+															<div className="space-y-2">
+																<p>选择或创建新出版社</p>
+																{publisherSearch && (
+																	<Button
+																		type="button"
+																		variant={"outline"}
+																		onClick={() => onSaveBookPublisher({ name: publisherSearch })}
+																	>
+																		创建 <Badge>{publisherSearch}</Badge>
+																	</Button>
+																)}
+															</div>
+														}
+														options={publisherList}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="publishDate"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">出版日期</FormLabel>
+												<FormControl>
+													<DatePicker
+														{...field}
+														classNames={{
+															root: "rounded-lg",
+														}}
+														value={dayjs(field.value || "2025-06-01")}
+														onChange={(_, dateString) => {
+															form.setValue("publishDate", dateString || "");
+														}}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="binding"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">装帧</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														placeholder="请选择装帧"
+														options={bindingTypeList}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="edition"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">版次</FormLabel>
+												<FormControl>
+													<Input type="number" className="bg-white" {...field} placeholder="选填" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="pages"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">页数</FormLabel>
+												<FormControl>
+													<Input type="number" className="bg-white" {...field} placeholder="选填" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="currency"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">币种</FormLabel>
+												<FormControl>
+													<Select
+														{...field}
+														styles={{
+															popup: {
+																root: {
+																	pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
+																},
+															},
+														}}
+														placeholder="请选择币种"
+														options={CURRENY}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="price"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">价格</FormLabel>
+												<FormControl>
+													<Input type="number" className="bg-white" {...field} placeholder="选填" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="translators"
+										render={() => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">译者</FormLabel>
+												<FormControl>
+													<NameListField
+														names={translatorsField.fields}
+														placeholder="输入后回车添加"
+														editingRef={nameEditingRef}
+														onAdd={(name) => translatorsField.append({ name })}
+														onChange={(index, name) =>
+															translatorsField.update(index, { ...form.getValues(`translators.${index}`), name })
+														}
+														onRemove={handleTranslatorFieldRemove}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="rating"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">评分</FormLabel>
+												<FormControl>
+													<Rate {...field} />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="cover"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-gray-500">封面链接</FormLabel>
+												<FormControl>
+													<Input {...field} className="bg-white" placeholder="选填" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+
+									<FormField
+										control={form.control}
+										name="overview"
+										render={({ field }) => (
+											<FormItem className="col-span-2">
+												<FormLabel className="text-xs text-gray-500">补充说明</FormLabel>
+												<FormControl>
+													<Textarea {...field} className="bg-white" placeholder="记录一些关于它的信息…" />
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+								</div>
 							</div>
+						)}
 
-							<FormField
-								control={form.control}
-								name="publisherId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Publisher</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto",
-														},
-													},
-												}}
-												showSearch={{ optionFilterProp: "label", onSearch: onPublisherSearch }}
-												onChange={onPublisherChange}
-												placeholder="Select Publisher"
-												notFoundContent={
-													<div className="space-y-2">
-														<p>Select an option or create one</p>
-														{publisherSearch && (
-															<Button
-																type="button"
-																variant={"outline"}
-																onClick={() => onSaveBookPublisher({ name: publisherSearch })}
-															>
-																Create <Badge>{publisherSearch}</Badge>
-															</Button>
-														)}
-													</div>
-												}
-												options={publisherList}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="publishDate"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Publisher Date</FormLabel>
-										<FormControl>
-											<DatePicker
-												{...field}
-												value={dayjs(field.value || "2025-06-01")}
-												onChange={(_, dateString) => {
-													form.setValue("publishDate", dateString || "");
-												}}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="overview"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Content</FormLabel>
-										<FormControl>
-											<Textarea {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="edition"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Edition</FormLabel>
-										<FormControl>
-											<Input type="number" {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="binding"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Binding</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
-														},
-													},
-												}}
-												placeholder="Select Binding"
-												options={bindingTypeList}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="pages"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Pages</FormLabel>
-										<FormControl>
-											<Input type="number" {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="currency"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Currency</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
-														},
-													},
-												}}
-												placeholder="Select Currency"
-												options={CURRENY}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="price"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Price</FormLabel>
-										<FormControl>
-											<Input type="number" {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="categoryId"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Category</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
-														},
-													},
-												}}
-												showSearch={{ optionFilterProp: "label", onSearch: onCategorySearch }}
-												onChange={onCategoryChange}
-												placeholder="Select Category"
-												notFoundContent={
-													<div className="space-y-2">
-														<p>Select an option or create one</p>
-														{categorySearch && (
-															<Button
-																type="button"
-																variant={"outline"}
-																onClick={() => onSaveBookCategory({ name: categorySearch })}
-															>
-																Create <Badge>{categorySearch}</Badge>
-															</Button>
-														)}
-													</div>
-												}
-												options={categoryList}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="sourceIds"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Sources</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												mode="multiple"
-												allowClear
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
-														},
-													},
-												}}
-												showSearch={{ optionFilterProp: "label", onSearch: onSourceSearch }}
-												onChange={onSourceChange}
-												placeholder="Select Sources"
-												notFoundContent={
-													<div className="space-y-2">
-														<p>Select an option or create one</p>
-														{sourceSearch && (
-															<Button
-																type="button"
-																variant={"outline"}
-																onClick={() => onSaveBookSource({ name: sourceSearch })}
-															>
-																Create <Badge>{sourceSearch}</Badge>
-															</Button>
-														)}
-													</div>
-												}
-												options={sourceList}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="readStatus"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Status</FormLabel>
-										<FormControl>
-											<Select
-												{...field}
-												styles={{
-													popup: {
-														root: {
-															pointerEvents: "auto", // fix: 修复下拉列表点击事件无效问题
-														},
-													},
-												}}
-												placeholder="Select Status"
-												options={readStatusList}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="rating"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Rating</FormLabel>
-										<FormControl>
-											<Rate {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-
-							<DialogFooter>
+						{step === 1 && (
+							<DialogFooter className="flex-row justify-end gap-2 border-t border-success-dark/10 px-6 py-4">
 								<Button type="button" variant={"outline"} onClick={onCancel}>
-									Cancel
+									取消
 								</Button>
-								<Button type="submit" variant={"default"}>
-									Confirm
+								<Button type="submit" className="bg-primary text-white hover:bg-primary-dark">
+									加入收藏
 								</Button>
 							</DialogFooter>
-						</form>
-					</Form>
-				</div>
+						)}
+					</form>
+				</Form>
+
+				<DialogClose className="absolute right-5 top-5 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary-dark hover:text-white">
+					<X className="size-4" />
+					<span className="sr-only">关闭</span>
+				</DialogClose>
 			</DialogContent>
 		</Dialog>
 	);

@@ -202,12 +202,28 @@ const mockLibraryBookSave = http.post(`${apiPrefix}${LibraryBookApi.BookSave}`, 
 /** 模拟更新图书 */
 const mockLibraryBookUpdate = http.put(`${apiPrefix}${LibraryBookApi.BookUpdate}`, async ({ request }) => {
 	// 更新数据
-	await libraryDatabase.put(libraryStore.Book, await request.json());
+	// await libraryDatabase.put(libraryStore.Book, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
 			code: ResultEnum.SUCCESS,
 			msg: "success",
+		},
+		{
+			status: 200,
+		},
+	);
+});
+
+const mockLibraryBookCheck = http.get(`${apiPrefix}${LibraryBookApi.BookCheckISBN}`, async ({ request }) => {
+	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
+	const url = new URL(request.url);
+	const isbn = url.searchParams.get("isbn");
+	return HttpResponse.json<Result>(
+		{
+			code: ResultEnum.SUCCESS,
+			msg: "success",
+			data: isbn === "9787121316388",
 		},
 		{
 			status: 200,
@@ -404,6 +420,7 @@ export {
 	mockLibraryBookList,
 	mockLibraryBookSave,
 	mockLibraryBookUpdate,
+	mockLibraryBookCheck,
 	mockLibraryBookEnumInfo,
 	mockLibraryBookPublisherList,
 	mockLibraryBookPublisherSave,
