@@ -85,7 +85,7 @@ export interface LibraryBookPublisherListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookPublisherSaveReq[];
+		list: BookPublisher[];
 	};
 }
 
@@ -135,12 +135,18 @@ export enum LibraryBookApi {
 	 * 检查 ISBN 重复
 	 */
 	BookCheckISBN = "/library/book/check-isbn",
-	// 获取出版社列表
-	BookPublisherList = "/library/bookpublisher/list",
-	// 创建出版社
-	BookPublisherSave = "/library/bookpublisher/save",
-	// 更新出版社
-	BookPublisherUpdate = "/library/bookpublisher/update",
+	/**
+	 * 获取出版社列表
+	 */
+	BookPublisherList = "/library/book/publisher/list",
+	/**
+	 * 创建出版社
+	 */
+	BookPublisherSave = "/library/book/publisher/save",
+	/**
+	 * 更新出版社
+	 */
+	BookPublisherUpdate = "/library/book/publisher/update",
 	/**
 	 * 获取书籍分类列表
 	 */

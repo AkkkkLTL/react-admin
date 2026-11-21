@@ -47,6 +47,8 @@ export interface BookCategory {
 export interface BookPublisher {
 	id?: number;
 	name: string;
+	relationCount?: number;
+	updateTime?: string;
 }
 
 export interface BookSource {

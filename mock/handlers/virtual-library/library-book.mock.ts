@@ -188,6 +188,21 @@ var mockBookCategory: LibraryBookCategoryListRes["page"]["list"] = [
 	},
 ];
 
+var mockBookPublisher: LibraryBookPublisherListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "电子工业出版社",
+		relationCount: 10,
+		updateTime: "2026-11-05T09:42:55",
+	},
+	{
+		id: 2,
+		name: "上海交通大学出版社",
+		relationCount: 0,
+		updateTime: "2026-11-05T09:42:55",
+	},
+];
+
 const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async ({ request }) => {
 	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
 	const url = new URL(request.url);
@@ -278,7 +293,7 @@ const mockLibraryBookEnumInfo = http.get(`${apiPrefix}${LibraryBookApi.BookEnumI
 
 /** 模拟获取出版社列表 */
 const mockLibraryBookPublisherList = http.get(`${apiPrefix}${LibraryBookApi.BookPublisherList}`, async () => {
-	const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
+	// const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
 	return HttpResponse.json<Result & LibraryBookPublisherListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -288,7 +303,7 @@ const mockLibraryBookPublisherList = http.get(`${apiPrefix}${LibraryBookApi.Book
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: publishers || [],
+				list: mockBookPublisher || [],
 			},
 		},
 		{
@@ -302,7 +317,7 @@ const mockLibraryBookPublisherSave = http.post(
 	`${apiPrefix}${LibraryBookApi.BookPublisherSave}`,
 	async ({ request }) => {
 		// 添加数据
-		await libraryDatabase.add(libraryStore.BookPublisher, await request.json());
+		// await libraryDatabase.add(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -321,7 +336,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookPublisherUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await libraryDatabase.put(libraryStore.BookPublisher, await request.json());
+		// await libraryDatabase.put(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
