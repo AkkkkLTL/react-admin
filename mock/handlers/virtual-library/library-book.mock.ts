@@ -175,6 +175,19 @@ var mockBookSource: LibraryBookSourceListRes["page"]["list"] = [
 	},
 ];
 
+var mockBookCategory: LibraryBookCategoryListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "计算机",
+		relationCount: 10,
+	},
+	{
+		id: 2,
+		name: "图形学",
+		relationCount: 0,
+	},
+];
+
 const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async ({ request }) => {
 	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
 	const url = new URL(request.url);
@@ -324,7 +337,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 
 /** 模拟获取分类列表 */
 const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookCategoryList}`, async () => {
-	const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
+	// const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
 	return HttpResponse.json<Result & LibraryBookCategoryListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -334,7 +347,7 @@ const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookC
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: categories || [],
+				list: mockBookCategory || [],
 			},
 		},
 		{
@@ -346,7 +359,7 @@ const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookC
 /** 模拟保存分类 */
 const mockLibraryBookCategorySave = http.post(`${apiPrefix}${LibraryBookApi.BookCategorySave}`, async ({ request }) => {
 	// 添加数据
-	await libraryDatabase.add(libraryStore.BookCategory, await request.json());
+	// await libraryDatabase.add(libraryStore.BookCategory, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -364,7 +377,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookCategoryUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await libraryDatabase.put(libraryStore.BookCategory, await request.json());
+		// await libraryDatabase.put(libraryStore.BookCategory, await request.json());
 
 		return HttpResponse.json<Result>(
 			{

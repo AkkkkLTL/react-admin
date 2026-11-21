@@ -41,6 +41,7 @@ export interface BookCharacter {
 export interface BookCategory {
 	id?: number;
 	name: string;
+	relationCount?: number;
 }
 
 export interface BookPublisher {

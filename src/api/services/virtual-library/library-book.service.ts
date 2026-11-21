@@ -95,7 +95,7 @@ export interface LibraryBookCategoryListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookCategorySaveReq[];
+		list: BookCategory[];
 	};
 }
 
@@ -141,17 +141,29 @@ export enum LibraryBookApi {
 	BookPublisherSave = "/library/bookpublisher/save",
 	// 更新出版社
 	BookPublisherUpdate = "/library/bookpublisher/update",
-	// 获取分类列表
-	BookCategoryList = "/library/bookcategory/list",
-	// 创建分类
-	BookCategorySave = "/library/bookcategory/save",
-	// 更新分类
-	BookCategoryUpdate = "/library/bookcategory/update",
-	// 获取阅读来源列表
+	/**
+	 * 获取书籍分类列表
+	 */
+	BookCategoryList = "/library/book/category/list",
+	/**
+	 * 创建书籍分类
+	 */
+	BookCategorySave = "/library/book/category/save",
+	/**
+	 * 更新书籍分类
+	 */
+	BookCategoryUpdate = "/library/book/category/update",
+	/**
+	 * 获取阅读来源列表
+	 */
 	BookSourceList = "/library/book/source/list",
-	// 创建阅读来源
+	/**
+	 * 创建阅读来源
+	 */
 	BookSourceSave = "/library/book/source/save",
-	// 更新阅读来源
+	/**
+	 * 更新阅读来源
+	 */
 	BookSourceUpdate = "/library/book/source/update",
 }
 
