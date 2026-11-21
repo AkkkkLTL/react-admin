@@ -41,16 +41,21 @@ export interface BookCharacter {
 export interface BookCategory {
 	id?: number;
 	name: string;
+	relationCount?: number;
 }
 
 export interface BookPublisher {
 	id?: number;
 	name: string;
+	relationCount?: number;
+	updateTime?: string;
 }
 
 export interface BookSource {
 	id?: number;
 	name: string;
+	relationCount?: number;
+	updateTime?: string;
 }
 
 export interface EBookFilterParams {

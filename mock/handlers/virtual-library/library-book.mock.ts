@@ -160,6 +160,49 @@ var mockBookEnum: LibraryBookEnumInfoRes["data"] = {
 	],
 };
 
+var mockBookSource: LibraryBookSourceListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "个人藏书",
+		relationCount: 10,
+		updateTime: "2026-11-05T09:42:55",
+	},
+	{
+		id: 2,
+		name: "微信公众号",
+		relationCount: 0,
+		updateTime: "2026-11-05T09:42:55",
+	},
+];
+
+var mockBookCategory: LibraryBookCategoryListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "计算机",
+		relationCount: 10,
+	},
+	{
+		id: 2,
+		name: "图形学",
+		relationCount: 0,
+	},
+];
+
+var mockBookPublisher: LibraryBookPublisherListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "电子工业出版社",
+		relationCount: 10,
+		updateTime: "2026-11-05T09:42:55",
+	},
+	{
+		id: 2,
+		name: "上海交通大学出版社",
+		relationCount: 0,
+		updateTime: "2026-11-05T09:42:55",
+	},
+];
+
 const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async ({ request }) => {
 	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
 	const url = new URL(request.url);
@@ -250,7 +293,7 @@ const mockLibraryBookEnumInfo = http.get(`${apiPrefix}${LibraryBookApi.BookEnumI
 
 /** 模拟获取出版社列表 */
 const mockLibraryBookPublisherList = http.get(`${apiPrefix}${LibraryBookApi.BookPublisherList}`, async () => {
-	const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
+	// const publishers = (await libraryDatabase.getAll(libraryStore.BookPublisher)) as LibraryBookPublisherSaveReq[];
 	return HttpResponse.json<Result & LibraryBookPublisherListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -260,7 +303,7 @@ const mockLibraryBookPublisherList = http.get(`${apiPrefix}${LibraryBookApi.Book
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: publishers || [],
+				list: mockBookPublisher || [],
 			},
 		},
 		{
@@ -274,7 +317,7 @@ const mockLibraryBookPublisherSave = http.post(
 	`${apiPrefix}${LibraryBookApi.BookPublisherSave}`,
 	async ({ request }) => {
 		// 添加数据
-		await libraryDatabase.add(libraryStore.BookPublisher, await request.json());
+		// await libraryDatabase.add(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -293,7 +336,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookPublisherUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await libraryDatabase.put(libraryStore.BookPublisher, await request.json());
+		// await libraryDatabase.put(libraryStore.BookPublisher, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -309,7 +352,7 @@ const mockLibraryBookPublisherUpdate = http.put(
 
 /** 模拟获取分类列表 */
 const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookCategoryList}`, async () => {
-	const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
+	// const categories = (await libraryDatabase.getAll(libraryStore.BookCategory)) as LibraryBookCategorySaveReq[];
 	return HttpResponse.json<Result & LibraryBookCategoryListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -319,7 +362,7 @@ const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookC
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: categories || [],
+				list: mockBookCategory || [],
 			},
 		},
 		{
@@ -331,7 +374,7 @@ const mockLibraryBookCategoryList = http.get(`${apiPrefix}${LibraryBookApi.BookC
 /** 模拟保存分类 */
 const mockLibraryBookCategorySave = http.post(`${apiPrefix}${LibraryBookApi.BookCategorySave}`, async ({ request }) => {
 	// 添加数据
-	await libraryDatabase.add(libraryStore.BookCategory, await request.json());
+	// await libraryDatabase.add(libraryStore.BookCategory, await request.json());
 
 	return HttpResponse.json<Result>(
 		{
@@ -349,7 +392,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 	`${apiPrefix}${LibraryBookApi.BookCategoryUpdate}`,
 	async ({ request }) => {
 		// 更新数据
-		await libraryDatabase.put(libraryStore.BookCategory, await request.json());
+		// await libraryDatabase.put(libraryStore.BookCategory, await request.json());
 
 		return HttpResponse.json<Result>(
 			{
@@ -365,7 +408,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 
 /** 模拟获取阅读来源列表 */
 const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSourceList}`, async () => {
-	const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
+	// const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
 	return HttpResponse.json<Result & LibraryBookSourceListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -375,7 +418,7 @@ const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSou
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: sources || [],
+				list: mockBookSource || [],
 			},
 		},
 		{

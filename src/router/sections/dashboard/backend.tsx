@@ -74,13 +74,19 @@ export const convertToRoute = (items: MenuTree[], parent?: MenuTree): RouteObjec
 		// if menu, create route
 		if (item.type === PermissionType.MENU) {
 			const props = generateProps(item);
-
-			if (item.children && item.children.length > 0) {
-				const children = item.children;
+			const children = item.children || [];
+			if (children.length > 0) {
+				const firstChild = children[0];
 				routes.push({
 					path: getRoutePath(item.path, parent?.path),
 					element: Component(item.component, props),
-					children: [...convertToRoute(children, item)],
+					children: [
+						{
+							index: true,
+							element: <Navigate to={getRoutePath(firstChild.path, item.path)} replace />,
+						},
+						...convertToRoute(children, item),
+					],
 				});
 			} else {
 				routes.push({

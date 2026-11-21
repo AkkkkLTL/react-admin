@@ -4,7 +4,7 @@ import {
 	apiLibraryBookPublisherSave,
 	apiLibraryBookPublisherUpdate,
 	type LibraryBookPublisherSaveReq,
-} from "@/api/services/library-book.service";
+} from "@/api/services/virtual-library/library-book.service";
 import { Button } from "@/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/ui/form";
@@ -50,7 +50,7 @@ export function PublisherModal({ formValue, title, show, onOk, onCancel }: Publi
 							rules={{ required: "publisher name is required!" }}
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Publisher Name</FormLabel>
+									<FormLabel>出版社名称</FormLabel>
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
@@ -61,10 +61,10 @@ export function PublisherModal({ formValue, title, show, onOk, onCancel }: Publi
 
 						<DialogFooter>
 							<Button type="button" variant={"outline"} onClick={onCancel}>
-								Cancel
+								取消
 							</Button>
 							<Button type="submit" variant={"default"}>
-								Confirm
+								保存
 							</Button>
 						</DialogFooter>
 					</form>

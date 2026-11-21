@@ -1,4 +1,4 @@
-import { AppRouteObject, RouteMeta } from "./types";
+import type { AppRouteObject, RouteMeta } from "./types";
 
 /**
  * 菜单过滤和排序
@@ -7,18 +7,16 @@ import { AppRouteObject, RouteMeta } from "./types";
  * @param items 树形路由数组
  * @returns 过滤后的树形路由数组
  */
-export function menuFilter(items:AppRouteObject[]) {
-  return (
-    items
-    .filter((item) => {
-      const show = item.meta?.key;
-      if (show && item.children) {
-        item.children = menuFilter(item.children);
-      }
-      return show;
-    })
-    .sort((itemA, itemB) => (itemA.order || Number.POSITIVE_INFINITY) - (itemB.order || Number.POSITIVE_INFINITY))
-  )
+export function menuFilter(items: AppRouteObject[]) {
+	return items
+		.filter((item) => {
+			const show = item.meta?.key;
+			if (show && item.children) {
+				item.children = menuFilter(item.children);
+			}
+			return show;
+		})
+		.sort((itemA, itemB) => (itemA.order || Number.POSITIVE_INFINITY) - (itemB.order || Number.POSITIVE_INFINITY));
 }
 
 /**
@@ -26,16 +24,16 @@ export function menuFilter(items:AppRouteObject[]) {
  * @returns 树形路由数组
  */
 export function getRoutesFromModules() {
-  const menuModules:AppRouteObject[] = [];
+	const menuModules: AppRouteObject[] = [];
 
-  const modules = import.meta.glob("./routes/modules/*.tsx", {eager:true});
-  for (const key in modules) {
-    const mod = (modules as any)[key].default || {};
-    const modList = Array.isArray(mod) ? [...mod] : [mod];
-    menuModules.push(...modList);
-  }
+	const modules = import.meta.glob("./routes/modules/*.tsx", { eager: true });
+	for (const key in modules) {
+		const mod = (modules as any)[key].default || {};
+		const modList = Array.isArray(mod) ? [...mod] : [mod];
+		menuModules.push(...modList);
+	}
 
-  return menuModules;
+	return menuModules;
 }
 
 /**
@@ -45,9 +43,9 @@ export function getRoutesFromModules() {
  * @example
  * 输入参数：
  * [
- *  {order:1, path:"xx", element:ReactNode, meta:{key:"xx", label:"xx", icon:"xx"}, 
+ *  {order:1, path:"xx", element:ReactNode, meta:{key:"xx", label:"xx", icon:"xx"},
  *  children:[{order:1, path:"childrenpath", element:ReactNode, meta:{key:"childKey", label:"childLabel", icon:"childIcon2”}}]},
- *  {order:2, path:"xx2", element:ReactNode, meta:{key:"xx2", label:"xx2", icon:"xx2"}, 
+ *  {order:2, path:"xx2", element:ReactNode, meta:{key:"xx2", label:"xx2", icon:"xx2"},
  *  children:[{order:1, path:"childrenpath2", element:ReactNode, meta:{key:"childKey2", label:"childLabel2", icon:"childIcon2“}}]}
  * ]
  * 返回值：
@@ -58,15 +56,15 @@ export function getRoutesFromModules() {
  *  {key:"childKey2, label:"childLabel2", icon:"childIcon2"}
  * ]
  */
-export function flattenMenuRoutes(routes:AppRouteObject[]) {
-  return routes.reduce<RouteMeta[]>((prev, curr) => {
-    const { meta, children } = curr;
-    if (meta) {
-      prev.push(meta);
-    }
-    if (children) {
-      prev.push(...flattenMenuRoutes(children));
-    }
-    return prev;
-  }, []);
+export function flattenMenuRoutes(routes: AppRouteObject[]) {
+	return routes.reduce<RouteMeta[]>((prev, curr) => {
+		const { meta, children } = curr;
+		if (meta) {
+			prev.push(meta);
+		}
+		if (children) {
+			prev.push(...flattenMenuRoutes(children));
+		}
+		return prev;
+	}, []);
 }

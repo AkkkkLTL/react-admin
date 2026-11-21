@@ -1,225 +1,113 @@
-import type { TableColumnsType } from "antd";
-import Table from "antd/es/table";
 import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
 import {
 	apiLibraryBookCategoryList,
-	apiLibraryBookCategorySave,
-	apiLibraryBookCategoryUpdate,
 	type LibraryBookCategorySaveReq,
-} from "@/api/services/library-book.service";
+} from "@/api/services/virtual-library/library-book.service";
+import { useDataFilter } from "@/hooks/use-data-filter";
+import { themeVars } from "@/theme/theme.css";
+import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
-import { Card, CardContent, CardHeader } from "@/ui/card";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/ui/form";
+import { Card, CardContent, CardFooter, CardHeader } from "@/ui/card";
 import { Input } from "@/ui/input";
+import { rgbAlpha } from "@/utils/theme";
+import type { BookCategory } from "../../types";
+import { CategoryModal, type CategoryModalProps } from "./category-modal";
+import { CategoryTable } from "./category-table";
 
-interface DataType extends LibraryBookCategorySaveReq {
-	key: string;
-}
-
-const DEFAULT_BOOK_CATEGORY_VALUE: DataType = {
-	key: "",
+const DEFAULT_BOOK_CATEGORY_VALUE: LibraryBookCategorySaveReq = {
 	id: undefined,
 	name: "",
 };
 
 export default function BookCategoryListPage() {
-	const [categoryList, setCategoryList] = useState<DataType[]>([]);
-	const [count, setCount] = useState(0);
-	const [editingKey, setEditingKey] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [categoryList, setCategoryList] = useState<LibraryBookCategorySaveReq[]>([]);
 	const [refresh, setRefresh] = useState(0);
-
-	const form = useForm<{ categories: DataType[] }>({
-		defaultValues: {
-			categories: categoryList,
+	const [count, setCount] = useState(0);
+	const [bookCategoryModalProps, setBookCategoryModalProps] = useState<CategoryModalProps>({
+		formValue: { ...DEFAULT_BOOK_CATEGORY_VALUE },
+		title: "New",
+		show: false,
+		onOk: () => {
+			setBookCategoryModalProps((prev) => ({ ...prev, show: false }));
+			setRefresh(Date.now());
 		},
-	});
-
-	const categories = useFieldArray({
-		control: form.control,
-		name: "categories",
+		onCancel: () => {
+			setBookCategoryModalProps((prev) => ({ ...prev, show: false }));
+		},
 	});
 
 	useEffect(() => {
+		setLoading(true);
 		getBookCategoryList();
 	}, [refresh]);
 
-	const getBookCategoryList = async () => {
-		const dataList = ((await apiLibraryBookCategoryList()).page.list.map((item, index) => ({
-			...item,
-			key: index.toString() || "",
-		})) || []) as DataType[];
-		form.setValue("categories", dataList);
-		setCategoryList(dataList);
-		setCount(dataList.length);
-		setEditingKey("");
-	};
-
-	const isEditing = (record: DataType) => record.key === editingKey;
-
-	const columns = [
-		{
-			title: "No",
-			render: (_: string, record: DataType, index: number) => index + 1,
-			width: 50,
-		},
-		{
-			title: "Name",
-			dataIndex: "name",
-			width: "30%",
-			editable: true,
-		},
-		{
-			title: "operation",
-			dataIndex: "operation",
-			render: (_: any, record: DataType) => {
-				const editable = isEditing(record);
-				return editable ? (
-					<span className="space-x-2">
-						<Button type="button" onClick={() => onSave(record.key)}>
-							Save
-						</Button>
-						<Button type="button" onClick={onCancel}>
-							Cancel
-						</Button>
-					</span>
-				) : (
-					<Button type="button" disabled={editingKey !== ""} onClick={() => onEdit(record)}>
-						Edit
-					</Button>
-				);
-			},
-		},
-	];
-
-	const onCreate = () => {
-		const newData: DataType = {
-			...DEFAULT_BOOK_CATEGORY_VALUE,
-			key: count.toString(),
-		};
-		categories.append({
-			...DEFAULT_BOOK_CATEGORY_VALUE,
-			key: count.toString(),
-		});
-		setCategoryList([...categoryList, newData]);
-		setCount((prev) => prev + 1);
-	};
-
-	const onEdit = (record: Partial<DataType>) => {
-		setEditingKey(record.key || "");
-	};
-
-	const onSave = async (key: React.Key) => {
-		try {
-			const newData = [...categoryList];
-			const index = newData.findIndex((item) => item.key === key);
-
-			if (index > -1) {
-				if (form.getValues(`categories.${index}`).name === "") {
-					form.trigger(`categories.${index}`);
-					return;
-				}
-				const item = newData[index];
-				newData.splice(index, 1, { ...item, ...form.getValues(`categories.${index}`) });
-				if (newData[index].id === undefined) {
-					await apiLibraryBookCategorySave({
-						name: newData[index].name,
-					});
-				} else {
-					await apiLibraryBookCategoryUpdate({
-						id: newData[index].id,
-						name: newData[index].name,
-					});
-				}
-				// setCategoryList(newData);
-				// setEditingKey("");
-				setRefresh(Date.now());
-			} else {
-				newData.push(form.getValues(`categories.${index}`));
-				setCount((prev) => prev + 1);
-				setCategoryList(newData);
-				setEditingKey("");
-			}
-		} catch (error) {
-			console.log("Validate Failed:", error);
-		}
-	};
-
-	const onCancel = () => {
-		setEditingKey("");
-	};
-
-	const mergedColumns = columns.map<TableColumnsType<DataType>[number]>((col) => {
-		if (!col.editable) {
-			return col;
-		}
-		return {
-			...col,
-			onCell: (record: DataType, index?: number) => ({
-				record,
-				index: index || 0,
-				editing: isEditing(record),
-				dataIndex: col.dataIndex,
-				title: col.title,
-				inputType: col.dataIndex === "id" ? "number" : "text",
-			}),
-		};
+	const { searchValue, handleInputChange, filteredData } = useDataFilter<BookCategory>({
+		dataSource: categoryList,
 	});
 
-	const EditableCellRender = (props: EditableCellProps) => {
-		const { editing, dataIndex, title, inputType, record, index, children, ...restProps } = props;
+	const getBookCategoryList = async () => {
+		const res = ((await apiLibraryBookCategoryList()).page.list || []) as LibraryBookCategorySaveReq[];
+		setCategoryList(res);
+		setCount(res.length);
+		setLoading(false);
+	};
 
-		return (
-			<td {...restProps}>
-				{record && editing ? (
-					<FormField
-						control={form.control}
-						name={`categories.${index}.${dataIndex}`}
-						rules={{ required: `Please Input ${title}!` }}
-						render={({ field }) => (
-							<FormItem>
-								<FormControl>
-									{inputType === "number" ? <Input type="number" {...field} /> : <Input {...field} />}
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				) : (
-					children
-				)}
-			</td>
-		);
+	const onCreate = () => {
+		setBookCategoryModalProps((prev) => ({
+			...prev,
+			show: true,
+			title: "Create New",
+			formValue: {
+				...DEFAULT_BOOK_CATEGORY_VALUE,
+			},
+		}));
+	};
+
+	const onEdit = (formValue: LibraryBookCategorySaveReq) => {
+		setBookCategoryModalProps((prev) => ({
+			...prev,
+			show: true,
+			title: "Edit",
+			formValue,
+		}));
 	};
 
 	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-center justify-between">
-					<div>图书分类列表</div>
-					<Button onClick={onCreate}>New</Button>
+		<Card className="gap-0 py-0">
+			<CardHeader className="px-0 py-4">
+				<div className="flex items-center justify-between px-4">
+					<div className="flex flex-col items-start gap-1">
+						<div className="flex flex-row gap-2 items-center">
+							<div className="text-base font-bold">纸质书分类</div>
+							<Badge
+								variant="default"
+								className="text-gray-500"
+								style={{ background: rgbAlpha(themeVars.colors.palette.gray["500Channel"], 0.1) }}
+							>
+								{count || 0}
+							</Badge>
+						</div>
+						<span className="text-xs text-gray-500">管理图书分类标签，方便归类和筛选。</span>
+					</div>
+					<div className="flex flex-row gap-4 items-center">
+						<Input value={searchValue} onChange={handleInputChange} placeholder="搜索分类名称" />
+						<Button className="bg-primary text-white" onClick={onCreate}>
+							{"+ "} 新增分类
+						</Button>
+					</div>
 				</div>
 			</CardHeader>
-			<CardContent>
-				<Form {...form}>
-					<Table
-						bordered
-						pagination={false}
-						components={{ body: { cell: EditableCellRender } }}
-						dataSource={categoryList}
-						columns={mergedColumns}
-					/>
-				</Form>
+			<CardContent className="px-0">
+				<CategoryTable loading={loading} dataSource={filteredData} operations={{ onEdit }} />
 			</CardContent>
+			<CardFooter className="border-t px-4 [.border-t]:pt-4 pb-4">
+				<div className="w-full flex flex-row justify-between items-center">
+					<span className="text-xs text-gray-500">{`共 ${count || 0} 个分类 · 已显示全部`}</span>
+					<span className="text-xs text-gray-500">灰色「删除」表示条目仍有关联书籍</span>
+				</div>
+			</CardFooter>
+			<CategoryModal {...bookCategoryModalProps} />
 		</Card>
 	);
-}
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-	editing: boolean;
-	dataIndex: keyof DataType;
-	title: any;
-	inputType: "number" | "text";
-	record: DataType;
-	index: number;
 }

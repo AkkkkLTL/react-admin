@@ -11,6 +11,7 @@ import {
 	type LibraryBookSaveReq,
 } from "@/api/services/virtual-library/library-book.service";
 import { Icon } from "@/components/icon";
+import { useRouter } from "@/router/hooks";
 import { themeVars } from "@/theme/theme.css";
 import { ReadStatus } from "@/types/enum";
 import { Badge } from "@/ui/badge";
@@ -88,6 +89,8 @@ export default function BookListPage() {
 			setBookModalProps((prev) => ({ ...prev, formValue: structuredClone(DEFAULT_BOOK_VALUE), show: false }));
 		},
 	});
+
+	const { replace } = useRouter();
 
 	const itemRender: PaginationProps["itemRender"] = (_, type, originalElement) => {
 		if (type === "prev") {
@@ -288,6 +291,9 @@ export default function BookListPage() {
 								</div>
 								<Button className="bg-primary text-white" onClick={onCreate}>
 									{"+ "} 新增纸质书
+								</Button>
+								<Button type="button" variant={"outline"} size={"icon"} onClick={() => replace("/library/book/config")}>
+									<Icon icon="hugeicons:configuration-02" />
 								</Button>
 							</div>
 						</div>

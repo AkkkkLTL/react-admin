@@ -85,7 +85,7 @@ export interface LibraryBookPublisherListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookPublisherSaveReq[];
+		list: BookPublisher[];
 	};
 }
 
@@ -95,7 +95,7 @@ export interface LibraryBookCategoryListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookCategorySaveReq[];
+		list: BookCategory[];
 	};
 }
 
@@ -105,7 +105,7 @@ export interface LibraryBookSourceListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookSourceSaveReq[];
+		list: BookSource[];
 	};
 }
 //#endregion
@@ -135,24 +135,42 @@ export enum LibraryBookApi {
 	 * 检查 ISBN 重复
 	 */
 	BookCheckISBN = "/library/book/check-isbn",
-	// 获取出版社列表
-	BookPublisherList = "/library/bookpublisher/list",
-	// 创建出版社
-	BookPublisherSave = "/library/bookpublisher/save",
-	// 更新出版社
-	BookPublisherUpdate = "/library/bookpublisher/update",
-	// 获取分类列表
-	BookCategoryList = "/library/bookcategory/list",
-	// 创建分类
-	BookCategorySave = "/library/bookcategory/save",
-	// 更新分类
-	BookCategoryUpdate = "/library/bookcategory/update",
-	// 获取阅读来源列表
-	BookSourceList = "/library/booksource/list",
-	// 创建阅读来源
-	BookSourceSave = "/library/booksource/save",
-	// 更新阅读来源
-	BookSourceUpdate = "/library/booksource/update",
+	/**
+	 * 获取出版社列表
+	 */
+	BookPublisherList = "/library/book/publisher/list",
+	/**
+	 * 创建出版社
+	 */
+	BookPublisherSave = "/library/book/publisher/save",
+	/**
+	 * 更新出版社
+	 */
+	BookPublisherUpdate = "/library/book/publisher/update",
+	/**
+	 * 获取书籍分类列表
+	 */
+	BookCategoryList = "/library/book/category/list",
+	/**
+	 * 创建书籍分类
+	 */
+	BookCategorySave = "/library/book/category/save",
+	/**
+	 * 更新书籍分类
+	 */
+	BookCategoryUpdate = "/library/book/category/update",
+	/**
+	 * 获取阅读来源列表
+	 */
+	BookSourceList = "/library/book/source/list",
+	/**
+	 * 创建阅读来源
+	 */
+	BookSourceSave = "/library/book/source/save",
+	/**
+	 * 更新阅读来源
+	 */
+	BookSourceUpdate = "/library/book/source/update",
 }
 
 const apiLibraryBookList = (params: URLSearchParams) =>
