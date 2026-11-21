@@ -160,6 +160,21 @@ var mockBookEnum: LibraryBookEnumInfoRes["data"] = {
 	],
 };
 
+var mockBookSource: LibraryBookSourceListRes["page"]["list"] = [
+	{
+		id: 1,
+		name: "个人藏书",
+		relationCount: 10,
+		updateTime: "2026-11-05T09:42:55",
+	},
+	{
+		id: 2,
+		name: "微信公众号",
+		relationCount: 0,
+		updateTime: "2026-11-05T09:42:55",
+	},
+];
+
 const mockLibraryBookList = http.get(`${apiPrefix}${LibraryBookApi.BookList}`, async ({ request }) => {
 	// const books = (await libraryDatabase.getAll(libraryStore.Book)) as LibraryBookSaveReq[];
 	const url = new URL(request.url);
@@ -365,7 +380,7 @@ const mockLibraryBookCategoryUpdate = http.put(
 
 /** 模拟获取阅读来源列表 */
 const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSourceList}`, async () => {
-	const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
+	// const sources = (await libraryDatabase.getAll(libraryStore.BookSource)) as LibraryBookSourceSaveReq[];
 	return HttpResponse.json<Result & LibraryBookSourceListRes>(
 		{
 			code: ResultEnum.SUCCESS,
@@ -375,7 +390,7 @@ const mockLibraryBookSourceList = http.get(`${apiPrefix}${LibraryBookApi.BookSou
 				pageSize: 20,
 				totalPage: 0,
 				currPage: 1,
-				list: sources || [],
+				list: mockBookSource || [],
 			},
 		},
 		{

@@ -105,7 +105,7 @@ export interface LibraryBookSourceListRes {
 		pageSize: number;
 		totalPage: number;
 		currPage: number;
-		list: LibraryBookSourceSaveReq[];
+		list: BookSource[];
 	};
 }
 //#endregion
@@ -148,11 +148,11 @@ export enum LibraryBookApi {
 	// 更新分类
 	BookCategoryUpdate = "/library/bookcategory/update",
 	// 获取阅读来源列表
-	BookSourceList = "/library/booksource/list",
+	BookSourceList = "/library/book/source/list",
 	// 创建阅读来源
-	BookSourceSave = "/library/booksource/save",
+	BookSourceSave = "/library/book/source/save",
 	// 更新阅读来源
-	BookSourceUpdate = "/library/booksource/update",
+	BookSourceUpdate = "/library/book/source/update",
 }
 
 const apiLibraryBookList = (params: URLSearchParams) =>

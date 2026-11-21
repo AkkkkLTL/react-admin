@@ -51,6 +51,8 @@ export interface BookPublisher {
 export interface BookSource {
 	id?: number;
 	name: string;
+	relationCount?: number;
+	updateTime?: string;
 }
 
 export interface EBookFilterParams {
